@@ -1,3 +1,3 @@
 #practice for merge conflict
 
-print('hello world')
+print('hi world')
