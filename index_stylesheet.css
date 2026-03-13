@@ -1,0 +1,179 @@
+body {
+    background-color: rgb(245, 245, 245);
+}
+
+p, h2 {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.nav-bar {
+    background-color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 25px 25px 0px 0px;
+    display: flex;
+    justify-content: flex-end;
+    align-items:center;
+    margin: 0px;
+    padding: 10px 0px;
+    width: 100%;
+    z-index: 1000;
+}
+
+.nav-bar button{
+    display: block;
+    text-align: center;
+    background-color: rgb(0, 85, 255);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 10px;
+    margin-right: 10px;
+}
+
+.nav-bar a {
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 17px;
+    color: grey;
+}
+
+.company-name {
+    align-self: center;
+    margin-left: 20px;
+    margin-right: auto;
+    font-weight: 500;
+}
+
+#home-page {
+    background-image: linear-gradient(to bottom right, rgb(0, 85, 255), rgb(3, 55, 160));
+    padding: 125px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#home-page h2, #home-page p {
+    color: white;
+    text-align: center;
+}
+
+#home-page p {
+    font-weight: 100;
+}
+
+#home-page input[type=search] {
+    display: block;
+    padding: 6px;
+    border: none;
+    border-radius: 15px;
+    width: 75%;
+}
+
+.unit-review {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.trending-units h2{
+    margin-left: 30px;
+    margin-top: 50px;
+}
+
+#top-unit {
+    background-color: white;
+    border-style: solid;
+    border-color: rgba(128, 128, 128, 0.311);
+    border-radius: 25px;
+    border-width: 1px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 10px;
+}
+
+#top-unit p {
+    margin: 3px 20px 0 20px;
+}
+
+.unit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#unit-code {
+    color: rgb(0, 115, 255);
+    font-size:small;
+}
+
+#unit-name {
+    font-weight: bold;
+}
+
+#major-name {
+    color: rgb(118, 118, 118);
+    font-size: small;
+    padding-top: 10px;
+}
+
+#unit-overall-rating {
+    background-color: rgb(254, 248, 215);
+    border-radius: 10px;
+    padding: 10px 10px;
+    font-size: medium;
+}
+
+#unit-rating {
+    display: flex;
+    justify-content:space-evenly;
+    align-items: center;
+}
+
+.difficulty, .workload {
+    background-color: rgb(242, 242, 242);
+    border-radius: 5px;
+    width: 40%;
+    padding: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.difficulty p, .workload p {
+    font-size: smaller;
+    color: grey;
+}
+
+#difficulty-rating, #workload-rating {
+    font-size: medium;
+    color: black;
+}
+
+#review-count {
+    color: grey;
+    padding: 10px 0px 10px 0px;
+}
+
+.footer-text {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    padding: 50px;
+}
+
+.footer-text p {
+    color: gray;
+}
+
+.footer-text button {
+    text-align: center;
+    background-color: rgb(0, 85, 255);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 20px 20px;
+    font-size: medium;
+}
+@media all and (max-width: 500px) {
+    
+}
