@@ -1,5 +1,6 @@
 body {
     background-color: rgb(245, 245, 245);
+    margin: 0;
 }
 
 p, h2 {
@@ -9,14 +10,12 @@ p, h2 {
 .nav-bar {
     background-color: white;
     font-family: Arial, Helvetica, sans-serif;
-    border-radius: 25px 25px 0px 0px;
     display: flex;
     justify-content: flex-end;
     align-items:center;
     margin: 0px;
     padding: 10px 0px;
     width: 100%;
-    z-index: 1000;
 }
 
 .nav-bar button{
@@ -66,12 +65,16 @@ p, h2 {
     padding: 6px;
     border: none;
     border-radius: 15px;
-    width: 75%;
+    width: 50%;
+}
+
+.trending-units {
+    margin: 10px 200px;
 }
 
 .unit-review {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto auto auto;
     gap: 20px;
 }
 
@@ -89,6 +92,7 @@ p, h2 {
     display: flex;
     flex-direction: column;
     padding: 10px 10px;
+    width: 90%;
 }
 
 #top-unit p {
@@ -174,6 +178,36 @@ p, h2 {
     padding: 20px 20px;
     font-size: medium;
 }
+
 @media all and (max-width: 500px) {
-    
+    body {
+        padding: 8px;
+        margin: 0;
+    }
+
+    #home-page input[type=search] {
+        width: 75%;
+    }
+
+    .trending-units {
+        margin: 0;
+    }
+
+    .unit-review {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    #top-unit {
+        background-color: white;
+        border-style: solid;
+        border-color: rgba(128, 128, 128, 0.311);
+        border-radius: 25px;
+        border-width: 1px;
+        display: flex;
+        flex-direction: column;
+        padding: 10px 10px;
+        width: 95%;
+    }
 }
