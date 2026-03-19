@@ -1,9 +1,6 @@
 body {
     background-color: rgb(245, 245, 245);
     margin: 0;
-}
-
-p, h2 {
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -16,6 +13,11 @@ p, h2 {
     margin: 0px;
     padding: 10px 0px;
     width: 100%;
+    position:fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 
 .nav-bar button{
@@ -69,7 +71,7 @@ p, h2 {
 }
 
 .trending-units {
-    margin: 10px 200px;
+    margin: 10px 50px;
 }
 
 .unit-review {
@@ -112,12 +114,14 @@ p, h2 {
 
 #unit-name {
     font-weight: bold;
+    width: 50%;
 }
 
 #major-name {
     color: rgb(118, 118, 118);
     font-size: small;
     padding-top: 10px;
+    width: 50%;
 }
 
 #unit-overall-rating {
@@ -159,8 +163,8 @@ p, h2 {
 
 .footer-text {
     display: flex;
+    justify-content: center;
     align-items: center;
-    text-align: center;
     flex-direction: column;
     padding: 50px;
 }
@@ -177,6 +181,10 @@ p, h2 {
     border-radius: 10px;
     padding: 20px 20px;
     font-size: medium;
+}
+
+.footer-header, .footer-message {
+    align-self: center;
 }
 
 @media all and (max-width: 500px) {
@@ -196,7 +204,82 @@ p, h2 {
     .unit-review {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 10px;
+    }
+
+    .unit-header {
+        justify-content: flex-start;
+        width: 50%;
+    }
+
+    #unit-rating {
+        position: relative;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin: 0px;
+        margin-bottom: -130px;
+    }
+
+    .difficulty, .workload {
+        margin: 2px;
+        position: relative;
+        width: 35%;
+        left: 100px;
+        top: -85px;
+    }
+
+    #top-unit {
+        width: 95%;
+    }
+
+   #unit-4, #unit-5 {
+        display: none;
+    }
+    
+    * {
+        outline: 1px solid red;
+    } 
+}
+
+@media all and (max-width: 360px) {
+    body {
+        padding: 8px;
+        margin: 0;
+    }
+
+    #home-page input[type=search] {
+        width: 75%;
+    }
+
+    .trending-units {
+        margin: 0;
+    }
+
+    .unit-review {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .unit-header {
+        justify-content: flex-start;
+        width: 50%;
+    }
+
+    #unit-rating {
+        position: relative;
+        flex-direction: column;
+        justify-content: flex-start;
+        margin: 0px;
+        margin-bottom: -130px;
+    }
+
+    .difficulty, .workload {
+        margin: 2px;
+        position: relative;
+        width: 35%;
+        left: 75px;
+        top: -100px;
     }
 
     #top-unit {
