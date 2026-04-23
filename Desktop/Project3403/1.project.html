@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniReviews</title>
+    <link rel="stylesheet" href="project.css">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header>
+    <div class="nav-bar">
+        <div class="company-name">
+            <a href="#">UniReviews</a>
+        </div>
+
+        <button class="menu-toggle">☰</button>
+
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Dashboard</a>
+            <a href="#">Unit Page</a>
+            <a href="#">Reviews</a>
+            <a href="#">Discussion</a>
+            <a href="#">Projects</a>
+        </nav>
+
+        <button id="create-review-btn">Write a Review</button>
+    </div>
+</header>
+
+<div class="page-container">
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>Find the Right Units for You</h1>
+        <p>Read reviews from real students</p>
+        <input type="text" placeholder="Search unit name, code...">
+    </section>
+
+    <!-- PROJECT UPLOAD -->
+    <section class="projects">
+        <h2>Past Students Projects</h2>
+
+        <input type="file" id="pdf-upload" accept="application/pdf" hidden>
+
+        <button id="upload-btn">Upload PDF</button>
+
+        <div id="drop-area">
+            Drag & drop your PDF here
+        </div>
+
+        <p id="file-name"></p>
+
+        <!-- PDF preview -->
+        <div id="pdf-preview">
+            <a id="pdf-link" target="_blank" class="pdf-card">
+                <span class="pdf-icon">📄</span>
+                <span id="pdf-name" class="pdf-name"></span>
+            </a>
+        </div>
+
+        <!-- Preloaded -->
+        <div class="project-list">
+            <a href="sample1.pdf" target="_blank" class="pdf-card">
+                <span class="pdf-icon">📄</span>
+                <span class="pdf-name">CITS3403 Final Project</span>
+            </a>
+
+            <a href="sample2.pdf" target="_blank" class="pdf-card">
+                <span class="pdf-icon">📄</span>
+                <span class="pdf-name">Web App UX Report</span>
+            </a>
+        </div>
+    </section>
+
+</div>
+
+<script src="project.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
