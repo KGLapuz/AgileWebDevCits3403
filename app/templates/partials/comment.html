@@ -1,0 +1,27 @@
+<div class="comment">
+    <div class="comment-content">
+
+        <p class="meta">
+            {% if comment.author_id == current_user.user_id %}
+                You
+            {% else %}
+                {{ get_user(comment.author_id).username }}
+            {% endif %}
+        </p>
+
+        <p>{{ comment.content }}</p>
+
+        <button class="reply-btn">Reply</button>
+    </div>
+
+    <!-- REPLIES -->
+    {% set replies = discussion.comments | selectattr("parent_comment_id", "equalto", comment.comment_id) | list %}
+
+    {% if replies %}
+        <div class="replies">
+            {% for comment in replies %}
+                {% include "partials/comment.html" %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
