@@ -7,6 +7,12 @@ from enum import Enum # for role systems e.g. Student, Moderator, Admin
 # -------------------------
 # USER MODEL
 # -------------------------
+    # Role-based access control
+@dataclass
+class UserRole(Enum):
+    STUDENT = "student"
+    MODERATOR = "moderator"
+    ADMIN = "admin"
 
 @dataclass
 class User:
@@ -24,16 +30,20 @@ class User:
     study_plan: List[str] = field(default_factory=list)  # unit codes
     bookmarks: List[str] = field(default_factory=list)   # could be URLs or IDs
 
-    # Role-based access control
-@dataclass
-class UserRole(Enum):
-    STUDENT = "student"
-    MODERATOR = "moderator"
-    ADMIN = "admin"
-
 # -------------------------
 # UNIT MODEL
 # -------------------------
+@dataclass
+class Review:
+    review_id: int
+    unit_code: str
+    author_id: int
+
+    rating: float        #  1–5
+    workload: float      #  1–5
+
+    content: str
+    created_at: datetime
 
 @dataclass
 class Unit:
@@ -65,18 +75,6 @@ class Unit:
     
     def increase_review_count(self):
         self.review_count += 1
-
-@dataclass
-class Review:
-    review_id: int
-    unit_code: str
-    author_id: int
-
-    rating: float        #  1–5
-    workload: float      #  1–5
-
-    content: str
-    created_at: datetime
 
 # -------------------------
 # DISCUSSION + COMMENTS
