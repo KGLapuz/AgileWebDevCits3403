@@ -10,17 +10,15 @@ const pdfLink = document.getElementById("pdf-link");
 
 let currentURL;
 
-/* NAV TOGGLE */
 document.querySelector(".menu-toggle").addEventListener("click", () => {
     document.querySelector(".nav-links").classList.toggle("active");
 });
 
-/* upload button */
+
 button.addEventListener("click", () => {
     fileInput.click();
 });
 
-/* show pdf */
 function showPDF(file) {
 
     if (currentURL) URL.revokeObjectURL(currentURL);
@@ -33,7 +31,6 @@ function showPDF(file) {
     pdfPreview.style.display = "block";
 }
 
-/* file input */
 fileInput.addEventListener("change", () => {
     const file = fileInput.files[0];
 
@@ -45,7 +42,6 @@ fileInput.addEventListener("change", () => {
     }
 });
 
-/* drag & drop */
 dropArea.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropArea.classList.add("hover");
