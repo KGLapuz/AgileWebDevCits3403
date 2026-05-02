@@ -50,6 +50,7 @@ class Unit:
     code: str
     name: str
     level: int
+    handbook_link: str
 
     # Aggregated values
     review_count: int = 0
