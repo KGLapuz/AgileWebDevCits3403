@@ -29,7 +29,36 @@
                 </div>
             </div>
             <button type="submit">Sign in</button>
-            <p class="signup-text">Don't Have an account? Sign up now</p>
         </form>
+        <p class="signup-popup" onclick="popupSignup()">Don't Have an account? Sign up now</p>
     </div>
+    <div id="SignUpForm" class="modal">
+        <div class="SignUpForm-content">
+            <span class="close" onclick="closeSignUp()">&times;</span>
+            <h2>Create Account</h2>
+            
+            <form class="SignUp-container">
+            <div class="Credentials">
+                <div class="FirstName">
+                    <p>First Name</p>
+                    <input type="text" name="FName" placeholder="First Name" required/>
+                </div>
+                <div class="LastName">
+                    <p>Last Name</p>
+                    <input type="text" name="LName" placeholder="Last Name" required/>
+                </div>
+                <div class="Email">
+                    <p>Email</p>
+                    <input type="text" name="email" placeholder="user@gmail.com"/>
+                </div>
+                 <div class="password">
+                    <p>Password</p>
+                    <input type="password" name="password" placeholder="••••••••" required/>
+                </div>
+            </div>
+            <button type="submit" class="signup-btn">Sign Up</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{url_for('static',filename='log_in_page.js')}}"></script>
 </body>
