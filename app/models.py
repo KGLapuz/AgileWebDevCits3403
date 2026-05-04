@@ -19,9 +19,9 @@ class User:
     user_id: int
     username: str
     email: str
-    role: 'UserRole' = UserRole.STUDENT # users are students by default
-    # Temporary feature: we will implement proper authentication later
     password_hash: str  # never store raw passwords
+    role: 'UserRole' = field(default_factory=lambda: UserRole.STUDENT) # users are students by default
+    # Temporary feature: we will implement proper authentication later
 
     # Optional / dynamic fields
     recently_viewed_units: List[str] = field(default_factory=list)

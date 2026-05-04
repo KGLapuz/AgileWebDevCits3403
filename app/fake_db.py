@@ -147,11 +147,11 @@ d3 = create_discussion(
     "What should I learn early?"
 )
 
-def add_comment(discussion, author_id, content, parent_id=None):
+def add_comment(discussion, comment_author_id, content, parent_id=None):
     global comment_id
     c = Comment(
         comment_id=comment_id,
-        author_id=author_id,
+        comment_author_id=comment_author_id,
         content=content,
         created_at=datetime.now(),
         parent_comment_id=parent_id
@@ -180,3 +180,22 @@ for d in discussions:
     for u in units:
         if u.code == d.unit_code:
             u.discussions.append(d.discussion_id)
+
+def get_unit(code: str):
+    return next((u for u in units if u.code == code), None)
+
+
+def get_reviews_for_unit(code: str):
+    return [r for r in reviews if r.unit_code == code]
+
+
+def get_discussions_for_unit(code: str):
+    return [d for d in discussions if d.unit_code == code]
+
+
+def get_projects_for_unit(code: str):
+    return [p for p in projects if p.unit_code == code]
+
+
+def get_user(user_id: int):
+    return next((u for u in users if u.user_id == user_id), None)

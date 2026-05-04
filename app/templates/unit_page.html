@@ -82,7 +82,8 @@
 
         <!-- DISCUSSIONS -->
         <div class="col-md-4">
-            <a href="{{ url_for('unit_discussions', code=unit.code) }}" class="text-decoration-none text-dark">
+            <a href="#" class="text-decoration-none text-dark"> 
+                {# {{ url_for('unit_discussions', code=unit.code) }} #}
                 <div class="card p-3 h-100">
                     <h5>Discussions</h5>
 
@@ -101,7 +102,8 @@
 
         <!-- PROJECTS -->
         <div class="col-md-4">
-            <a href="{{ url_for('unit_projects', code=unit.code) }}" class="text-decoration-none text-dark">
+            <a href="#" class="text-decoration-none text-dark">
+                {# {{ url_for('unit_projects', code=unit.code) }} #}
                 <div class="card p-3 h-100">
                     <h5>Projects</h5>
 
@@ -120,7 +122,8 @@
 
         <!-- REVIEWS -->
         <div class="col-md-4">
-            <a href="{{ url_for('unit_reviews', code=unit.code) }}" class="text-decoration-none text-dark">
+            <a href="#" class="text-decoration-none text-dark">
+                {# {{ url_for('unit_reviews', code=unit.code) }} #}
                 <div class="card p-3 h-100">
                     <h5>Reviews</h5>
 
@@ -144,7 +147,8 @@
     <!-- CTA -->
     <!-- ========================= -->
     <div class="text-center mt-5">
-        <a href="{{ url_for('create_review', code=unit.code) }}">
+        <a href="#" class="text-decoration-none">
+            {# {{ url_for('write_review', code=unit.code) }} #}
             <button class="btn btn-primary btn-lg">
                 Write a Review for {{ unit.code }}
             </button>

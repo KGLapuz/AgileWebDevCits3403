@@ -9,7 +9,7 @@
                 <span class="text-white small">Hi, {{ current_user.username }}</span>
             {% endif %}
 
-            <a href="{{ url_for('create_review') }}">
+            <a href="{{ url_for('create_review', unit_code='CITS3403') }}">
                 <button>Write a Review</button>
             </a>
         </div>
