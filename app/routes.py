@@ -22,4 +22,20 @@ def discussion_thread(discussion_id):
         current_user=current_user
     )
     
+@app.route("/unit/<code>")
+def unit_page(code):
+
+    unit = get_unit(code)
+    reviews = get_reviews_for_unit(code)
+    discussions = get_discussions_for_unit(code)
+    projects = get_projects_for_unit(code)
+
+    return render_template(
+        "unit_page.html",
+        unit=unit,
+        reviews=reviews,
+        discussions=discussions,
+        projects=projects
+    )
+
 # -----------------------------------------------------------------------------------------------------
