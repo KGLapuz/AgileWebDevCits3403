@@ -36,12 +36,12 @@ body {
     text-align: left;
 }
 
-.email, .password, .FirstName, .LastName, .Email {
+.email, .password, .UserName, .Email {
     margin: 5px;
     padding-bottom: 15px;
 }
 
-.email p, .password p, .FirstName p, .LastName p, .Email p {
+.email p, .password p, .UserName p, .Email p {
     margin: 0px;
     padding-bottom: 2px;
     font-size: 14px;
@@ -94,26 +94,13 @@ button {
 .Credentials {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
 }
 
-.FirstName, .LastName {
-    width: 48%;
-    margin: 5px 0;
-    display: flex;
-    flex-direction: column;
-}
 
-.FirstName p, .LastName p {
-    margin: 0;
-    padding-bottom: 5px;
-    height: 20px;
-}
-
-.Email, .password {
+.Email, .password, .UserName {
     width: 100%;
     display: flex;
     flex-direction: column;
