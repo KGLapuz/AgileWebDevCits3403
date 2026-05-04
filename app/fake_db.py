@@ -13,6 +13,9 @@ users = [
     User(3, "james", "j@example.com", "hash3", role=UserRole.MODERATOR),
     User(4, "admin", "admin@example.com", "hash4", role=UserRole.ADMIN),
     User(5, "alex", "alex@example.com", "hash5", role=UserRole.STUDENT),
+    User(6, "bronte", "bronte@unireviews.com", "hash6", role=UserRole.ADMIN),
+    User(7, "kiethlin", "kiethlin@unireviews.com", "hash7", role=UserRole.MODERATOR),
+    User(8, "mambwe", "mambwe@example.com", "hash8", role=UserRole.STUDENT),
 ]
 
 # Units
