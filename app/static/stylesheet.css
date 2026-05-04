@@ -1,294 +1,175 @@
 /* =========================
-   GLOBAL STYLES
-========================= */
+   1. GLOBAL RESET
+   ========================= */
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
+    width: 100%;
+    min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
+    background: rgb(245, 245, 245);
 }
 
-/* NAVBAR (ONE VERSION ONLY) */
+/* =========================
+   2. SHARED NAV BAR
+   ========================= */
 .nav-bar {
+    background: rgb(0, 48, 135);
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    position: fixed;
+    padding: 15px 60px;
     width: 100%;
-    top: 0;
     z-index: 1000;
 }
 
-.company-name {
-    margin-left: 20px;
-    margin-right: auto;
-}
-
-.company-name a {
-    color: white;
+.nav-bar a, 
+.nav-bar .nav-links a, 
+.nav-bar .company-name a {
+    color: white !important;
     text-decoration: none;
+    font-weight: 500;
 }
 
-/* COMMON BUTTON STYLE */
-.nav-bar button {
+.nav-bar .nav-links {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.nav-bar .company-name a {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.nav-bar button, .write-review-yellow {
+    background-color: rgb(226, 182, 0);
+    color: white;
     border: none;
-    border-radius: 10px;
-    padding: 10px;
-    margin-right: 10px;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: bold;
     cursor: pointer;
 }
 
-/* FOOTER */
-.footer-text {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 50px;
-}
-
-.footer-text p {
-    color: grey;
-}
-
 /* =========================
-   INDEX PAGE
-========================= */
-.page-index {
-    background-color: rgb(245,245,245);
+   3. LOGIN PAGE (Restored CSS)
+   ========================= */
+.login-body {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100vh;
 }
 
-.page-index .nav-bar {
+.login-body .login-container {
     background-color: white;
-}
-
-.page-index .nav-bar button {
-    background-color: rgb(0, 85, 255);
-    color: white;
-}
-
-.page-index #home-page {
-    background-image: linear-gradient(to bottom right, rgb(0,85,255), rgb(3,55,160));
-    padding: 125px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.page-index #home-page h2,
-.page-index #home-page p {
-    color: white;
+    padding: 5rem 4rem; /* Restored size for the chunky look */
+    border-radius: 60px; /* Matching Screenshot 8.57.37 am */
+    width: 95%;
+    max-width: 550px;
     text-align: center;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.05);
 }
 
-.page-index input[type=search] {
-    padding: 6px;
-    border: none;
-    border-radius: 15px;
+.login-body h1 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
 }
 
-/* UNITS */
-.trending-units {
-    margin: 10px 50px;
+.login-body p {
+    margin-bottom: 2rem;
+    font-weight: bold;
 }
 
-.unit-review {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    gap: 20px;
-}
-
-#top-unit {
-    background-color: white;
-    border: 1px solid rgba(128,128,128,0.3);
-    border-radius: 25px;
-    padding: 10px;
-}
-
-/* =========================
-   DISCUSSION PAGE
-========================= */
-.page-discussion {
-    background-color: white;
-}
-
-.page-discussion .nav-bar {
-    background-color: rgb(0,48,135);
-}
-
-.page-discussion .nav-bar button {
-    background-color: rgb(226,182,0);
-    color: white;
-}
-
-.thread-container {
-    max-width: 900px;
-}
-
-/* THREAD */
-.thread-sticky {
-    position: sticky;
-    top: 60px;
-    background: white;
-    padding: 10px 15px;
-    z-index: 500;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-}
-
-.meta {
-    color: grey;
-    font-size: 14px;
-}
-
-.comment {
-    margin-top: 15px;
-}
-
-.comment-content {
-    background: white;
-    padding: 12px;
+.login-body input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
     border-radius: 10px;
-    border: 1px solid rgba(128,128,128,0.2);
-    cursor: pointer;
-}
-
-.comment-content:hover {
-    background: rgb(250,250,250);
-}
-
-/* REPLIES */
-.replies {
-    margin-left: 30px;
-    border-left: 2px solid rgba(0,0,0,0.1);
-    padding-left: 15px;
-    margin-top: 10px;
-}
-
-.reply {
-    margin-top: 10px;
-}
-
-/* BUTTONS */
-.reply-btn {
-    background: none;
-    border: none;
-    color: rgb(0,85,255);
-    cursor: pointer;
-}
-
-.reply-btn:hover {
-    text-decoration: underline;
+    background-color: #fafafa;
 }
 
 /* =========================
-   LOGIN PAGE
-========================= */
-.page-login {
-    background-color: rgb(245,245,245);
+   4. PROJECT PAGE (Container Scaled Down)
+   ========================= */
+.project-page .page-container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 40px;
+}
+
+/* Reduced height and padding for the drop area */
+.project-page #drop-area {
+    width: 100%;
+    min-height: 220px; /* Scaled down from 300px */
+    margin: 0 auto 40px auto;
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-}
-
-.login-container {
+    justify-content: center;
+    border: 2px dashed #ccc;
     background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-radius: 20px;
+    font-size: 1.3rem;
+    color: #666;
 }
 
-input {
-    border-radius: 8px;
-    border: 1px solid rgb(195,195,195);
-    padding: 5px;
-    width: 100%;
-}
-
-button {
-    width: 100%;
-    margin-top: 20px;
-    border-radius: 8px;
-    padding: 10px;
-    border: none;
-    background: linear-gradient(-45deg, #149de7, #101bee, #052848);
+/* Scaled down upload button */
+.project-page #upload-btn {
+    display: block;
+    margin: 30px auto 20px auto;
+    background: #2b6df2;
     color: white;
+    border: none;
+    padding: 18px 60px; /* Made smaller */
+    border-radius: 12px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
 }
 
-/* =========================
-   PROJECT PAGE
-========================= */
-.page-project {
-    background: rgb(245,245,245);
+.project-page .section-title {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin: 30px 0 15px 0;
+    text-align: left;
 }
 
-.page-project .nav-bar {
-    background: rgb(0,48,135);
-}
-
-.nav-links {
-    display: flex;
+.project-page .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 15px;
 }
 
-.nav-links a {
-    color: white;
-    text-decoration: none;
-}
-
-#create-review-btn {
-    background: rgb(226,182,0);
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.page-container {
-    max-width: 1000px;
-    margin: 80px auto 0;
-}
-
-.intro {
-    text-align: center;
-    padding: 40px;
-    background: linear-gradient(to right, #2563eb, #1e3a8a);
-    color: white;
-}
-
-#drop-area {
-    margin: 20px auto;
-    width: 300px;
-    padding: 30px;
-    border: 2px dashed #aaa;
+.project-page .pdf-card {
     background: white;
+    padding: 12px 15px; /* Compact padding */
     border-radius: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #003087;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
 
 /* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 768px) {
-    .nav-links {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 60px;
-        right: 20px;
-        background: white;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
+   5. DISCUSSION THREAD
+   ========================= */
+.discussion-thread-page .thread-container {
+    max-width: 900px;
+    margin: 40px auto;
 }
 
-@media (max-width: 500px) {
-    .unit-review {
-        display: flex;
-        flex-direction: column;
-    }
+.discussion-thread-page .replies {
+    margin-left: 40px;
+    border-left: 3px solid #003087;
+    padding-left: 20px;
 }

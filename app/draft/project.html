@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniReviews</title>
+    <title>Projects - UniReviews</title>
+
     <link rel="stylesheet" href="../static/stylesheet.css">
 </head>
 
-<body class="page-index">
+<body class="project-page">
 
-<!-- Navigation Bar -->
+<!-- NAVBAR -->
 <header>
     <div class="nav-bar">
         <div class="company-name">
             <a href="#">UniReviews</a>
         </div>
 
-        <button class="menu-toggle">☰</button>
 
         <nav class="nav-links">
             <a href="#">Home</a>
@@ -31,30 +31,35 @@
     </div>
 </header>
 
+<!-- PAGE CONTENT -->
 <div class="page-container">
 
-    <!-- Intro-->
-    <section class="intro">
-        <h1>Find the Right Units for You</h1>
-        <p>Read reviews from real students</p>
-        <input type="text" placeholder="Search unit name, code...">
-    </section>
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <a href="#">Home</a> > <a href="#">CITS2006</a> > Projects
+    </div>
 
-    <!-- Project upload and form -->
+    <!-- TITLE -->
+    <h1>CITS2006: Defensive Cybersecurity</h1>
+    <p class="subtitle">Past Students Projects</p>
+
+    <!-- UPLOAD SECTION -->
     <section class="projects">
-        <h2>Past Students Projects</h2>
 
-        <input type="file" id="pdf-upload" accept="application/pdf" hidden>
+        <div class="upload-section">
+            <input type="file" id="pdf-upload" accept="application/pdf" hidden>
 
-        <button id="upload-btn">Upload PDF</button>
+            <button id="upload-btn">Upload Your Project</button>
 
-        <div id="drop-area">
-            Drag & drop your PDF here
+            <div id="drop-area">
+                Drag & drop your PDF here or  
+                <span class="upload-link"> click to upload</span>
+            </div>
+
+            <p id="file-name"></p>
         </div>
 
-        <p id="file-name"></p>
-
-        <!-- Past projects PDF in new browser -->
+        <!-- PREVIEW (new upload) -->
         <div id="pdf-preview">
             <a id="pdf-link" target="_blank" class="pdf-card">
                 <span class="pdf-icon">📄</span>
@@ -62,8 +67,12 @@
             </a>
         </div>
 
-        <!-- Preloaded PDF -->
-        <div class="project-list">
+        <!-- SECTION TITLE -->
+        <h2 class="section-title">Past Students Projects</h2>
+
+        <!-- EXISTING PROJECTS -->
+        <div class="projects-grid">
+
             <a href="sample1.pdf" target="_blank" class="pdf-card">
                 <span class="pdf-icon">📄</span>
                 <span class="pdf-name">CITS3403 Final Project</span>
@@ -73,19 +82,19 @@
                 <span class="pdf-icon">📄</span>
                 <span class="pdf-name">Web App UX Report</span>
             </a>
+
+            <a href="#" class="pdf-card">
+                <span class="pdf-icon">📄</span>
+                <span class="pdf-name">Portfolio Part 1</span>
+            </a>
+
         </div>
+
     </section>
 
 </div>
 
 <script src="project.js"></script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
