@@ -8,7 +8,9 @@
 
 {% block content %}
 
-<div class="container mt-5 pt-5 thread-container">
+<div id="thread-root"
+     data-discussion-id="{{ discussion.discussion_id }}"
+     class="container mt-5 pt-5 thread-container">
 
     <!-- BREADCRUMB -->
     <div class="breadcrumb">
@@ -39,18 +41,19 @@
     </div>
 
     <!-- COMMENTS -->
+
+        <!-- ADD COMMENT -->
+    <div class="card p-3 mt-4">
+        <textarea id="new-comment" class="form-control mb-2" placeholder="Chip in and share your thoughts..."></textarea>
+        <button id="post-comment-btn" class="btn btn-primary">Post Comment</button>
+    </div>
+
     <div class="comments-section">
 
         {% for comment in discussion.comments if not comment.parent_comment_id %}
             {% include "partials/comment.html" %}
         {% endfor %}
 
-    </div>
-
-    <!-- ADD COMMENT -->
-    <div class="card p-3 mt-4">
-        <textarea id="new-comment" class="form-control mb-2" placeholder="Write a comment..."></textarea>
-        <button id="post-comment-btn" class="btn btn-primary">Post Comment</button>
     </div>
 
 </div>

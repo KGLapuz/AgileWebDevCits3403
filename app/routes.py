@@ -1,8 +1,7 @@
 from models import Unit, Discussion, Project, User
 from datetime import datetime
 from fake_db import *
-from flask import Flask, render_template
-
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
@@ -56,4 +55,43 @@ def create_review(unit_code):
     add_review(unit_code, author_id, rating, workload, content)
 
     return "Review added!"  # In reality, you'd redirect back to the unit page
+
+# routing for comments and replies to comments
+@app.route("/add_comment", methods=["POST"])
+def add_comment_route():
+    data = request.get_json()
+
+    discussion_id = int(data.get("discussion_id"))
+    content = data.get("content")
+    parent_id = data.get("parent_id")  # None for top-level
+
+    # ⚠️ TEMP: hardcode logged-in user
+    current_user_id = 8 # Mambwe is currently logged in as user_id=8, but you can change this to test with other users
+
+    # find discussion
+    discussion = next((d for d in discussions if d.discussion_id == discussion_id), None)
+
+    if not discussion or not content:
+        return jsonify({"error": "Invalid data"}), 400
+
+    new_comment = add_comment(
+        discussion,
+        comment_author_id=current_user_id,
+        content=content,
+        parent_id=parent_id
+    )
+
+    return jsonify({
+        "success": True,
+        "comment_id": new_comment.comment_id,
+        "author": get_user(current_user_id).username,
+        "content": new_comment.content,
+        "created_at": new_comment.created_at.isoformat(),
+        "parent_id": new_comment.parent_comment_id
+    })
+
+# route to specific static files (e.g. JS, CSS)
+@app.route("/static/<path:filename>")
+def serve_static(filename):
+    return app.send_static_file(filename)
 # -----------------------------------------------------------------------------------------------------
