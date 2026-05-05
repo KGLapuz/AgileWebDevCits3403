@@ -1,8 +1,8 @@
-<div class="comment" data-comment-id="{{ comment.comment_id }}" data-discussion-id="{{ discussion.discussion_id }}">
+<div class="comment" data-comment-id="{{ comment.comment_id }}">
     <div class="comment-content">
 
         <p class="meta">
-            {% if comment.comment_author_id == current_user.user_id %}
+            {% if comment.comment_author_id == current_user_id %}
                 You
             {% else %}
                 {{ get_user(comment.comment_author_id).username }}
@@ -16,12 +16,10 @@
     </div>
 
     <!-- REPLIES -->
-    {% set replies = discussion.comments | selectattr("parent_comment_id", "equalto", comment.comment_id) | list %}
-
-    {% if replies %}
+    {% if comment.replies %}
         <div class="replies">
-            {% for comment in replies %}
-                {% include "partials/comment.html" %}
+            {% for reply in comment.replies %}
+                {% include "partials/comment.html" with context %}
             {% endfor %}
         </div>
     {% endif %}

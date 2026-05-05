@@ -160,6 +160,24 @@ def add_comment(discussion, comment_author_id, content, parent_id=None):
     comment_id += 1
     return c
 
+def build_comment_tree(comments):
+    comment_map = {c.comment_id: c for c in comments}
+
+    for c in comments:
+        c.replies = []
+
+    root_comments = []
+
+    for c in comments:
+        if c.parent_comment_id:
+            parent = comment_map.get(c.parent_comment_id)
+            if parent:
+                parent.replies.append(c)
+        else:
+            root_comments.append(c)
+
+    return root_comments
+
 c1 = add_comment(d1, 2, "Group matters a LOT. Try to find proactive people.")
 c2 = add_comment(d1, 3, "Start early and use Git properly.")
 c3 = add_comment(d1, 4, "Communication is everything.")
