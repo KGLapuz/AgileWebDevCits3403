@@ -36,7 +36,7 @@ units = [
         rating=4.2,
         workload=3.2,
         handbook_link="https://www.handbooks.uwa.edu.au/unitdetails?code=CITS1402",
-        tags=["sql", "databases"]
+        tags=["sql", "databases", "Data Science"]
     ),
     Unit(
         code="CITS2005",
