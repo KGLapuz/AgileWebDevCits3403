@@ -1,153 +1,402 @@
-from dataclasses import dataclass, field  # for simple data constructors
-from typing import List, Optional # for type hints
-from datetime import datetime # for timestamps
-from enum import Enum # for role systems e.g. Student, Moderator, Admin
+from datetime import datetime
+from enum import Enum
+
+from app import db
 
 
-# -------------------------
-# USER MODEL
-# -------------------------
-    # Role-based access control
-@dataclass
+# -------------------------------------------------
+# USER ROLE ENUM
+# -------------------------------------------------
+
 class UserRole(Enum):
     STUDENT = "student"
     MODERATOR = "moderator"
     ADMIN = "admin"
 
-@dataclass
-class User:
-    user_id: int
-    username: str
-    email: str
-    password_hash: str  # never store raw passwords
-    role: 'UserRole' = field(default_factory=lambda: UserRole.STUDENT) # users are students by default
-    # Temporary feature: we will implement proper authentication later
 
-    # Optional / dynamic fields
-    recently_viewed_units: List[str] = field(default_factory=list)
-    recently_viewed_discussions: List[int] = field(default_factory=list)
-    recently_viewed_projects: List[int] = field(default_factory=list)
-    study_plan: List[str] = field(default_factory=list)  # unit codes
-    bookmarks: List[str] = field(default_factory=list)   # could be URLs or IDs
+# -------------------------------------------------
+# USER MODEL
+# -------------------------------------------------
 
-# -------------------------
+class User(db.Model):
+    __tablename__ = "users"
+
+    user_id = db.Column(db.Integer, primary_key=True)
+
+    username = db.Column(
+        db.String(64),
+        unique=True,
+        nullable=False
+    )
+
+    email = db.Column(
+        db.String(120),
+        unique=True,
+        nullable=False
+    )
+
+    password_hash = db.Column(
+        db.String(255),
+        nullable=False
+    )
+
+    role = db.Column(
+        db.Enum(UserRole),
+        default=UserRole.STUDENT,
+        nullable=False
+    )
+
+    # Dynamic / temporary data
+    recently_viewed_units = db.Column(db.JSON, default=list)
+    recently_viewed_discussions = db.Column(db.JSON, default=list)
+    recently_viewed_projects = db.Column(db.JSON, default=list)
+
+    study_plan = db.Column(db.JSON, default=list)
+    bookmarks = db.Column(db.JSON, default=list)
+
+    # Relationships
+    reviews = db.relationship(
+        "Review",
+        back_populates="author",
+        cascade="all, delete-orphan"
+    )
+
+    discussions = db.relationship(
+        "Discussion",
+        back_populates="author",
+        cascade="all, delete-orphan"
+    )
+
+    comments = db.relationship(
+        "Comment",
+        back_populates="author",
+        cascade="all, delete-orphan"
+    )
+
+    projects = db.relationship(
+        "Project",
+        back_populates="author",
+        cascade="all, delete-orphan"
+    )
+
+    def __repr__(self):
+        return f"<User {self.username}>"
+
+
+# -------------------------------------------------
 # UNIT MODEL
-# -------------------------
-@dataclass
-class Review:
-    review_id: int
-    unit_code: str
-    author_id: int
+# -------------------------------------------------
 
-    rating: float        #  1–5
-    workload: float      #  1–5
+class Unit(db.Model):
+    __tablename__ = "units"
 
-    content: str
-    created_at: datetime
+    code = db.Column(
+        db.String(16),
+        primary_key=True
+    )
 
-@dataclass
-class Unit:
-    code: str
-    name: str
-    level: int
-    handbook_link: str
+    name = db.Column(
+        db.String(255),
+        nullable=False
+    )
 
-    # Aggregated values
-    review_count: int = 0
-    rating: float = 0.0
-    workload: float = 0.0
+    level = db.Column(
+        db.Integer,
+        nullable=False
+    )
 
-    reviews: List[int] = field(default_factory=list)
-    tags: List[str] = field(default_factory=list)
-    prerequisites: List[str] = field(default_factory=list)
-    tips: Optional[str] = None  # advisable prior study / get-ahead tips
+    handbook_link = db.Column(db.String(500))
 
-    # Relationships (IDs reference other objects)
-    discussions: List[int] = field(default_factory=list)
-    projects: List[int] = field(default_factory=list)
-    
-    def calculate_rating(self, reviews: List[Review]) -> float:
-        relevant = [r.rating for r in reviews if r.unit_code == self.code]
-        return sum(relevant) / len(relevant) if relevant else 0.0
-    
-    def calculate_workload(self, reviews: List[Review]) -> float:
-        relevant = [r.workload for r in reviews if r.unit_code == self.code]
-        return sum(relevant) / len(relevant) if relevant else 0.0
-    
-    def increase_review_count(self):
-        self.review_count += 1
+    tags = db.Column(db.JSON, default=list)
+    prerequisites = db.Column(db.JSON, default=list)
 
-# -------------------------
-# DISCUSSION + COMMENTS
-# -------------------------
+    tips = db.Column(db.Text)
 
-@dataclass
-class Comment:
-    comment_id: int
-    comment_author_id: int
-    content: str
-    created_at: datetime
-    replies: list = field(default_factory=list)  # for nested replies
+    # Relationships
+    reviews = db.relationship(
+        "Review",
+        back_populates="unit",
+        cascade="all, delete-orphan"
+    )
 
-    # For nested replies
-    parent_comment_id: Optional[int] = None
-    
-    upvotes: int = 0
-    downvotes: int = 0
-    
-    def score(self) -> int:
+    discussions = db.relationship(
+        "Discussion",
+        back_populates="unit",
+        cascade="all, delete-orphan"
+    )
+
+    projects = db.relationship(
+        "Project",
+        back_populates="unit",
+        cascade="all, delete-orphan"
+    )
+
+    @property
+    def review_count(self):
+        return len(self.reviews)
+
+    @property
+    def rating(self):
+        if not self.reviews:
+            return 0.0
+
+        return sum(r.rating for r in self.reviews) / len(self.reviews)
+
+    @property
+    def workload(self):
+        if not self.reviews:
+            return 0.0
+
+        return sum(r.workload for r in self.reviews) / len(self.reviews)
+
+    def __repr__(self):
+        return f"<Unit {self.code}>"
+
+
+# -------------------------------------------------
+# REVIEW MODEL
+# -------------------------------------------------
+
+class Review(db.Model):
+    __tablename__ = "reviews"
+
+    review_id = db.Column(db.Integer, primary_key=True)
+
+    unit_code = db.Column(
+        db.String(16),
+        db.ForeignKey("units.code"),
+        nullable=False
+    )
+
+    author_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.user_id"),
+        nullable=False
+    )
+
+    rating = db.Column(db.Float, nullable=False)
+    workload = db.Column(db.Float, nullable=False)
+
+    content = db.Column(db.Text, nullable=False)
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    # Relationships
+    unit = db.relationship(
+        "Unit",
+        back_populates="reviews"
+    )
+
+    author = db.relationship(
+        "User",
+        back_populates="reviews"
+    )
+
+    def __repr__(self):
+        return f"<Review {self.review_id}>"
+
+
+# -------------------------------------------------
+# DISCUSSION MODEL
+# -------------------------------------------------
+
+class Discussion(db.Model):
+    __tablename__ = "discussions"
+
+    discussion_id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    unit_code = db.Column(
+        db.String(16),
+        db.ForeignKey("units.code"),
+        nullable=False
+    )
+
+    author_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.user_id"),
+        nullable=False
+    )
+
+    title = db.Column(
+        db.String(255),
+        nullable=False
+    )
+
+    body = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    upvotes = db.Column(db.Integer, default=0)
+    downvotes = db.Column(db.Integer, default=0)
+
+    voters = db.Column(db.JSON, default=list)
+
+    # Relationships
+    unit = db.relationship(
+        "Unit",
+        back_populates="discussions"
+    )
+
+    author = db.relationship(
+        "User",
+        back_populates="discussions"
+    )
+
+    comments = db.relationship(
+        "Comment",
+        back_populates="discussion",
+        cascade="all, delete-orphan"
+    )
+
+    @property
+    def score(self):
         return self.upvotes - self.downvotes
-    
-    def get_author_username(self, users: List["User"]) -> str:
-        for user in users:
-            if user.user_id == self.comment_author_id:
-                return user.username
-        return "Unknown"
 
-
-@dataclass
-class Discussion:
-    discussion_id: int
-    unit_code: str  # link back to Unit
-
-    title: str
-    author_id: int
-    created_at: datetime
-    body: str
-
-    comments: List[Comment] = field(default_factory=list)
-    
-    upvotes: int = 0
-    downvotes: int = 0
-    voters: List[int] = field(default_factory=list)  # track users who voted
-
-    def score(self) -> int:
-        return self.upvotes - self.downvotes
-
-    def reply_count(self) -> int:
+    @property
+    def reply_count(self):
         return len(self.comments)
 
-    def get_author_username(self, users: List["User"]) -> str:
-        for user in users:
-            if user.user_id == self.author_id:
-                return user.username
-        return "Unknown"
+    def __repr__(self):
+        return f"<Discussion {self.title}>"
 
 
-# -------------------------
+# -------------------------------------------------
+# COMMENT MODEL
+# -------------------------------------------------
+
+class Comment(db.Model):
+    __tablename__ = "comments"
+
+    comment_id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    discussion_id = db.Column(
+        db.Integer,
+        db.ForeignKey("discussions.discussion_id"),
+        nullable=False
+    )
+
+    comment_author_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.user_id"),
+        nullable=False
+    )
+
+    content = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    parent_comment_id = db.Column(
+        db.Integer,
+        db.ForeignKey("comments.comment_id"),
+        nullable=True
+    )
+
+    upvotes = db.Column(db.Integer, default=0)
+    downvotes = db.Column(db.Integer, default=0)
+
+    # Relationships
+    discussion = db.relationship(
+        "Discussion",
+        back_populates="comments"
+    )
+
+    author = db.relationship(
+        "User",
+        back_populates="comments"
+    )
+
+    # Self-referential relationship
+    replies = db.relationship(
+        "Comment",
+        backref=db.backref(
+            "parent",
+            remote_side=[comment_id]
+        ),
+        cascade="all, delete-orphan"
+    )
+
+    @property
+    def score(self):
+        return self.upvotes - self.downvotes
+
+    def __repr__(self):
+        return f"<Comment {self.comment_id}>"
+
+
+# -------------------------------------------------
 # PROJECT MODEL
-# -------------------------
+# -------------------------------------------------
 
-@dataclass
-class Project:
-    project_id: int
-    unit_code: str
+class Project(db.Model):
+    __tablename__ = "projects"
 
-    title: str
-    author_id: int
-    created_at: datetime
-    year: int
+    project_id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
 
-    description: str
-    external_link: Optional[str] = None  # GitHub or other resource
-    
+    unit_code = db.Column(
+        db.String(16),
+        db.ForeignKey("units.code"),
+        nullable=False
+    )
+
+    author_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.user_id"),
+        nullable=False
+    )
+
+    title = db.Column(
+        db.String(255),
+        nullable=False
+    )
+
+    description = db.Column(
+        db.Text,
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow
+    )
+
+    year = db.Column(db.Integer)
+
+    external_link = db.Column(db.String(500))
+
+    # Relationships
+    unit = db.relationship(
+        "Unit",
+        back_populates="projects"
+    )
+
+    author = db.relationship(
+        "User",
+        back_populates="projects"
+    )
+
+    def __repr__(self):
+        return f"<Project {self.title}>"

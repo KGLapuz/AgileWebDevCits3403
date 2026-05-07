@@ -6,7 +6,7 @@
 
         <div class="d-flex align-items-center gap-2 me-2">
             {% if current_user_id %}
-                <span class="text-white small">Hi, {{ get_user(current_user_id).username }}</span>
+                <span class="text-white small">Hi, {{ current_user.username }}</span>
             {% endif %}
 
             <a href="{{ url_for('create_review', unit_code='CITS3403') }}">
