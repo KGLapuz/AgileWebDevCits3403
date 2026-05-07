@@ -62,6 +62,32 @@ def discussion_thread(discussion_id):
         comments=comments_tree,
         current_user_id=get_current_user()
     )
+    
+def build_comment_tree(comments):
+
+    comment_map = {}
+
+    # create lookup + clear replies
+    for c in comments:
+        c.replies = []
+        comment_map[c.comment_id] = c
+
+    root_comments = []
+
+    for c in comments:
+
+        # top-level comment
+        if c.parent_comment_id is None:
+            root_comments.append(c)
+
+        else:
+            parent = comment_map.get(c.parent_comment_id)
+
+            # IMPORTANT: prevent self-reference
+            if parent and parent.comment_id != c.comment_id:
+                parent.replies.append(c)
+
+    return root_comments
 
 @app.route("/create_review/<unit_code>", methods=["POST"])
 def create_review(unit_code):
@@ -84,6 +110,10 @@ def add_comment_route():
     discussion_id = int(data.get("discussion_id"))
     content = data.get("content")
     parent_id = data.get("parent_id")
+    
+    # parent_id will be None for top-level comments, but if it's provided, we should convert it to int
+    if parent_id is not None:
+        parent_id = int(parent_id)
 
     discussion = next((d for d in discussions if d.discussion_id == discussion_id), None)
 

@@ -87,6 +87,7 @@ class Comment:
     comment_author_id: int
     content: str
     created_at: datetime
+    replies: list = field(default_factory=list)  # for nested replies
 
     # For nested replies
     parent_comment_id: Optional[int] = None

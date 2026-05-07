@@ -19,7 +19,8 @@
     {% if comment.replies %}
         <div class="replies">
             {% for reply in comment.replies %}
-                {% include "partials/comment.html" with context %}
+                {% set comment = reply %}
+                {% include "partials/comment.html" %}
             {% endfor %}
         </div>
     {% endif %}
