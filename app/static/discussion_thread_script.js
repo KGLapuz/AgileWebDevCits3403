@@ -28,13 +28,15 @@ document.addEventListener("DOMContentLoaded", function () {
         const now = new Date();
 
         times.forEach(time => {
-            const date = new Date(time.getAttribute('datetime'));
-            const diff = Math.floor((now - date) / 1000);
+            const utcDate = new Date(time.getAttribute('datetime'))
+            const diff = Math.floor((now.getUTCDate() - utcDate) / 1000);
 
-            if (diff < 60) time.innerText = "Just now";
-            else if (diff < 3600) time.innerText = Math.floor(diff/60) + " minutes ago";
-            else if (diff < 86400) time.innerText = Math.floor(diff/3600) + " hours ago";
-            else time.innerText = Math.floor(diff/86400) + " days ago";
+            if (diff < 10) {
+                time.innerText = "Just now";}
+            else if (diff < 60) {time.innerText = diff + " seconds ago";}
+            else if (diff < 3600) {time.innerText = Math.floor(diff / 60) + " minutes ago";}
+            else if (diff < 86400) {time.innerText = Math.floor(diff / 3600) + " hours ago";}
+            else {time.innerText = Math.floor(diff / 86400) + " days ago";}
         });
     }
 
