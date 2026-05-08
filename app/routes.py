@@ -261,3 +261,101 @@ def add_comment_route():
         "html": html,
         "parent_id": parent_id
     })
+
+
+# -------------------------------------------------
+# PLACEHOLDER ROUTES FOR DISCUSSIONS, REVIEWS, AND PROJECTS PAGES
+@app.route("/<unit_code>/discussions")
+def unit_discussions(unit_code):
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    search = request.args.get("search", "")
+
+    query = Discussion.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            db.or_(
+                Discussion.title.ilike(f"%{search}%"),
+                Discussion.body.ilike(f"%{search}%")
+            )
+        )
+
+    discussions = query.order_by(
+        Discussion.created_at.desc()
+    ).all()
+
+    return render_template(
+        "content_list.html",
+        unit=unit,
+        items=discussions,
+        content_type="discussions",
+        page_title=f"{unit.code} Discussions"
+    )
+
+@app.route("/<unit_code>/projects")
+def unit_projects(unit_code):
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    search = request.args.get("search", "")
+
+    query = Project.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            db.or_(
+                Project.title.ilike(f"%{search}%"),
+                Project.description.ilike(f"%{search}%")
+            )
+        )
+
+    projects = query.order_by(
+        Project.created_at.desc()
+    ).all()
+
+    return render_template(
+        "content_list.html",
+        unit=unit,
+        items=projects,
+        content_type="projects",
+        page_title=f"{unit.code} Projects"
+    )
+
+@app.route("/projects/<int:project_id>")
+def project_detail(project_id):
+
+    project = Project.query.get_or_404(project_id)
+
+    return render_template(
+        "project_detail.html",
+        project=project
+    )
+    
+    
+@app.route("/<unit_code>/reviews")
+def unit_reviews(unit_code):
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    search = request.args.get("search", "")
+
+    query = Review.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            Review.content.ilike(f"%{search}%")
+        )
+
+    reviews = query.order_by(
+        Review.created_at.desc()
+    ).all()
+
+    return render_template(
+        "content_list.html",
+        unit=unit,
+        items=reviews,
+        content_type="reviews",
+        page_title=f"{unit.code} Reviews"
+    )

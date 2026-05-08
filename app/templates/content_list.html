@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <a href="{{ url_for('home') }}">Home</a>
+        >
+        <a href="{{ url_for('unit_page', code=unit.code) }}">
+            {{ unit.code }}
+        </a>
+        >
+        <span>{{ content_type.title() }}</span>
+    </div>
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1>
+            {{ unit.code }} {{ content_type.title() }}
+        </h1>
+
+        <p>
+            {% if content_type == "discussions" %}
+                Ask questions and help other students.
+            {% elif content_type == "projects" %}
+                Explore past student projects and ideas.
+            {% elif content_type == "reviews" %}
+                Read reviews from previous students.
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- SEARCH -->
+    <form method="GET" class="search-bar">
+        <input
+            type="search"
+            name="search"
+            placeholder="Search {{ content_type }}..."
+            value="{{ request.args.get('search', '') }}"
+        >
+    </form>
+
+    <!-- CONTENT LIST -->
+    <div class="content-list">
+
+        {% if items %}
+
+            {% for item in items %}
+
+                {% if content_type == "discussions" %}
+                    {% include "partials/discussion_card.html" %}
+                {% elif content_type == "projects" %}
+                    {% include "partials/project_card.html" %}
+                {% elif content_type == "reviews" %}
+                    {% include "partials/review_card.html" %}
+                {% endif %}
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+                <h3>No {{ content_type }} to see yet :-(</h3>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
