@@ -4,3 +4,6 @@ venv/
 env/
 ENV/
 .agile/
+app.db
+__pycache__/
+app/__pycache__/

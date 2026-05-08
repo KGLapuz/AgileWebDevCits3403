@@ -1,126 +1,254 @@
-from models import Unit, Discussion, Project, User
-from datetime import datetime
-from fake_db import *
-from flask import Flask, render_template, request, jsonify, session
+from app import app, db
+from app.models import *
 
-app = Flask(__name__)
-app.secret_key = "dev"
+from flask import (
+    render_template,
+    request,
+    jsonify,
+    session
+)
+
+
+# -------------------------------------------------
+# GLOBAL TEMPLATE FUNCTIONS
+# -------------------------------------------------
 
 @app.context_processor
 def inject_globals():
-    return dict(get_user=get_user)
 
-# -------------------------
-# setting logged-in user for testing purposes
-# -------------------------
-@app.route("/set_user", methods=["POST"])
-def set_user():
-    user_id = int(request.json.get("user_id"))
-    session["user_id"] = user_id
-    return jsonify({"success": True})
+    return dict(
+        current_user_id=get_current_user(),
+        current_user=get_current_user_obj()
+    )
+
+
+# -------------------------------------------------
+# HELPER FUNCTIONS
+# -------------------------------------------------
+
+def get_user(user_id):
+    return User.query.get(user_id)
+
 
 def get_current_user():
-    return session.get("user_id", 1)  # default = 1
+    return session.get("user_id", 1)
+
 
 def get_current_user_obj():
-    return get_user(get_current_user())
+    return User.query.get(get_current_user())
 
-# -----------------------------------------------------------------------------------------------------
-# MAMBWE trying out some functions in flask. DO NOT DELETE
+
+# -------------------------------------------------
+# TEST LOGIN ROUTE
+# -------------------------------------------------
+
+@app.route("/set_user", methods=["POST"])
+def set_user():
+
+    user_id = int(request.json.get("user_id"))
+
+    user = User.query.get(user_id)
+
+    if not user:
+        return jsonify({
+            "error": "User not found"
+        }), 404
+
+    session["user_id"] = user_id
+
+    return jsonify({
+        "success": True
+    })
+
+
+# -------------------------------------------------
+# HOME PAGE
+# -------------------------------------------------
+
 @app.route("/")
 def home():
-    return render_template("home.html", units=units)  # pass units list to template
+
+    units = Unit.query.order_by(Unit.code).all()
+
+    return render_template(
+        "home.html",
+        units=units
+    )
+
+
+# -------------------------------------------------
+# UNIT PAGE
+# -------------------------------------------------
 
 @app.route("/unit/<code>")
 def unit_page(code):
-    unit = get_unit(code)
-    reviews = get_reviews_for_unit(code)
-    discussions = get_discussions_for_unit(code)
-    projects = get_projects_for_unit(code)
+
+    unit = Unit.query.get_or_404(code)
 
     return render_template(
         "unit_page.html",
         unit=unit,
-        reviews=reviews,
-        discussions=discussions,
-        projects=projects
+
+        # Sort reviews, discussions, and projects by creation date (newest first)
+        reviews = sorted(
+            unit.reviews,
+            key=lambda r: r.created_at,
+            reverse=True
+        ),
+
+        discussions = sorted(
+            unit.discussions,
+            key=lambda d: d.created_at,
+            reverse=True
+        ),
+
+        projects = sorted(
+            unit.projects,
+            key=lambda p: p.created_at,
+            reverse=True
+        )
     )
-    
+
+
+# -------------------------------------------------
+# DISCUSSION THREAD
+# -------------------------------------------------
+
 @app.route("/discussion/<int:discussion_id>")
 def discussion_thread(discussion_id):
 
-    discussion = next(d for d in discussions if d.discussion_id == discussion_id)
-    
-    comments_tree = build_comment_tree(discussion.comments)
-    
-    unit = get_unit(discussion.unit_code)
+    discussion = Discussion.query.get_or_404(
+        discussion_id
+    )
+
+    comments_tree = build_comment_tree(
+        discussion.comments
+    )
 
     return render_template(
         "discussion_thread.html",
         discussion=discussion,
-        unit=unit,
+        unit=discussion.unit,
         comments=comments_tree,
         current_user_id=get_current_user()
     )
-    
+
+
+# -------------------------------------------------
+# BUILD NESTED COMMENT TREE
+# -------------------------------------------------
+
 def build_comment_tree(comments):
 
     comment_map = {}
 
-    # create lookup + clear replies
-    for c in comments:
-        c.replies = []
-        comment_map[c.comment_id] = c
+    # Clear temporary replies lists
+    for comment in comments:
+
+        comment.replies_cache = []
+
+        comment_map[comment.comment_id] = comment
 
     root_comments = []
 
-    for c in comments:
+    for comment in comments:
 
-        # top-level comment
-        if c.parent_comment_id is None:
-            root_comments.append(c)
+        if comment.parent_comment_id is None:
+
+            root_comments.append(comment)
 
         else:
-            parent = comment_map.get(c.parent_comment_id)
 
-            # IMPORTANT: prevent self-reference
-            if parent and parent.comment_id != c.comment_id:
-                parent.replies.append(c)
+            parent = comment_map.get(
+                comment.parent_comment_id
+            )
+
+            # Prevent self-reference
+            if (
+                parent and
+                parent.comment_id != comment.comment_id
+            ):
+                parent.replies_cache.append(comment)
 
     return root_comments
 
+
+# -------------------------------------------------
+# CREATE REVIEW
+# -------------------------------------------------
+
 @app.route("/create_review/<unit_code>", methods=["POST"])
 def create_review(unit_code):
-    # This is just a placeholder to show how we might handle form submissions
-    # In a real app, you'd get these from request.form and validate them
+
+    unit = Unit.query.get_or_404(unit_code)
+
     author_id = get_current_user()
+
+    # placeholder values
     rating = 5
     workload = 3
     content = "This is a great unit!"
 
-    add_review(unit_code, author_id, rating, workload, content)
+    review = Review(
+        unit_code=unit.code,
+        author_id=author_id,
+        rating=rating,
+        workload=workload,
+        content=content
+    )
 
-    return "Review added!"  # In reality, you'd redirect back to the unit page
+    db.session.add(review)
 
-# routing for comments and replies to comments
+    db.session.commit()
+
+    return jsonify({
+        "success": True
+    })
+
+
+# -------------------------------------------------
+# ADD COMMENT / REPLY
+# -------------------------------------------------
+
 @app.route("/add_comment", methods=["POST"])
 def add_comment_route():
+
     data = request.get_json()
 
-    discussion_id = int(data.get("discussion_id"))
+    discussion_id = int(
+        data.get("discussion_id")
+    )
+
     content = data.get("content")
+
     parent_id = data.get("parent_id")
-    
-    # parent_id will be None for top-level comments, but if it's provided, we should convert it to int
+
     if parent_id is not None:
         parent_id = int(parent_id)
 
-    discussion = next((d for d in discussions if d.discussion_id == discussion_id), None)
+    discussion = Discussion.query.get(
+        discussion_id
+    )
 
     if not discussion or not content:
-        return jsonify({"error": "Invalid"}), 400
 
-    new_comment = add_comment(discussion, get_current_user(), content, parent_id)
+        return jsonify({
+            "error": "Invalid"
+        }), 400
+
+    new_comment = Comment(
+        discussion_id=discussion_id,
+        comment_author_id=get_current_user(),
+        content=content,
+        parent_comment_id=parent_id
+    )
+
+    db.session.add(new_comment)
+
+    db.session.commit()
+    
+    # Set up an empty replies cache for the new comment so jinja renders correctly
+    new_comment.replies_cache = []
 
     html = render_template(
         "partials/comment.html",
@@ -133,9 +261,3 @@ def add_comment_route():
         "html": html,
         "parent_id": parent_id
     })
-
-# route to specific static files (e.g. JS, CSS)
-@app.route("/static/<path:filename>")
-def serve_static(filename):
-    return app.send_static_file(filename)
-# -----------------------------------------------------------------------------------------------------

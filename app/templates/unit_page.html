@@ -1,158 +1,314 @@
 {% extends "base.html" %}
 
-{% block title %}{{ unit.code }}{% endblock %}
+{% block title %}
+    {{ unit.code }}
+{% endblock %}
+
 
 {% block styles %}
-<link href="{{ url_for('static', filename='unit_page.css') }}" rel="stylesheet">
+<link
+    href="{{ url_for('static', filename='unit_page.css') }}"
+    rel="stylesheet">
 {% endblock %}
+
 
 {% block content %}
 
 <div class="container mt-5 pt-5">
 
     <!-- ========================= -->
-    <!-- TAGS ROW -->
+    <!-- TAGS -->
     <!-- ========================= -->
-    <div class="mb-3">
-        {% for tag in unit.tags %}
-            <span class="badge bg-secondary me-1">{{ tag }}</span>
-        {% endfor %}
-    </div>
+
+    {% if unit.tags %}
+
+        <div class="mb-3">
+
+            {% for tag in unit.tags %}
+
+                <span class="badge bg-secondary me-1">
+                    {{ tag }}
+                </span>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
 
 
+
     <!-- ========================= -->
-    <!-- MAIN SPLIT SECTION -->
+    <!-- MAIN SECTION -->
     <!-- ========================= -->
+
     <div class="row align-items-stretch">
 
-        <!-- LEFT (60%) -->
+        <!-- LEFT -->
         <div class="col-md-7 d-flex">
+
             <div class="card p-4 flex-fill">
 
-                <h1 class="fw-bold">{{ unit.code }}</h1>
-                <h5 class="text-muted mb-3">{{ unit.name }}</h5>
+                <h1 class="fw-bold">
+                    {{ unit.code }}
+                </h1>
+
+                <h5 class="text-muted mb-3">
+                    {{ unit.name }}
+                </h5>
 
                 <p>
+
                     For official UWA unit info
-                    <a href="{{ unit.handbook_link }}" target="_blank">click here</a>
+
+                    <a
+                        href="{{ unit.handbook_link }}"
+                        target="_blank">
+
+                        click here
+
+                    </a>
+
                 </p>
 
+
+                <!-- Recent Reviews Preview -->
                 <ul class="mt-4">
+
                     {% for review in reviews[:4] %}
+
                         <li>
-                            > {{ review.created_at.strftime("%d/%m") }} -
+
+                            {{ review.created_at.strftime("%d/%m") }}
+                            -
+
                             {{ review.content[:80] }}...
+
                         </li>
+
+                    {% else %}
+
+                        <li class="text-muted">
+                            No reviews yet.
+                        </li>
+
                     {% endfor %}
+
                 </ul>
 
             </div>
+
         </div>
 
 
-        <!-- RIGHT (40%) -->
+
+        <!-- RIGHT -->
         <div class="col-md-5 d-flex flex-column gap-3">
 
-            <!-- Rating Card -->
+            <!-- Rating -->
             <div class="card p-3 text-center flex-fill">
-                <h6 class="text-muted">Average Rating</h6>
-                <h2>{{ unit.rating }}</h2>
+
+                <h6 class="text-muted">
+                    Average Rating
+                </h6>
+
+                <h2>
+                    {{ "%.1f"|format(unit.rating) }}
+                </h2>
+
             </div>
 
-            <!-- Workload Card -->
+
+            <!-- Workload -->
             <div class="card p-3 text-center flex-fill">
-                <h6 class="text-muted">Average Workload</h6>
-                <h2>{{ unit.workload }}</h2>
+
+                <h6 class="text-muted">
+                    Average Workload
+                </h6>
+
+                <h2>
+                    {{ "%.1f"|format(unit.workload) }}
+                </h2>
+
             </div>
 
-            <!-- Graph Card -->
+
+            <!-- Graph -->
             <div class="card p-3 flex-fill">
-                <h6 class="text-muted text-center">Rating vs Workload</h6>
+
+                <h6 class="text-muted text-center">
+                    Rating vs Workload
+                </h6>
+
                 <canvas id="ratingWorkloadChart"></canvas>
+
             </div>
 
         </div>
+
     </div>
 
 
+
     <!-- ========================= -->
-    <!-- CARDS ROW -->
+    <!-- CONTENT CARDS -->
     <!-- ========================= -->
+
     <div class="row mt-4 g-3">
+
 
         <!-- DISCUSSIONS -->
         <div class="col-md-4">
-            <a href="#" class="text-decoration-none text-dark"> 
-                {# {{ url_for('unit_discussions', code=unit.code) }} #}
+
+            <a
+                href="#"
+                class="text-decoration-none text-dark">
+
                 <div class="card p-3 h-100">
-                    <h5>Discussions</h5>
+
+                    <h5>
+                        Discussions
+                    </h5>
 
                     <ul class="mt-2">
+
                         {% for d in discussions[:5] %}
+
                             <li>
-                                {{ d.created_at.strftime("%Hh ago") }} -
+
+                                {{ d.created_at.strftime("%d %b") }}
+                                -
+
                                 {{ d.title[:50] }}
+
                             </li>
+
+                        {% else %}
+
+                            <li class="text-muted">
+                                No discussions yet.
+                            </li>
+
                         {% endfor %}
+
                     </ul>
 
                 </div>
+
             </a>
+
         </div>
+
+
 
         <!-- PROJECTS -->
         <div class="col-md-4">
-            <a href="#" class="text-decoration-none text-dark">
-                {# {{ url_for('unit_projects', code=unit.code) }} #}
+
+            <a
+                href="#"
+                class="text-decoration-none text-dark">
+
                 <div class="card p-3 h-100">
-                    <h5>Projects</h5>
+
+                    <h5>
+                        Projects
+                    </h5>
 
                     <ul class="mt-2">
+
                         {% for p in projects[:5] %}
+
                             <li>
-                                {{ p.created_at.strftime("%d %b") }} -
+
+                                {{ p.created_at.strftime("%d %b") }}
+                                -
+
                                 {{ p.title[:50] }}
+
                             </li>
+
+                        {% else %}
+
+                            <li class="text-muted">
+                                No projects yet.
+                            </li>
+
                         {% endfor %}
+
                     </ul>
 
                 </div>
+
             </a>
+
         </div>
+
+
 
         <!-- REVIEWS -->
         <div class="col-md-4">
-            <a href="#" class="text-decoration-none text-dark">
-                {# {{ url_for('unit_reviews', code=unit.code) }} #}
+
+            <a
+                href="#"
+                class="text-decoration-none text-dark">
+
                 <div class="card p-3 h-100">
-                    <h5>Reviews</h5>
+
+                    <h5>
+                        Reviews
+                    </h5>
 
                     <ul class="mt-2">
+
                         {% for r in reviews[4:9] %}
+
                             <li>
-                                {{ r.created_at.strftime("%d/%m") }} -
+
+                                {{ r.created_at.strftime("%d/%m") }}
+                                -
+
                                 {{ r.content[:50] }}
+
                             </li>
+
+                        {% else %}
+
+                            <li class="text-muted">
+                                No additional reviews.
+                            </li>
+
                         {% endfor %}
+
                     </ul>
 
                 </div>
+
             </a>
+
         </div>
 
     </div>
+
 
 
     <!-- ========================= -->
     <!-- CTA -->
     <!-- ========================= -->
+
     <div class="text-center mt-5">
-        <a href="#" class="text-decoration-none">
-            {# {{ url_for('write_review', code=unit.code) }} #}
+
+        <a
+            href="{{ url_for('create_review', unit_code=unit.code) }}"
+            class="text-decoration-none">
+
             <button class="btn btn-primary btn-lg">
+
                 Write a Review for {{ unit.code }}
+
             </button>
+
         </a>
+
     </div>
 
 </div>
@@ -160,40 +316,78 @@
 {% endblock %}
 
 
+
 {% block scripts %}
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Unit Page CSS -->
-<link href="{{ url_for('static', filename='unit_page.css') }}" rel="stylesheet">
 
 <script>
+
 const ctx = document.getElementById('ratingWorkloadChart');
 
 new Chart(ctx, {
+
     type: 'scatter',
+
     data: {
+
         datasets: [{
+
             label: 'Reviews',
+
             data: [
+
                 {% for r in reviews %}
-                    { x: {{ r.workload }}, y: {{ r.rating }} },
+
+                    {
+                        x: {{ r.workload }},
+                        y: {{ r.rating }}
+                    },
+
                 {% endfor %}
+
             ]
+
         }]
+
     },
+
     options: {
+
         scales: {
+
             x: {
-                title: { display: true, text: 'Workload' }
+
+                title: {
+                    display: true,
+                    text: 'Workload'
+                },
+
+                min: 0,
+                max: 5
+
             },
+
             y: {
-                title: { display: true, text: 'Rating' }
+
+                title: {
+                    display: true,
+                    text: 'Rating'
+                },
+
+                min: 0,
+                max: 5
+
             }
+
         }
+
     }
+
 });
+
 </script>
 
 {% endblock %}

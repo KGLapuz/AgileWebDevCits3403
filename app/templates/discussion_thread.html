@@ -10,46 +10,74 @@
 
 <div id="thread-root"
      data-discussion-id="{{ discussion.discussion_id }}"
-     data-current-user="{{ current_user_id}}"
+     data-current-user="{{ current_user_id }}"
      class="container mt-5 pt-5 thread-container">
 
     <!-- BREADCRUMB -->
     <div class="breadcrumb">
         <p>
             <a href="{{ url_for('home') }}">Home</a> >
-            <a href="{{ url_for('unit_page', code=unit.code) }}">{{ unit.code }}</a> >
-            Discussions > Thread
+            <a href="{{ url_for('unit_page', code=unit.code) }}">
+                {{ unit.code }}
+            </a> > Discussions > Thread
         </p>
     </div>
 
     <!-- ORIGINAL POST -->
     <div class="card p-4 mb-4">
+
         <div class="thread-sticky">
             <h3>{{ discussion.title }}</h3>
         </div>
 
         <p class="meta">
+
             Posted by
+
             {% if discussion.author_id == current_user_id %}
                 You
             {% else %}
-                {{ get_user(discussion.author_id).username }}
+                {{ discussion.author.username }}
             {% endif %}
-            • <time class="relative-time" datetime="{{ discussion.created_at.isoformat() }}"></time> 
-            • {{ discussion.reply_count() }} replies
+
+            •
+
+            <time
+                class="relative-time"
+                datetime="{{ discussion.created_at.isoformat() }}">
+            </time>
+
+            •
+
+            {{ discussion.reply_count }} replies
+
         </p>
 
         <p>{{ discussion.body }}</p>
+
+    </div>
+
+
+    <!-- ADD COMMENT -->
+    <div class="card p-3 mt-4">
+
+        <textarea
+            id="new-comment"
+            class="form-control mb-2"
+            placeholder="Chip in and share your thoughts...">
+        </textarea>
+
+        <button
+            id="post-comment-btn"
+            class="btn btn-primary">
+
+            Post Comment
+
+        </button>
+
     </div>
 
     <!-- COMMENTS -->
-
-        <!-- ADD COMMENT -->
-    <div class="card p-3 mt-4">
-        <textarea id="new-comment" class="form-control mb-2" placeholder="Chip in and share your thoughts..."></textarea>
-        <button id="post-comment-btn" class="btn btn-primary">Post Comment</button>
-    </div>
-
     <div class="comments-section">
 
         {% for comment in comments %}
