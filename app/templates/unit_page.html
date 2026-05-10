@@ -59,13 +59,13 @@
 
                 <p>
 
-                    For official UWA unit info
+                    For more information check out UWA's official 
 
                     <a
                         href="{{ unit.handbook_link }}"
                         target="_blank">
 
-                        click here
+                        website
 
                     </a>
 
@@ -73,25 +73,21 @@
 
 
                 <!-- Recent Reviews Preview -->
-                <ul class="mt-4">
+                <ul class="recent-reviews-list mt-4">
+                    {% for review in reviews[:2] %}
 
-                    {% for review in reviews[:4] %}
+                        <li class="review-wide-card">
+                            <span class="review-date">
+                            {{ review.created_at.strftime("%d/%B") }}
+                            </span>
 
-                        <li>
-
-                            {{ review.created_at.strftime("%d/%m") }}
-                            -
-
-                            {{ review.content[:80] }}...
+                            <span class="review-rating">
+                                {{ review.content[:100] }}...
+                            </span>
 
                         </li>
-
                     {% else %}
-
-                        <li class="text-muted">
-                            No reviews yet.
-                        </li>
-
+                        <li class="text-muted">No reviews have been left yet.</li>
                     {% endfor %}
 
                 </ul>
@@ -106,37 +102,42 @@
         <div class="col-md-5 d-flex flex-column gap-3">
 
             <!-- Rating -->
-            <div class="card p-3 text-center flex-fill">
+            <div class="card p-3 text-start flex-fill rating-card">
+                <h6 class="text-muted">Average Rating</h6>
 
-                <h6 class="text-muted">
-                    Average Rating
-                </h6>
+                <div class="rating-info">
+                    <h2 class="fw-bold">{{ "%.1f"|format(unit.rating) }}</h2>
 
-                <h2>
-                    {{ "%.1f"|format(unit.rating) }}
-                </h2>
-
+                    <div class="rating-stars">
+                        {% for i in range(1, 6) %}
+                            <span class="star {% if unit.rating >= i %}filled{% endif %}">⭐️</span>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
-
             <!-- Workload -->
-            <div class="card p-3 text-center flex-fill">
+            <div class="card p-3 text-start flex-fill rating-card">
+                <h6 class="text-muted">Average Workload (hours)</h6>
 
-                <h6 class="text-muted">
-                    Average Workload
-                </h6>
+                <div class="rating-info">
+                    <h2 class="fw-bold">{{ "%.1f"|format(unit.workload) }}</h2>
 
-                <h2>
-                    {{ "%.1f"|format(unit.workload) }}
-                </h2>
-
+                    <div class="workload-icon">
+                        {% for i in range(1, 6) %}
+                            <span style="font-size: 2rem; color: black; opacity: {% if unit.workload >= i %}1{% else %}0.2{% endif %};">
+                            ⏳
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
 
             <!-- Graph -->
             <div class="card p-3 flex-fill">
 
-                <h6 class="text-muted text-center">
+                <h6 class="chart-main-title text-center">
                     Rating vs Workload
                 </h6>
 
@@ -145,9 +146,6 @@
             </div>
 
         </div>
-
-    </div>
-
 
 
     <!-- ========================= -->
@@ -289,105 +287,56 @@
 
     </div>
 
-
-
-    <!-- ========================= -->
-    <!-- CTA -->
-    <!-- ========================= -->
-
     <div class="text-center mt-5">
 
-        <a
-            href="{{ url_for('create_review', unit_code=unit.code) }}"
-            class="text-decoration-none">
-
-            <button class="btn btn-primary btn-lg">
-
-                Write a Review for {{ unit.code }}
-
-            </button>
-
-        </a>
-
+         <a href="{{ url_for('create_review', unit_code=unit.code) }}"
+                class="text-decoration-none">
+                <button class="btn btn-primary btn-lg">
+                    Write a Review for {{ unit.code }}
+                </button>
+            </a>
+        </div>
     </div>
 
-</div>
-
-{% endblock %}
+</div>{% endblock %}
 
 
+    <!-- ========================= -->
+    <!-- JS -->
+    <!-- ========================= -->
 
 {% block scripts %}
-
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
 <script>
-
 const ctx = document.getElementById('ratingWorkloadChart');
 
 new Chart(ctx, {
-
-    type: 'scatter',
-
+    type: 'bar',
     data: {
-
+        labels: ['Average Rating', 'Average Workload'],
         datasets: [{
-
-            label: 'Reviews',
-
-            data: [
-
-                {% for r in reviews %}
-
-                    {
-                        x: {{ r.workload }},
-                        y: {{ r.rating }}
-                    },
-
-                {% endfor %}
-
-            ]
-
+            label: 'Unit Scores',
+            data: [{{ unit.rating }}, {{ unit.workload }}], 
+            backgroundColor: [
+                'rgba(0, 48, 135, 0.8)', 
+                'rgba(226, 182, 0, 0.8)' 
+            ],
+            borderRadius: 10
         }]
-
     },
-
     options: {
-
+        indexAxis: 'y',
         scales: {
-
             x: {
-
-                title: {
-                    display: true,
-                    text: 'Workload'
-                },
-
                 min: 0,
-                max: 5
-
-            },
-
-            y: {
-
-                title: {
-                    display: true,
-                    text: 'Rating'
-                },
-
-                min: 0,
-                max: 5
-
+                max: 5, 
+                ticks: { stepSize: 1 }
             }
-
+        },
+        plugins: {
+            legend: { display: false }
         }
-
     }
-
 });
-
 </script>
-
 {% endblock %}

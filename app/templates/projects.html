@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}{{ unit.code }} Projects - UniReviews{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='project_static.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="project-page">
+    <div class="page-container">
+        <div class="breadcrumbs">
+            <a href="{{ url_for('home') }}">Home</a> &gt; 
+            <a href="{{ url_for('unit_page', code=unit.code) }}">{{ unit.code }}</a> &gt; 
+            Projects
+        </div>
+
+        <h1 class="unit-title">{{ unit.code }}: {{ unit.name }}</h1>
+        <p class="subtitle">Past Students Projects</p>
+
+        <section class="projects">
+            <div class="upload-section">
+                <input type="file" id="pdf-upload" accept="application/pdf" hidden>
+                <button id="upload-btn">Upload Your Project</button>
+                <div id="drop-area">
+                    Drag &amp; drop your PDF here or 
+                    <span class="upload-link">click to upload</span>
+                </div>
+                <p id="file-name"></p>
+            </div>
+
+            <h2 class="section-title">Past Students Projects</h2>
+
+            <div class="projects-grid">
+                {% include 'partials/project_card.html' %}
+                {% include 'partials/project_card.html' %}
+                {% include 'partials/project_card.html' %}
+
+                {# Comment out the real logic temporarily
+                {% if items %}
+                    {% for item in items %}
+                        {% include 'partials/project_card.html' %}
+                    {% endfor %}
+                {% endif %}
+                #}
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='project.js') }}"></script>
+{% endblock %}
