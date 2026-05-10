@@ -1,38 +1,43 @@
-from flask import Flask, session, redirect, \
-url_for, request, render_template
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import DataRequired, Email, Length, Regexp, ValidationError
+from config import Config
 
 app = Flask(__name__)
-app.secret_key = 'mysecret'
 
-TEST_DATA = {
-    "admin": "password123",
-}
+app.config.from_object(Config)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+db = SQLAlchemy(app)
 
-@app.route('/log_in_page.html',methods=['GET','POST'])
-def login():
-    error = None
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(256), nullable=False)
 
-        if email in TEST_DATA and TEST_DATA[email] == password:
-            session['user'] = email
-            return redirect(url_for('dashboard'))
-        else:
-            error = "Incorrect username or password. Please try again."
+class RegistrationForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=2,max=20)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[
+        DataRequired(),
+        Regexp(r'^(?=.*[A-Z])(?=.*[a-z](?=.\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$)',
+               message="Password must be 8+ chars, have 1 uppercase, 1 lowercase, 1 number, and 1 special char.")
+    ])
+    submit_signup = SubmitField('Sign Up')
 
-    return render_template('log_in_page.html' , error=error)
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError('Username is already taken.')
+        
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            ValidationError('Email is already registered.')
 
-@app.route('/dashboard')
-def dashboard():
-    if 'user' in session:
-        return f"<h1>Success!</h1><p>Welcome to the dashboard, {session['user']}.</p><a href='/logout'>Logout</a>"
-    
-    return redirect(url_for('login'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit_login = SubmitField('Sign in')

@@ -17,6 +17,8 @@ body {
     display: flex;
     text-align: center;
     flex-direction: column;
+    width: 100%;
+    max-width: 400px;
 }
 
 .greetings h2 {
@@ -30,6 +32,7 @@ body {
     margin: 0;
     border-radius: 20px;
     box-shadow: 0 4px 8px 4px rgba(0,0,0,0.2);
+    width: 100%;
 }
 
 .credentials, .Credentials {
@@ -38,7 +41,9 @@ body {
 
 .email, .password, .UserName, .Email {
     margin: 5px;
-    padding-bottom: 15px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
 }
 
 .email p, .password p, .UserName p, .Email p {
@@ -55,7 +60,7 @@ input {
     width: 100%
 }
 
-button {
+.button {
     width: 100%;
     margin-top: 20px;
     border-radius: 8px;
@@ -124,4 +129,39 @@ button {
     cursor: pointer;
     color: #aaa;
     line-height: 1;
+}
+
+.error-text {
+    color: #b4424d;
+    font-size: 0.85rem;
+    margin-top: 2px;
+    font-weight:bold;
+    line-height: 1.2;
+    word-wrap: break-word;
+}
+
+.flash-msg {
+    padding: 10px; 
+    margin-bottom: 20px;
+    border-radius: 4px;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.flash-msg-container {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.flash-error {
+    background-color: #fff2f3;
+    color: #721c24;
+    border: 1px solid #b2757b
+}
+
+.flash-success {
+    background-color: #d4edda;
+    color: #10832b;
+    border: 1px solid #355d3e
 }

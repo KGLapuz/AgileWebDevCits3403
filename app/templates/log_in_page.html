@@ -17,18 +17,36 @@
             <h2>UniReviews</h2>
             <p>Shares Your Experience</p>
         </div>
+
         <form class="login-container" action="{{url_for('login')}}" method="POST">
+            {{ login_form.hidden_tag() }} 
+            <div class="flash-msg-container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
             <div class="credentials">
                 <div class="email">
                     <p>Email</p>
-                    <input type="text" name="email" placeholder="user@gmail.com" required/>
+                    {{ login_form.email(placeholder="user@gmail.com") }}
+                    {% for error in login_form.email.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
                 </div>
                 <div class="password">
                     <p>Password</p>
-                    <input type="password" name="password" placeholder="••••••••" required/>
+                    {{ login_form.password(placeholder="••••••••") }}
+                    {% for error in login_form.password.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
                 </div>
             </div>
-            <button type="submit">Sign in</button>
+            {{ login_form.submit_login(class="button") }}
         </form>
         <p class="signup-popup" onclick="popupSignup()">Don't Have an account? Sign up now</p>
     </div>
@@ -37,22 +55,32 @@
             <span class="close" onclick="closeSignUp()">&times;</span>
             <h2>Create Account</h2>
             
-            <form class="SignUp-container">
+            <form class="SignUp-container" action="{{ url_for('login')}}" method="POST">
+                {{ signup_form.hidden_tag() }}
             <div class="Credentials">
                 <div class="UserName">
                     <p>Username</p>
-                    <input type="text" name="UserName" placeholder="Username" required/>
+                    {{ signup_form.username(placeholder="Username") }}
+                    {% for error in signup_form.username.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
                 </div>
                 <div class="Email">
                     <p>Email</p>
-                    <input type="text" name="email" placeholder="user@gmail.com"/>
+                    {{ signup_form.email(placeholder="user@gmail.com") }}
+                    {% for error in signup_form.email.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
                 </div>
                  <div class="password">
                     <p>Password</p>
-                    <input type="password" name="password" placeholder="••••••••" required/>
+                    {{ signup_form.password(placeholder="••••••••") }}
+                    {% for error in signup_form.password.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
                 </div>
             </div>
-            <button type="submit" class="signup-btn">Sign Up</button>
+            {{ signup_form.submit_signup(class="signup-btn button") }}
             </form>
         </div>
     </div>
