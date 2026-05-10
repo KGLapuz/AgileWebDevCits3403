@@ -18,7 +18,7 @@
             <p>Shares Your Experience</p>
         </div>
 
-        <form class="login-container" action="{{url_for('login')}}" method="POST">
+        <form class="login-container" action="{{url_for('main.login')}}" method="POST">
             {{ login_form.hidden_tag() }} 
             <div class="flash-msg-container">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -55,7 +55,7 @@
             <span class="close" onclick="closeSignUp()">&times;</span>
             <h2>Create Account</h2>
             
-            <form class="SignUp-container" action="{{ url_for('login')}}" method="POST">
+            <form class="SignUp-container" action="{{ url_for('main.login')}}" method="POST">
                 {{ signup_form.hidden_tag() }}
             <div class="Credentials">
                 <div class="UserName">

@@ -1,5 +1,9 @@
-from app import app, db
-from app.models import *
+from . import db
+from .models import *
+from .controllers import user_registration, verify_login
+from flask import url_for, redirect, flash, render_template,session, Blueprint
+from .log_in_page import RegistrationForm, LoginForm, User
+import os
 
 from flask import (
     render_template,
@@ -8,12 +12,13 @@ from flask import (
     session
 )
 
+main = Blueprint('main', __name__)
 
 # -------------------------------------------------
 # GLOBAL TEMPLATE FUNCTIONS
 # -------------------------------------------------
 
-@app.context_processor
+@main.context_processor
 def inject_globals():
 
     return dict(
@@ -42,7 +47,7 @@ def get_current_user_obj():
 # TEST LOGIN ROUTE
 # -------------------------------------------------
 
-@app.route("/set_user", methods=["POST"])
+@main.route("/set_user", methods=["POST"])
 def set_user():
 
     user_id = int(request.json.get("user_id"))
@@ -65,22 +70,15 @@ def set_user():
 # HOME PAGE
 # -------------------------------------------------
 
-@app.route("/")
-def home():
-
-    units = Unit.query.order_by(Unit.code).all()
-
-    return render_template(
-        "home.html",
-        units=units
-    )
-
+@main.route('/')
+def index():
+    return render_template('index.html')
 
 # -------------------------------------------------
 # UNIT PAGE
 # -------------------------------------------------
 
-@app.route("/unit/<code>")
+@main.route("/unit/<code>")
 def unit_page(code):
 
     unit = Unit.query.get_or_404(code)
@@ -114,7 +112,7 @@ def unit_page(code):
 # DISCUSSION THREAD
 # -------------------------------------------------
 
-@app.route("/discussion/<int:discussion_id>")
+@main.route("/discussion/<int:discussion_id>")
 def discussion_thread(discussion_id):
 
     discussion = Discussion.query.get_or_404(
@@ -177,7 +175,7 @@ def build_comment_tree(comments):
 # CREATE REVIEW
 # -------------------------------------------------
 
-@app.route("/create_review/<unit_code>", methods=["POST"])
+@main.route("/create_review/<unit_code>", methods=["POST"])
 def create_review(unit_code):
 
     unit = Unit.query.get_or_404(unit_code)
@@ -210,7 +208,7 @@ def create_review(unit_code):
 # ADD COMMENT / REPLY
 # -------------------------------------------------
 
-@app.route("/add_comment", methods=["POST"])
+@main.route("/add_comment", methods=["POST"])
 def add_comment_route():
 
     data = request.get_json()
@@ -265,7 +263,7 @@ def add_comment_route():
 
 # -------------------------------------------------
 # PLACEHOLDER ROUTES FOR DISCUSSIONS, REVIEWS, AND PROJECTS PAGES
-@app.route("/<unit_code>/discussions")
+@main.route("/<unit_code>/discussions")
 def unit_discussions(unit_code):
 
     unit = Unit.query.get_or_404(unit_code)
@@ -294,7 +292,7 @@ def unit_discussions(unit_code):
         page_title=f"{unit.code} Discussions"
     )
 
-@app.route("/<unit_code>/projects")
+@main.route("/<unit_code>/projects")
 def unit_projects(unit_code):
 
     unit = Unit.query.get_or_404(unit_code)
@@ -323,7 +321,7 @@ def unit_projects(unit_code):
         page_title=f"{unit.code} Projects"
     )
 
-@app.route("/projects/<int:project_id>")
+@main.route("/projects/<int:project_id>")
 def project_detail(project_id):
 
     project = Project.query.get_or_404(project_id)
@@ -334,7 +332,7 @@ def project_detail(project_id):
     )
     
     
-@app.route("/<unit_code>/reviews")
+@main.route("/<unit_code>/reviews")
 def unit_reviews(unit_code):
 
     unit = Unit.query.get_or_404(unit_code)
@@ -359,3 +357,35 @@ def unit_reviews(unit_code):
         content_type="reviews",
         page_title=f"{unit.code} Reviews"
     )
+
+@main.route('/log_in_page.html', methods=['GET','POST'])
+def login():
+    login_form = LoginForm()
+    signup_form = RegistrationForm()
+
+    # This handles the signup post
+    if signup_form.submit_signup.data and signup_form.validate_on_submit():
+        user_registration(signup_form)
+        return redirect(url_for('main.login'))
+
+    # This handles the login post
+    if login_form.submit_login.data and login_form.validate_on_submit():
+        user = verify_login(login_form.email.data, login_form.password.data)
+        if user:
+            session['user'] = user.username
+            return redirect(url_for('main.dashboard'))
+        flash('Login Unsuccessful. Please Check email and password', 'error')
+    return render_template('log_in_page.html', login_form=login_form, signup_form=signup_form)
+
+@main.route('/dashboard')
+def dashboard():
+    if 'user' not in session:
+        return redirect(url_for('main.login'))
+    
+    return render_template('dashboard.html')
+
+@main.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('main.login'))
+

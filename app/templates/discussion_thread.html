@@ -16,8 +16,8 @@
     <!-- BREADCRUMB -->
     <div class="breadcrumb">
         <p>
-            <a href="{{ url_for('home') }}">Home</a> >
-            <a href="{{ url_for('unit_page', code=unit.code) }}">
+            <a href="{{ url_for('main.index') }}">Home</a> >
+            <a href="{{ url_for('main.unit_page', code=unit.code) }}">
                 {{ unit.code }}
             </a> > Discussions > Thread
         </p>

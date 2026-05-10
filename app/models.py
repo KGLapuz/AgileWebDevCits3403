@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from enum import Enum
 
-from app import db
+from . import db
 
 
 # -------------------------------------------------
@@ -24,7 +24,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
 
     username = db.Column(
-        db.String(64),
+        db.String(20),
         unique=True,
         nullable=False
     )
@@ -36,7 +36,7 @@ class User(db.Model):
     )
 
     password_hash = db.Column(
-        db.String(255),
+        db.String(256),
         nullable=False
     )
 

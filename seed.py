@@ -1,5 +1,6 @@
-from app import db, app
+from app import db, create_app
 from app.models import *
+from werkzeug.security import generate_password_hash
 
 from datetime import datetime
 
@@ -10,6 +11,7 @@ from datetime import datetime
 # Must run inside Flask app context
 # -------------------------
 
+app = create_app()
 with app.app_context():
 
     # -------------------------
@@ -23,14 +25,14 @@ with app.app_context():
     # USERS
     # -------------------------
     users = [
-        User(username="michael", email="m@example.com", password_hash="hash1", role=UserRole.STUDENT),
-        User(username="sarah", email="s@example.com", password_hash="hash2", role=UserRole.STUDENT),
-        User(username="james", email="j@example.com", password_hash="hash3", role=UserRole.MODERATOR),
-        User(username="admin", email="admin@example.com", password_hash="hash4", role=UserRole.ADMIN),
-        User(username="alex", email="alex@example.com", password_hash="hash5", role=UserRole.STUDENT),
-        User(username="bronte", email="bronte@unireviews.com", password_hash="hash6", role=UserRole.ADMIN),
-        User(username="keithlin", email="keithlin@unireviews.com", password_hash="hash7", role=UserRole.MODERATOR),
-        User(username="mambwe", email="mambwe@unireviews.com", password_hash="hash8", role=UserRole.STUDENT),
+        User(username="michael", email="m@example.com", password_hash=generate_password_hash("hash1"), role=UserRole.STUDENT),
+        User(username="sarah", email="s@example.com", password_hash=generate_password_hash("hash2"), role=UserRole.STUDENT),
+        User(username="james", email="j@example.com", password_hash=generate_password_hash("hash3"), role=UserRole.MODERATOR),
+        User(username="admin", email="admin@example.com", password_hash=generate_password_hash("hash4"), role=UserRole.ADMIN),
+        User(username="alex", email="alex@example.com", password_hash=generate_password_hash("hash5"), role=UserRole.STUDENT),
+        User(username="bronte", email="bronte@unireviews.com", password_hash=generate_password_hash("hash6"), role=UserRole.ADMIN),
+        User(username="keithlin", email="keithlin@unireviews.com", password_hash=generate_password_hash("hash7"), role=UserRole.MODERATOR),
+        User(username="mambwe", email="mambwe@unireviews.com", password_hash=generate_password_hash("hash8"), role=UserRole.STUDENT),
     ]
 
     db.session.add_all(users)

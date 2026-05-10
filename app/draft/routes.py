@@ -26,7 +26,7 @@ def login():
     if signup_form.submit_signup.data and signup_form.validate_on_submit():
         hashed_password = generate_password_hash(signup_form.password.data)
         user = User(username=signup_form.username.data,
-                    email = signup_form.emai.data,
+                    email = signup_form.email.data,
                     password = hashed_password)
         db.session.add(user)
         db.session.commit()
