@@ -1,0 +1,93 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Create Discussion</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="../static/stylesheet.css">
+</head>
+
+<body class="create-discussion-page">
+    <!-- NAVBAR (your style) -->
+    <header>
+        <div class="nav-bar">
+            <div class="company-name">
+                <a href="index.html">UniReviews</a>
+            </div>
+            <button>Write a Review</button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container mt-5 pt-5">
+        <!-- BREADCRUMB -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">CITS3403</a></li>
+                <li class="breadcrumb-item"><a href="discussions_page.html">Discussions</a></li>
+                <li class="breadcrumb-item active">Create Discussion</li>
+            </ol>
+        </nav>
+        <!-- HEADER -->
+        <div class="text-center mb-4">
+            <h1 class="fw-bold">Start your Discussion</h1>
+            <p class="text-muted">Ask questions or share insights with other students</p>
+        </div>
+        <!-- FORM CARD -->
+        <div class="card shadow-sm p-4">
+            <form id="create-discussion-form">
+                <!-- TITLE -->
+                <div class="mb-3">
+                    <label for="title" class="form-label">Discussion Title</label>
+                    <input type="text" class="form-control" id="title" maxlength="100" minlength="15" placeholder="e.g. How hard is the final exam?" required>
+                </div>
+                <!-- UNIT SELECT -->
+                <div class="mb-3">
+                    <label for="unit" class="form-label">Unit</label><br>
+                    <p id="Unit name"><b>CITS3403</b></p>
+                </div>
+                <!-- CATEGORY -->
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-select" id="category">
+                        <option>General</option>
+                        <option>Assessments</option>
+                        <option>Lectures</option>
+                        <option>Resources</option>
+                        <option>Labs</option>
+                    </select>
+                </div>
+                <!-- DESCRIPTION -->
+                <div class="mb-3">
+                    <label for="content" class="form-label">Description</label>
+                    <textarea class="form-control" id="content" rows="5" maxlength="1000" minlength="15" placeholder="Lay it all out there..." required></textarea>
+                </div>
+                <!-- ANONYMOUS -->
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="anonymous">
+                    <label class="form-check-label" for="anonymous">
+                        Post anonymously
+                    </label>
+                </div>
+                <!-- SUBMIT -->
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-secondary" onclick="goBack()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Post Discussion</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- FOOTER -->
+    <div class="footer-text mt-5">
+        <p>UniReviews © 2026</p>
+    </div>
+    <!-- JS -->
+    <script src="create_discussion_script.js" defer></script>
+</body>
+</html>

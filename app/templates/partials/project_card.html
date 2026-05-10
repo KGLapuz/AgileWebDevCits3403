@@ -1,0 +1,18 @@
+<a
+    class="content-card clickable"
+    href="{{ url_for('project_detail', project_id=item.project_id) }}"
+>
+
+    <h3>{{ item.title }}</h3>
+
+    <div class="card-meta">
+        <span>{{ item.year }}</span>
+        <span>• {{ item.author.username }}</span>
+        <span>• {{ moment(item.created_at).fromNow() }}</span>
+    </div>
+
+    <p>
+        {{ item.description[:140] }}...
+    </p>
+
+</a>

@@ -1,0 +1,29 @@
+<div class="content-card review-card">
+
+    <div class="review-header">
+
+        <div>
+            <strong>{{ item.rating }}/5</strong>
+            Rating
+        </div>
+
+        <div>
+            <strong>{{ item.workload }}/5</strong>
+            Workload
+        </div>
+
+        <div>
+            {{ item.created_at.year }}
+        </div>
+
+    </div>
+
+    <p>
+        {{ item.content[:180] }}...
+    </p>
+
+    <div class="card-meta">
+        {{ item.author.username }}
+    </div>
+
+</div>

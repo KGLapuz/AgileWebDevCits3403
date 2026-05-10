@@ -1,0 +1,27 @@
+<div class="comment" data-comment-id="{{ comment.comment_id }}">
+    <div class="comment-content">
+
+        <p class="meta">
+            {% if comment.comment_author_id == current_user_id %}
+                You
+            {% else %}
+                {{ comment.author.username }}
+            {% endif %} • 
+            <time class="relative-time" datetime="{{ comment.created_at.isoformat() }}"></time>
+        </p>
+
+        <p>{{ comment.content }}</p>
+
+        <button class="reply-btn">Reply</button>
+    </div>
+
+    <!-- REPLIES -->
+    {% if comment.replies_cache %}
+        <div class="replies">
+            {% for reply in comment.replies %}
+                {% set comment = reply %}
+                {% include "partials/comment.html" %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>

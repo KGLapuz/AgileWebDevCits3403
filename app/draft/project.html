@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - UniReviews</title>
+
+    <link rel="stylesheet" href="project.css">
+</head>
+
+<body class="project-page">
+
+<!-- NAVIGATION BAR-->
+<header>
+    <div class="nav-bar">
+        <div class="company-name">
+            <a href="#">UniReviews</a>
+        </div>
+
+
+        <nav class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Dashboard</a>
+            <a href="#">Unit Page</a>
+            <a href="#">Reviews</a>
+            <a href="#">Discussion</a>
+            <a href="#">Projects</a>
+        </nav>
+
+        <button id="create-review-btn">Write a Review</button>
+    </div>
+</header>
+
+<!-- CONTENT OF THE PAGE -->
+<div class="page-container">
+
+    <!-- BREADCRUMBS - LINK TO PREV PAGES -->
+    <div class="breadcrumb">
+        <a href="#">Home</a> > <a href="#">CITS2006</a> > Projects
+    </div>
+
+    <!-- UNIT TITLE + LOWER TITLE  -->
+    <h1>CITS2006: Defensive Cybersecurity</h1>
+    <p class="subtitle">Past Students Projects</p>
+
+    <!-- UPLOAD PROJECT SECTION -->
+    <section class="projects">
+
+        <div class="upload-section">
+            <input type="file" id="pdf-upload" accept="application/pdf" hidden>
+
+            <button id="upload-btn">Upload Your Project</button>
+
+            <div id="drop-area">
+                Drag & drop your PDF here or  
+                <span class="upload-link"> click to upload</span>
+            </div>
+
+            <p id="file-name"></p>
+        </div>
+
+        <!-- PREVIEW PDF -->
+        <div id="pdf-preview">
+            <a id="pdf-link" target="_blank" class="pdf-card">
+                <span class="pdf-icon">📄</span>
+                <span id="pdf-name" class="pdf-name"></span>
+            </a>
+        </div>
+
+        <!-- SECTION TITLE: PAST STUDENT PROJ PDF'S -->
+        <h2 class="section-title">Past Students Projects</h2>
+
+        <!-- PREVIOUS PROJECTS -->
+        <div class="projects-grid">
+
+            <a href="sample1.pdf" target="_blank" class="pdf-card">
+                <span class="pdf-icon">📄</span>
+                <span class="pdf-name">CITS3403 Final Project</span>
+            </a>
+
+            <a href="sample2.pdf" target="_blank" class="pdf-card">
+                <span class="pdf-icon">📄</span>
+                <span class="pdf-name">Web App UX Report</span>
+            </a>
+
+            <a href="#" class="pdf-card">
+                <span class="pdf-icon">📄</span>
+                <span class="pdf-name">Portfolio Part 1</span>
+            </a>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script src="project.js"></script>
+
+</body>
+</html>

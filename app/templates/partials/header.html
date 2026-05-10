@@ -1,0 +1,17 @@
+<header>
+    <div class="nav-bar">
+        <div class="company-name">
+            <a href="{{ url_for('home') }}">UniReviews</a>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 me-2">
+            {% if current_user_id %}
+                <span class="text-white small">Hi, {{ current_user.username }}</span>
+            {% endif %}
+
+            <a href="{{ url_for('create_review', unit_code='CITS3403') }}">
+                <button>Write a Review</button>
+            </a>
+        </div>
+    </div>
+</header>
