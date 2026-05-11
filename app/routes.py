@@ -36,10 +36,14 @@ def get_user(user_id):
 
 
 def get_current_user():
-    return session.get("user_id", 1)
+    return session.get("user_id")
 
 
 def get_current_user_obj():
+    user_id = get_current_user()
+    
+    if not user_id:
+        return None
     return User.query.get(get_current_user())
 
 
@@ -358,7 +362,7 @@ def unit_reviews(unit_code):
         page_title=f"{unit.code} Reviews"
     )
 
-@main.route('/log_in_page.html', methods=['GET','POST'])
+@main.route('/log_in', methods=['GET','POST'])
 def login():
     login_form = LoginForm()
     signup_form = RegistrationForm()
@@ -367,25 +371,25 @@ def login():
     if signup_form.submit_signup.data and signup_form.validate_on_submit():
         user_registration(signup_form)
         return redirect(url_for('main.login'))
-
+    
     # This handles the login post
     if login_form.submit_login.data and login_form.validate_on_submit():
         user = verify_login(login_form.email.data, login_form.password.data)
         if user:
-            session['user'] = user.username
+            session['user_id'] = user.user_id
             return redirect(url_for('main.dashboard'))
         flash('Login Unsuccessful. Please Check email and password', 'error')
     return render_template('log_in_page.html', login_form=login_form, signup_form=signup_form)
 
 @main.route('/dashboard')
 def dashboard():
-    if 'user' not in session:
+    if 'user_id' not in session:
         return redirect(url_for('main.login'))
     
     return render_template('dashboard.html')
 
 @main.route('/logout')
 def logout():
-    session.pop('user', None)
+    session.pop('user_id', None)
     return redirect(url_for('main.login'))
 

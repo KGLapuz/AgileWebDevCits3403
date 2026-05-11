@@ -8,7 +8,7 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[
         DataRequired(),
-        Regexp(r'^(?=.*[A-Z])(?=.*[a-z](?=.\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$)',
+        Regexp(r'^(?=.*[A-Z])(?=.*[a-z](?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$)',
                message="Password must be 8+ chars, have 1 uppercase, 1 lowercase, 1 number, and 1 special char.")
     ])
     submit_signup = SubmitField('Sign Up')
