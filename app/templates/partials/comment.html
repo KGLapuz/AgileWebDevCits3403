@@ -7,17 +7,34 @@
             {% else %}
                 {{ comment.author.username }}
             {% endif %} • 
-            <time class="relative-time" datetime="{{ comment.created_at.isoformat() }}"></time>
+            <time class="relative-time" datetime="{{ comment.created_at.isoformat() }}Z"></time>
         </p>
 
         <p>{{ comment.content }}</p>
 
-        <button class="reply-btn">Reply</button>
+        <div class="comment-actions">
+            <button class="reply-btn">
+                Reply
+            </button>
+            {% if comment.replies %}
+                <button class="toggle-replies-btn">
+                    <span class="reply-arrow">▶</span>
+                    <span class="reply-count">
+                    {{ comment.replies|length }}
+                    {% if comment.replies|length == 1 %}
+                        reply
+                    {% else %}
+                        replies
+                    {% endif %}
+                    </span>
+                </button>
+            {% endif %}
+        </div>
     </div>
 
     <!-- REPLIES -->
     {% if comment.replies_cache %}
-        <div class="replies">
+        <div class="replies hidden">
             {% for reply in comment.replies %}
                 {% set comment = reply %}
                 {% include "partials/comment.html" %}

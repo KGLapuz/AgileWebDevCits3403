@@ -3,7 +3,7 @@
 {% block title %}Discussion Thread{% endblock %}
 
 {% block styles %}
-<link href="{{ url_for('static', filename='discussion_thread_styles.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/discussion_thread_styles.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -26,44 +26,39 @@
         </p>
     </div>
 
-    <!-- ORIGINAL POST -->
-    <div class="card p-4 mb-4">
-
-        <div class="thread-sticky">
-            <h3>{{ discussion.title }}</h3>
+    <!-- STICKY THREAD HEADER -->
+    <div class="thread-sticky">
+        <div class="thread-sticky-inner">
+            <h2>{{ discussion.title }}</h2>
+            <p class="sticky-meta">
+                {% if discussion.author_id == current_user_id %}
+                    You
+                {% else %}
+                    {{ discussion.author.username }}
+                {% endif %}
+                •
+                <time
+                    class="relative-time"
+                    datetime="{{ discussion.created_at.isoformat() }}Z">
+                </time>
+                •
+                <span class="thread-reply-count">
+                {{ discussion.reply_count }}
+                </span> replies
+            </p>
         </div>
+    </div>
 
-        <p class="meta">
-
-            Posted by
-
-            {% if discussion.author_id == current_user_id %}
-                You
-            {% else %}
-                {{ discussion.author.username }}
-            {% endif %}
-
-            •
-
-            <time
-                class="relative-time"
-                datetime="{{ discussion.created_at.isoformat() }}">
-            </time>
-
-            •
-
-            {{ discussion.reply_count }} replies
-
+    <!-- ORIGINAL POST -->
+    <div class="card thread-card p-4 mb-4">
+        <p class="thread-body">
+            {{ discussion.body }}
         </p>
-
-        <p>{{ discussion.body }}</p>
-
     </div>
 
 
     <!-- ADD COMMENT -->
     <div class="card p-3 mt-4">
-
         <textarea
             id="new-comment"
             class="form-control mb-2"
@@ -73,26 +68,20 @@
         <button
             id="post-comment-btn"
             class="btn btn-primary">
-
             Post Comment
-
         </button>
-
     </div>
 
     <!-- COMMENTS -->
     <div class="comments-section">
-
         {% for comment in comments %}
             {% include "partials/comment.html" %}
         {% endfor %}
-
     </div>
-
 </div>
 
 {% endblock %}
 
 {% block scripts %}
-<script src="{{ url_for('static', filename='discussion_thread_script.js') }}"></script>
+<script src="{{ url_for('static', filename='js/discussion_thread_script.js') }}"></script>
 {% endblock %}
