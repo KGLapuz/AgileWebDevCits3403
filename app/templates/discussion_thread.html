@@ -19,7 +19,10 @@
             <a href="{{ url_for('main.index') }}">Home</a> >
             <a href="{{ url_for('main.unit_page', code=unit.code) }}">
                 {{ unit.code }}
-            </a> > Discussions > Thread
+            </a> > 
+            <a href="{{ url_for('main.unit_discussions', unit_code=unit.code) }}">
+                Discussions
+            </a> > Thread
         </p>
     </div>
 

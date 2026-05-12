@@ -117,7 +117,7 @@ li {
     list-style: none !important;
     padding: 0 !important;
     display: flex;
-    flex-column: column;
+    flex-direction: column;
     gap: 12px;
 }
 

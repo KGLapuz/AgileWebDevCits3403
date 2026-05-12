@@ -12,7 +12,7 @@
             </div>
 
             <p class="review-preview">
-                {{ item.content[:180] }}...
+                {{ item.content[:300] }}...
             </p>
 
         </div>
@@ -20,18 +20,73 @@
         <!-- RIGHT SIDE -->
         <div class="review-stats">
 
+            <!-- Rating -->
             <div class="review-stat">
-                <span class="stat-label">Rating</span>
-                <strong>{{ item.rating }}/5</strong>
+
+                <span class="stat-label">
+                    Rating
+                </span>
+
+                <div class="stat-inline">
+
+                    <span class="stat-value">
+                        {{ "%.1f"|format(item.rating) }}
+                    </span>
+
+                    <div class="review-stars">
+
+                        {% for i in range(1, 6) %}
+
+                            <span
+                                class="star {% if item.rating >= i %}filled{% endif %}"
+                            >
+                                ⭐️
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
             </div>
 
+            <!-- Workload -->
             <div class="review-stat">
-                <span class="stat-label">Workload</span>
-                <strong>{{ item.workload }}/5</strong>
+
+                <span class="stat-label">
+                    Workload
+                </span>
+
+                <div class="stat-inline">
+
+                    <span class="stat-value">
+                        {{ "%.1f"|format(item.workload) }}
+                    </span>
+
+                    <div class="review-hourglasses">
+
+                        {% for i in range(1, 6) %}
+
+                            <span
+                                class="hourglass {% if item.workload >= i %}filled{% endif %}"
+                            >
+                                ⏳
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
 
+
+    
     </div>
+
 
 </div>
