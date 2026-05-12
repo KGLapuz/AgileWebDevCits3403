@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Create Discussion - {{ unit.code }}{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/create_discussion.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+
+    <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.unit_discussions', unit_code=unit.code) }}">Discussions</a>
+            </li>
+            <li class="breadcrumb-item active">Create Discussion</li>
+        </ol>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Start a Discussion</h1>
+        <p class="text-muted">Ask questions or share insights about <strong>{{ unit.code }} - {{ unit.name }}</strong></p>
+    </div>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- FORM CARD -->
+    <div class="card shadow-sm p-4 mb-5">
+        <form method="POST" action="{{ url_for('main.create_discussion', unit_code=unit.code) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+            <!-- TITLE -->
+            <div class="mb-3">
+                <label for="title" class="form-label fw-semibold">Discussion Title</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    name="title"
+                    maxlength="255"
+                    minlength="10"
+                    placeholder="e.g. How hard is the final exam?"
+                    value="{{ request.form.get('title', '') }}"
+                    required>
+                <div class="form-text">10–255 characters.</div>
+            </div>
+
+            <!-- CATEGORY -->
+            <div class="mb-3">
+                <label for="category" class="form-label fw-semibold">Category</label>
+                <select class="form-select" id="category" name="category">
+                    {% set categories = ['General', 'Assessments', 'Lectures', 'Resources', 'Labs'] %}
+                    {% for cat in categories %}
+                        <option value="{{ cat }}"
+                            {% if request.form.get('category') == cat %}selected{% endif %}>
+                            {{ cat }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- BODY -->
+            <div class="mb-3">
+                <label for="body" class="form-label fw-semibold">Description</label>
+                <textarea
+                    class="form-control"
+                    id="body"
+                    name="body"
+                    rows="6"
+                    maxlength="5000"
+                    minlength="15"
+                    placeholder="Lay it all out there…"
+                    required>{{ request.form.get('body', '') }}</textarea>
+                <div class="form-text">15–5000 characters.</div>
+            </div>
+
+            <!-- SUBMIT / CANCEL -->
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('main.unit_discussions', unit_code=unit.code) }}"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-primary px-4">
+                    Post Discussion
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}

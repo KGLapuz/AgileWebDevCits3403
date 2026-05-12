@@ -265,8 +265,7 @@ def add_comment_route():
     })
 
 
-# -------------------------------------------------
-# PLACEHOLDER ROUTES FOR DISCUSSIONS, REVIEWS, AND PROJECTS PAGES
+
 @main.route("/<unit_code>/discussions")
 def unit_discussions(unit_code):
 
@@ -294,6 +293,70 @@ def unit_discussions(unit_code):
         items=discussions,
         content_type="discussions",
         page_title=f"{unit.code} Discussions"
+    )
+
+# -------------------------------------------------
+# CREATE DISCUSSION 
+# -------------------------------------------------
+
+@main.route("/<unit_code>/create_discussion", methods=["GET"])
+def create_discussion_page(unit_code):
+    """Render the create-discussion form."""
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    # Only logged-in users should reach this page
+    if not get_current_user():
+        flash("You must be logged in to start a discussion.", "error")
+        return redirect(url_for("main.login"))
+
+    return render_template(
+        "create_discussion.html",
+        unit=unit
+    )
+
+
+@main.route("/<unit_code>/create_discussion", methods=["POST"])
+def create_discussion(unit_code):
+    """Handle discussion form submission, save to DB, redirect to discussion list."""
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    author_id = get_current_user()
+
+    if not author_id:
+        flash("You must be logged in to start a discussion.", "error")
+        return redirect(url_for("main.login"))
+
+    title   = request.form.get("title",    "").strip()
+    body    = request.form.get("body",     "").strip()
+    # category is stored as a tag; extend the model later if you want a dedicated column
+    category = request.form.get("category", "General")
+
+    # Basic server-side validation
+    if not title or len(title) < 10:
+        flash("Title must be at least 10 characters.", "error")
+        return render_template("create_discussion.html", unit=unit)
+
+    if not body or len(body) < 15:
+        flash("Description must be at least 15 characters.", "error")
+        return render_template("create_discussion.html", unit=unit)
+
+    discussion = Discussion(
+        unit_code=unit.code,
+        author_id=author_id,
+        title=title,
+        body=body,
+        # voters list initialised by model default
+    )
+
+    db.session.add(discussion)
+    db.session.commit()
+
+    flash("Discussion posted successfully!", "success")
+
+    return redirect(
+        url_for("main.unit_discussions", unit_code=unit.code)
     )
 
 @main.route("/<unit_code>/projects")

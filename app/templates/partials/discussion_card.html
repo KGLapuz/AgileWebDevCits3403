@@ -14,11 +14,11 @@
         </span>
 
         <span>
-            • {{ item.reply_count }} replies
+            • {{ moment(item.created_at).fromNow() }}
         </span>
 
         <span>
-            • {{ moment(item.created_at).fromNow() }}
+            • {{ item.reply_count }} replies
         </span>
 
     </div>

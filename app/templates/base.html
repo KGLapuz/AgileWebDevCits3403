@@ -28,5 +28,27 @@
 
         {{ moment.include_moment() }}
 
+        <!-- FLOATING ACTION BUTTONS -->
+        <div class="fab-container">
+
+            <a href="#"
+            class="fab fab-review"
+            title="Write Review">
+                ⭐
+            </a>
+
+            <a href="{{ url_for('main.create_discussion_page', unit_code=unit.code) }}"
+            class="fab fab-discussion"
+            title="Start Discussion">
+                💬
+            </a>
+
+            <a href="#"
+            class="fab fab-project"
+            title="Post Project">
+                📁
+            </a>
+
+        </div>
     </body>
 </html>
