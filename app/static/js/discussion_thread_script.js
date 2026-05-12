@@ -66,6 +66,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 time.innerText =
                     `${Math.floor(diff / 3600)} hours ago`;
 
+            } else if (diff < 172800) {
+
+                time.innerText =
+                    `${1} day ago`;
             } else {
 
                 time.innerText =
