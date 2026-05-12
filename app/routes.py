@@ -398,33 +398,6 @@ def project_detail(project_id):
         project=project
     )
     
-    
-@main.route("/<unit_code>/reviews")
-def unit_reviews(unit_code):
-
-    unit = Unit.query.get_or_404(unit_code)
-
-    search = request.args.get("search", "")
-
-    query = Review.query.filter_by(unit_code=unit_code)
-
-    if search:
-        query = query.filter(
-            Review.content.ilike(f"%{search}%")
-        )
-
-    reviews = query.order_by(
-        Review.created_at.desc()
-    ).all()
-
-    return render_template(
-        "content_list.html",
-        unit=unit,
-        items=reviews,
-        content_type="reviews",
-        page_title=f"{unit.code} Reviews"
-    )
-
 @main.route('/log_in', methods=['GET','POST'])
 def login():
     login_form = LoginForm()
@@ -456,3 +429,106 @@ def logout():
     session.pop('user_id', None)
     return redirect(url_for('main.login'))
 
+# -------------------------------------------------
+# REVIEW pages
+# -------------------------------------------------
+
+    
+@main.route("/<unit_code>/reviews")
+def unit_reviews(unit_code):
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    search = request.args.get("search", "")
+
+    query = Review.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            Review.content.ilike(f"%{search}%")
+        )
+
+    reviews = query.order_by(
+        Review.created_at.desc()
+    ).all()
+
+    return render_template(
+        "content_list.html",
+        unit=unit,
+        items=reviews,
+        content_type="reviews",
+        page_title=f"{unit.code} Reviews"
+    )
+
+@main.route("/<unit_code>/create_review", methods=["GET"])
+def create_review_page(unit_code):
+    """Render the write-a-review form."""
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    if not get_current_user():
+        flash("You must be logged in to write a review.", "error")
+        return redirect(url_for("main.login"))
+
+    return render_template(
+        "create_review.html",
+        unit=unit
+    )
+
+@main.route("/<unit_code>/create_review", methods=["POST"])
+def submit_review(unit_code):
+    """Validate and save a new review, then redirect to the unit's review list."""
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    author_id = get_current_user()
+
+    if not author_id:
+        flash("You must be logged in to write a review.", "error")
+        return redirect(url_for("main.login"))
+
+    # --- collect form values ---
+    content      = request.form.get("content",       "").strip()
+    get_ahead    = request.form.get("get_ahead_tip", "").strip()
+
+    try:
+        rating   = float(request.form.get("rating",   0))
+        workload = float(request.form.get("workload", 0))
+    except (TypeError, ValueError):
+        flash("Invalid rating or workload value.", "error")
+        return render_template("create_review.html", unit=unit)
+
+    # --- server-side validation ---
+    if not (1 <= rating <= 5):
+        flash("Please select a star rating.", "error")
+        return render_template("create_review.html", unit=unit)
+
+    if not (1 <= workload <= 20):
+        flash("Workload must be between 1 and 20 hours.", "error")        
+        return render_template("create_review.html", unit=unit)
+
+    if len(content) < 30:
+        flash("Review must be at least 30 characters.", "error")
+        return render_template("create_review.html", unit=unit)
+
+    if len(get_ahead) > 200:
+        flash("Get Ahead tip must be 200 characters or fewer.", "error")
+        return render_template("create_review.html", unit=unit)
+
+    review = Review(
+        unit_code=unit.code,
+        author_id=author_id,
+        rating=rating,
+        workload=workload,
+        content=content,
+        get_ahead_tip=get_ahead or None   # store NULL if left blank
+    )
+
+    db.session.add(review)
+    db.session.commit()
+
+    flash("Review submitted — thanks for helping your fellow students!", "success")
+
+    return redirect(
+        url_for("main.unit_reviews", unit_code=unit.code)
+    )

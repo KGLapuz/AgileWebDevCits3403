@@ -12,6 +12,9 @@
         <!-- Global Header CSS -->
         <link href="{{ url_for('static', filename='css/header.css') }}" rel="stylesheet">
 
+        <!-- Workload CSS -->
+         <link href="{{ url_for('static', filename='css/workload_display.css')}}" rel="stylesheet">
+         
         <!-- Page-specific CSS -->
         {% block styles %}{% endblock %}
     </head>
@@ -31,7 +34,7 @@
         <!-- FLOATING ACTION BUTTONS -->
         <div class="fab-container">
 
-            <a href="#"
+            <a href="{{ url_for('main.create_review_page', unit_code=unit.code)}}"
             class="fab fab-review"
             title="Write Review">
                 ⭐

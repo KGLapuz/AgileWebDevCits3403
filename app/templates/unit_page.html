@@ -100,19 +100,13 @@
             </div>
 
             <!-- Workload -->
+            {% from "macros/workload.html" import workload_display %}
+
+            <!-- Workload card, replaces the existing ⏳ block -->
             <div class="card p-3 text-start flex-fill rating-card">
-                <h6 class="text-muted">Average Workload (hours per week)</h6>
-
+                <h6 class="text-muted">Average Workload</h6>
                 <div class="rating-info">
-                    <h2 class="fw-bold">{{ "%.1f"|format(unit.workload) }}</h2>
-
-                    <div class="workload-icon">
-                        {% for i in range(1, 6) %}
-                            <span style="font-size: 2rem; color: black; opacity: {% if unit.workload >= i %}1{% else %}0.2{% endif %};">
-                            ⏳
-                            </span>
-                        {% endfor %}
-                    </div>
+                    {{ workload_display(unit.workload) }}
                 </div>
             </div>
 

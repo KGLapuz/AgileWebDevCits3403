@@ -1,0 +1,178 @@
+/* ------------------------------------------------
+   Create Review page — consistent with unit_page.css
+------------------------------------------------ */
+
+body {
+    background-color: rgb(245, 245, 245);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.breadcrumb-item a {
+    text-decoration: none;
+    color: grey;
+}
+
+.card {
+    border-radius: 25px;
+    border: 2px solid rgba(0, 48, 135);
+    background-color: white;
+    transition: 0.2s;
+}
+
+/* Unit label */
+.unit-label {
+    color: rgb(0, 48, 135);
+    font-size: 1.05rem;
+}
+
+/* ------------------------------------------------
+   STAR RATING — left to right, JS-driven
+------------------------------------------------ */
+.star-rating-group {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+}
+
+.star-input {
+    display: none;
+}
+
+.star-label {
+    font-size: 2.5rem;
+    color: #ddd;
+    cursor: pointer;
+    transition: color 0.15s ease, transform 0.1s ease;
+    line-height: 1;
+    user-select: none;
+}
+
+.star-label.filled {
+    color: rgb(226, 182, 0);
+}
+
+.star-label:hover {
+    transform: scale(1.15);
+}
+
+/* ------------------------------------------------
+   HOURGLASS WORKLOAD PICKER
+------------------------------------------------ */
+.hourglass-picker {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hourglass-btn {
+    flex: 1;
+    min-width: 110px;
+    max-width: 180px;
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 16px;
+    padding: 12px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+}
+
+.hourglass-btn:hover {
+    border-color: rgb(0, 48, 135);
+    background: rgb(245, 248, 255);
+    transform: translateY(-2px);
+}
+
+.hourglass-btn.selected {
+    border-color: rgb(0, 48, 135);
+    background: rgb(235, 241, 255);
+    box-shadow: 0 0 0 2px rgba(0, 48, 135, 0.2);
+}
+
+.hourglass-icons {
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 6px;
+}
+
+.hourglass-icons .hg {
+    opacity: 0.2;
+}
+
+.hourglass-icons .hg.filled {
+    opacity: 1;
+}
+
+.hourglass-hours {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: rgb(0, 48, 135);
+    margin-bottom: 4px;
+}
+
+.hourglass-desc {
+    font-size: 0.7rem;
+    color: #777;
+    line-height: 1.3;
+}
+
+/* ------------------------------------------------
+   OPTIONAL BADGE
+------------------------------------------------ */
+.badge-optional {
+    font-size: 0.65rem;
+    font-weight: 500;
+    vertical-align: middle;
+    padding: 3px 8px;
+    border-radius: 20px;
+    border: 1.5px solid rgb(0, 48, 135);
+    background: white;
+    color: rgb(0, 48, 135);
+    opacity: 0.55;
+    letter-spacing: 0.02em;
+}
+
+/* ------------------------------------------------
+   GET AHEAD TIP
+------------------------------------------------ */
+#get_ahead_tip {
+    border-left: 4px solid rgb(226, 182, 0);
+    border-radius: 8px;
+    padding-left: 12px;
+}
+
+#get_ahead_tip:focus {
+    border-left-color: rgb(226, 182, 0);
+    border-color: rgb(0, 48, 135);
+    box-shadow: 0 0 0 0.2rem rgba(0, 48, 135, 0.2);
+}
+
+/* ------------------------------------------------
+   INPUTS / TEXTAREA
+------------------------------------------------ */
+.form-control:focus,
+.form-select:focus {
+    border-color: rgb(0, 48, 135);
+    box-shadow: 0 0 0 0.2rem rgba(0, 48, 135, 0.2);
+}
+
+/* ------------------------------------------------
+   BUTTONS
+------------------------------------------------ */
+.btn-primary {
+    background-color: rgb(0, 48, 135);
+    border-color: rgb(0, 48, 135);
+}
+
+.btn-primary:hover {
+    background-color: rgb(226, 182, 0);
+    border-color: rgb(0, 35, 100);
+}
+
+.btn-outline-secondary:hover {
+    background-color: rgb(226, 182, 0);
+    border-color: rgb(226, 182, 0);
+    color: white;
+}

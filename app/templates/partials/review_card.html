@@ -12,7 +12,7 @@
             </div>
 
             <p class="review-preview">
-                {{ item.content[:300] }}...
+                {{ item.content[:600] }}...
             </p>
 
         </div>
@@ -53,40 +53,11 @@
 
             <!-- Workload -->
             <div class="review-stat">
+                {% from "macros/workload.html" import workload_display %}
 
-                <span class="stat-label">
-                    Workload
-                </span>
-
-                <div class="stat-inline">
-
-                    <span class="stat-value">
-                        {{ "%.1f"|format(item.workload) }}
-                    </span>
-
-                    <div class="review-hourglasses">
-
-                        {% for i in range(1, 6) %}
-
-                            <span
-                                class="hourglass {% if item.workload >= i %}filled{% endif %}"
-                            >
-                                ⏳
-                            </span>
-
-                        {% endfor %}
-
-                    </div>
-
-                </div>
+                {{ workload_display(item.workload, size="sm") }}
 
             </div>
-
         </div>
-
-
-    
     </div>
-
-
 </div>

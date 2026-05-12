@@ -178,6 +178,8 @@ class Review(db.Model):
     workload = db.Column(db.Float, nullable=False)
 
     content = db.Column(db.Text, nullable=False)
+    
+    get_ahead_tip = db.Column(db.String(200), nullable=True)
 
     created_at = db.Column(
         db.DateTime,

@@ -1,0 +1,46 @@
+.workload-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Hours number */
+.workload-hours {
+    font-weight: bold;
+    color: rgb(0, 48, 135);
+    white-space: nowrap;
+}
+
+.workload-display--md .workload-hours {
+    font-size: 1rem;
+}
+
+.workload-display--sm .workload-hours {
+    font-size: 0.85rem;
+}
+
+/* Hourglass icons */
+.workload-hourglasses {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.wl-hg {
+    line-height: 1;
+}
+
+.workload-display--md .wl-hg {
+    font-size: 1.2rem;
+}
+
+.workload-display--sm .wl-hg {
+    font-size: 0.9rem;
+}
+
+.wl-hg--filled {
+    opacity: 1;
+}
+
+.wl-hg--empty {
+    opacity: 0.18;
+}
