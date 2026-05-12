@@ -1,5 +1,12 @@
 {% extends "base.html" %}
 
+{% block styles %}
+<link 
+    rel="stylesheet" 
+    href="{{ url_for('static', filename='css/content_list.css') }}"
+></link>
+{% endblock %}
+
 {% block content %}
 
 <div class="page-container">
@@ -62,7 +69,7 @@
         {% else %}
 
             <div class="empty-state">
-                <h3>No {{ content_type }} to see yet :-(</h3>
+                <h3>No {{ content_type }} to see yet. Be the first to add one!</h3>
             </div>
 
         {% endif %}

@@ -1,29 +1,37 @@
 <div class="content-card review-card">
 
-    <div class="review-header">
+    <div class="review-main">
 
-        <div>
-            <strong>{{ item.rating }}/5</strong>
-            Rating
+        <!-- LEFT SIDE -->
+        <div class="review-content">
+
+            <div class="review-meta">
+                <span>{{ item.created_at.year }}</span>
+                <span>•</span>
+                <span>{{ item.author.username }}</span>
+            </div>
+
+            <p class="review-preview">
+                {{ item.content[:180] }}...
+            </p>
+
         </div>
 
-        <div>
-            <strong>{{ item.workload }}/5</strong>
-            Workload
+        <!-- RIGHT SIDE -->
+        <div class="review-stats">
+
+            <div class="review-stat">
+                <span class="stat-label">Rating</span>
+                <strong>{{ item.rating }}/5</strong>
+            </div>
+
+            <div class="review-stat">
+                <span class="stat-label">Workload</span>
+                <strong>{{ item.workload }}/5</strong>
+            </div>
+
         </div>
 
-        <div>
-            {{ item.created_at.year }}
-        </div>
-
-    </div>
-
-    <p>
-        {{ item.content[:180] }}...
-    </p>
-
-    <div class="card-meta">
-        {{ item.author.username }}
     </div>
 
 </div>
