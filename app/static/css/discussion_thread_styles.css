@@ -24,7 +24,7 @@ body {
 .breadcrumb a,
 .breadcrumb p {
     text-decoration: none;
-    color: grey;
+    color: rgb(0, 48, 135);
 }
 
 .breadcrumb a:hover {
