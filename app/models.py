@@ -58,25 +58,29 @@ class User(db.Model):
     reviews = db.relationship(
         "Review",
         back_populates="author",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="desc(Review.created_at)"
     )
 
     discussions = db.relationship(
         "Discussion",
         back_populates="author",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="desc(Discussion.created_at)"
     )
 
     comments = db.relationship(
         "Comment",
         back_populates="author",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="desc(Comment.created_at)"
     )
 
     projects = db.relationship(
         "Project",
         back_populates="author",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="desc(Project.created_at)"
     )
 
     def __repr__(self):
@@ -116,19 +120,22 @@ class Unit(db.Model):
     reviews = db.relationship(
         "Review",
         back_populates="unit",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="desc(Review.created_at)"
     )
 
     discussions = db.relationship(
         "Discussion",
         back_populates="unit",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="desc(Discussion.created_at)"
     )
 
     projects = db.relationship(
         "Project",
         back_populates="unit",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="desc(Project.created_at)"
     )
 
     @property
@@ -259,7 +266,8 @@ class Discussion(db.Model):
     comments = db.relationship(
         "Comment",
         back_populates="discussion",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="desc(Comment.created_at)"
     )
 
     @property
