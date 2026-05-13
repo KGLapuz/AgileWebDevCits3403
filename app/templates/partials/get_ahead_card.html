@@ -1,0 +1,20 @@
+<div class="content-card review-card">
+    <div class="review-main">
+        <div class="review-content">
+            <div class="review-meta">
+                <span>{{ item.created_at.year }}</span>
+                <span>•</span>
+                <span>
+                {% if item.author_id == current_user_id %}
+                    You
+                {% else %}
+                    {{ item.author.username }}
+                {% endif %}
+                </span>
+            </div>
+            <p class="review-preview">
+                {{ item.get_ahead_tip}}
+            </p>
+        </div>
+    </div>
+</div>

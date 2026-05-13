@@ -1,37 +1,38 @@
-<div class="content-card review-card">
+<a 
+    href="{{ url_for('main.unit_page', code=item.code) }}"
+    class="content-card unit-card"
+>
     <div class="review-main">
         <!-- LEFT SIDE -->
         <div class="review-content">
             <div class="review-meta">
-                <span>{{ item.created_at.year }}</span>
-                <span>•</span>
-                <span>
-                {% if item.author_id == current_user_id %}
-                    You
-                {% else %}
-                    {{ item.author.username }}
-                {% endif %}
+                <span class="unit-code">
+                    {{ item.code }}
                 </span>
             </div>
-            <p class="review-preview">
-                {{ item.content[:600] }}...
+            <h3 class="unit-name">
+                {{ item.name }}
+            </h3>
+            <p class="unit-review-count">
+                {{ item.review_count }} Review{{ '' if item.review_count == 1 else 's' }}
             </p>
         </div>
+
         <!-- RIGHT SIDE -->
         <div class="review-stats">
-            <!-- Rating -->
+            <!-- Average Rating -->
             <div class="review-stat">
                 <span class="stat-label">
                     Rating
                 </span>
                 <div class="stat-inline">
                     <span class="stat-value">
-                        {{ "%.0f"|format(item.rating) }}
+                        {{ "%.1f"|format(item.rating) }}
                     </span>
                     <div class="review-stars">
                         {% for i in range(1, 6) %}
                             <span
-                                class="star {% if item.rating >= i %}filled{% endif %}"
+                                class="star {% if (item.rating) >= i %}filled{% endif %}"
                             >
                                 ⭐️
                             </span>
@@ -40,11 +41,12 @@
                 </div>
             </div>
 
-            <!-- Workload -->
+            <!-- Average Workload -->
             <div class="review-stat">
                 {% from "macros/workload.html" import workload_display %}
-                {{ workload_display(item.workload, size="sm") }}
+
+                {{ workload_display(item.workload or 0, size="sm") }}
             </div>
         </div>
     </div>
-</div>
+</a>

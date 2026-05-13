@@ -41,6 +41,9 @@
                 Read reviews from previous students.<br><br>
                 To get started:
                 Click on the ⭐ on the bottom right of the page to write your own review, or search keywords into the search bar to see how the unit has been reviewed by past students!
+            {% elif content_type == "tips" %}
+                We know how quickly things can pile up and cause us to fall behind.<br><br>
+                Get-Ahead tips help prevent that by letting you know what previous students in this unit would've found helpful before the semester began.
             {% endif %}
         </p>
     </div>
@@ -69,31 +72,24 @@
 
     <!-- CONTENT LIST -->
     <div class="content-list">
-
         {% if items %}
-
             {% for item in items %}
-
                 {% if content_type == "discussions" %}
                     {% include "partials/discussion_card.html" %}
                 {% elif content_type == "projects" %}
                     {% include "partials/project_card.html" %}
                 {% elif content_type == "reviews" %}
                     {% include "partials/review_card.html" %}
+                {% elif content_type == "tips" %}
+                    {% include "partials/get_ahead_card.html" %}
                 {% endif %}
-
             {% endfor %}
-
         {% else %}
-
             <div class="empty-state">
                 <h3>No {{ content_type }} to see yet. Be the first to add one!</h3>
             </div>
-
         {% endif %}
-
     </div>
-
 </div>
 
 {% endblock %}

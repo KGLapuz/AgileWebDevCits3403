@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link 
+    rel="stylesheet" 
+    href="{{ url_for('static', filename='css/content_list.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1>Browse Units</h1>
+        <p>
+            Search for a unit by its code or name to explore
+            reviews, projects, discussions, and study tips.
+        </p>
+    </div>
+
+    <!-- SEARCH -->
+    <form method="GET" class="search-bar">
+        <input
+            type="search"
+            name="search"
+            placeholder="Search units..."
+            value="{{ request.args.get('search', '') }}"
+        >
+    </form>
+    <!-- UNIT LIST -->
+    <div class="content-list">
+        {% if units %}
+            {% for item in units[:10] %}
+                {% include "partials/unit_card.html" %}
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No matching units found.</h3>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

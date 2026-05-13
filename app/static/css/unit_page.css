@@ -103,12 +103,26 @@ li {
     color: #FFD700;
 }
 
-.workload-icon {
-    display: flex !important;
-    align-items: center;
-    flex-direction: row !important;
-    gap:4px;
+.workload-unit {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #555;
+    margin-left: 6px;
 }
+
+.rating-stars span {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.wl-hg--empty {
+    opacity: 0.18;
+}
+
+.wl-hg--filled {
+    opacity: 1;
+}
+
 .rating-card h6 {
     white-space: nowrap !important;
 }

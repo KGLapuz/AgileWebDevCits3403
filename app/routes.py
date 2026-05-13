@@ -323,7 +323,7 @@ def create_discussion(unit_code):
     title   = request.form.get("title",    "").strip()
     body    = request.form.get("body",     "").strip()
     # category is stored as a tag; extend the model later if you want a dedicated column
-    category = request.form.get("category", "General")
+    category = " " # request.form.get("category", "General")
 
     # Basic server-side validation
     if not title or len(title) < 10:
@@ -339,7 +339,6 @@ def create_discussion(unit_code):
         author_id=author_id,
         title=title,
         body=body,
-        # voters list initialised by model default
     )
 
     db.session.add(discussion)
@@ -423,9 +422,7 @@ def logout():
 
 # -------------------------------------------------
 # REVIEW pages
-# -------------------------------------------------
-
-    
+# -------------------------------------------------    
 @main.route("/<unit_code>/reviews")
 def unit_reviews(unit_code):
 
@@ -523,4 +520,45 @@ def submit_review(unit_code):
 
     return redirect(
         url_for("main.unit_reviews", unit_code=unit.code)
+    )
+    
+@main.route("/<unit_code>/get_ahead_tips")
+def get_ahead_tips(unit_code):
+    unit = Unit.query.get_or_404(unit_code)
+    
+    tips = (
+        Review.query
+        .filter_by(unit_code=unit_code)
+        .filter(Review.get_ahead_tip.isnot(None))
+        .filter(Review.get_ahead_tip != "")
+        .order_by(Review.created_at.desc())
+        .all()
+    )
+ 
+    return render_template(
+        "content_list.html",
+        unit=unit,
+        items=tips,
+        content_type="tips",
+        page_title=f"{unit.code} Get-Ahead tips"
+    )
+ 
+@main.route("/units")
+def units():
+    search = request.args.get("search", "").strip()
+
+    query = Unit.query
+    if search:
+        query = query.filter(
+            db.or_(
+                Unit.code.ilike(f"%{search}%"),
+                Unit.name.ilike(f"%{search}%")
+            )
+        )
+
+    units = query.order_by(Unit.code.asc()).all()
+
+    return render_template(
+        "unit_list.html",
+        units=units
     )
