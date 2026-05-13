@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>log in page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{url_for('static',filename='log_in_page_stylesheet.css')}}" rel="stylesheet"/>
+</head>
+
+<body>
+    <div class="content">
+        <div class="greetings">
+            <div class="logo-container">
+                <div class="logo"></div>
+            </div>
+            <h2>UniReviews</h2>
+            <p>Shares Your Experience</p>
+        </div>
+
+        <form class="login-container" action="{{url_for('main.login')}}" method="POST">
+            {{ login_form.hidden_tag() }} 
+            {{ login_form.csrf_token }}
+            <div class="flash-msg-container">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="flash-msg flash-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="credentials">
+                <div class="email">
+                    <p>Email</p>
+                    {{ login_form.email(placeholder="user@gmail.com") }}
+                    {% for error in login_form.email.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="password">
+                    <p>Password</p>
+                    {{ login_form.password(placeholder="••••••••") }}
+                    {% for error in login_form.password.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {{ login_form.submit_login(class="button") }}
+        </form>
+        <p class="signup-popup" onclick="popupSignup()">Don't Have an account? Sign up now</p>
+    </div>
+    <div id="SignUpForm" class="modal">
+        <div class="SignUpForm-content">
+            <span class="close" onclick="closeSignUp()">&times;</span>
+            <h2>Create Account</h2>
+            
+            <form class="SignUp-container" action="{{ url_for('main.login')}}" method="POST">
+                {{ signup_form.hidden_tag() }}
+                {{ signup_form.csrf_token }}
+            <div class="Credentials">
+                <div class="UserName">
+                    <p>Username</p>
+                    {{ signup_form.username(placeholder="Username") }}
+                    {% for error in signup_form.username.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="Email">
+                    <p>Email</p>
+                    {{ signup_form.email(placeholder="user@gmail.com") }}
+                    {% for error in signup_form.email.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                 <div class="password">
+                    <p>Password</p>
+                    {{ signup_form.password(placeholder="••••••••") }}
+                    {% for error in signup_form.password.errors %}
+                        <div class="error-text">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {{ signup_form.submit_signup(class="signup-btn button") }}
+            </form>
+        </div>
+    </div>
+    <script src="{{url_for('static',filename='log_in_page.js')}}"></script>
+</body>

@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Discussion Thread{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/discussion_thread_styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+<div id="thread-root"
+     data-discussion-id="{{ discussion.discussion_id }}"
+     data-current-user="{{ current_user_id }}"
+     class="container mt-5 pt-5 thread-container">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <p>
+            <a href="{{ url_for('main.index') }}">Home</a> >
+            <a href="{{ url_for('main.unit_page', code=unit.code) }}">
+                {{ unit.code }}
+            </a> > 
+            <a href="{{ url_for('main.unit_discussions', unit_code=unit.code) }}">
+                Discussions
+            </a> > Thread
+        </p>
+    </div>
+
+    <!-- STICKY THREAD HEADER -->
+    <div class="thread-sticky">
+        <div class="thread-sticky-inner">
+            <h2>{{ discussion.title }}</h2>
+            <p class="sticky-meta">
+                {% if discussion.author_id == current_user_id %}
+                    You
+                {% else %}
+                    {{ discussion.author.username }}
+                {% endif %}
+                •
+                <time
+                    class="relative-time"
+                    datetime="{{ discussion.created_at.isoformat() }}Z">
+                </time>
+                •
+                <span class="thread-reply-count">
+                {{ discussion.reply_count }}
+                </span> replies
+            </p>
+        </div>
+    </div>
+
+    <!-- ORIGINAL POST -->
+    <div class="card thread-card p-4 mb-4">
+        <p class="thread-body">
+            {{ discussion.body }}
+        </p>
+    </div>
+
+
+    <!-- ADD COMMENT -->
+    <div class="card p-3 mt-4">
+        <textarea
+            id="new-comment"
+            class="form-control mb-2"
+            placeholder="Chip in and share your thoughts...">
+        </textarea>
+
+        <button
+            id="post-comment-btn"
+            class="btn btn-primary">
+            Post Comment
+        </button>
+    </div>
+
+    <!-- COMMENTS -->
+    <div class="comments-section">
+        {% for comment in comments %}
+            {% include "partials/comment.html" %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/discussion_thread_script.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniReviews | Settings</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='dashboard.css')}}">
+    <script src="dashboard.js"></script>
+</head>
+<body class="light-theme">
+
+    <nav class="nav-bar">
+        <div class="nav-left">
+            <div class="logo">
+                <img src="image.logo.png" alt="UniReviews" class="nav-logo-png">
+            </div>
+            <input type="text" class="nav-search" placeholder="Quick Search...">
+        </div>
+        
+        <div class="nav-right">
+            <div class="nav-links">
+                <a href="dashboard.html">Dashboard</a>
+                <a href="project.html">Projects</a>
+                <button id="theme-toggle" class="theme-btn">
+                    <i class="ph-bold ph-moon"></i>
+                </button>
+                <button class="write-review-btn">Write a Review</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-menu">
+                <h2>Settings</h2>
+                <ul>
+                    <li class="menu-item active" data-section="edit-profile">
+                        <i class="ph ph-pencil-simple"></i> Edit profile
+                    </li>
+                    <li class="menu-item" data-section="notifications">
+                        <i class="ph ph-bell"></i> Notification
+                    </li>
+                    <li class="menu-item" data-section="security">
+                        <i class="ph ph-shield-check"></i> Security
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="content-area">
+            <section id="edit-profile" class="content-section active">
+                <nav class="breadcrumbs">
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><i class="ph ph-caret-right"></i></li>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><i class="ph ph-caret-right"></i></li>
+                        <li class="current">Settings</li>
+                    </ul>
+                </nav>
+
+                <h1>Edit profile</h1>
+                
+                <form id="profileForm" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label><span class="req">*</span> First Name</label>
+                            <input type="text" id="firstName" placeholder="e.g. Mehrab">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="req">*</span> Last Name</label>
+                            <input type="text" id="lastName" placeholder="e.g. Bozorgi">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><span class="req">*</span> Update Username</label>
+                        <input type="text" id="username" placeholder="Choose a handle">
+                    </div>
+
+                    <div class="form-group">
+                        <label><span class="req">*</span> Update Email</label>
+                        <input type="email" id="email" placeholder="email@example.com">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="notifications" class="content-section" style="display: none;">
+                <h1>Notifications</h1>
+                <p>Manage your alerts and email preferences here.</p>
+            </section>
+
+            <section id="security" class="content-section" style="display: none;">
+                <h1>Security</h1>
+                <p>Update your password and two-factor authentication settings.</p>
+            </section>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Write a Review — {{ unit.code }}{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/create_review.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+
+    <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.unit_reviews', unit_code=unit.code) }}">Reviews</a>
+            </li>
+            <li class="breadcrumb-item active">Write a Review</li>
+        </ol>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Write a Review</h1>
+        <p class="text-muted">Share your experience with <strong>{{ unit.code }} — {{ unit.name }}</strong></p>
+    </div>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- FORM CARD -->
+    <div class="card shadow-sm p-4 mb-5">
+        <form method="POST" action="{{ url_for('main.submit_review', unit_code=unit.code) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+            <!-- UNIT (read-only) -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Unit</label>
+                <p class="form-control-plaintext fw-bold unit-label">
+                    {{ unit.code }} — {{ unit.name }}
+                </p>
+            </div>
+
+            <!-- RATING -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Overall Rating</label>
+                <div class="star-rating-group" id="rating-group">
+                    {% for i in range(1, 6) %}
+                        <input
+                            type="radio"
+                            class="star-input"
+                            name="rating"
+                            id="rating-{{ i }}"
+                            value="{{ i }}"
+                            {% if request.form.get('rating')|int == i %}checked{% endif %}
+                            required>
+                        <label class="star-label" for="rating-{{ i }}" data-value="{{ i }}" title="{{ i }} star{{ 's' if i > 1 }}">★</label>
+                    {% endfor %}
+                </div>
+                <div class="form-text">How would you rate the unit overall?</div>
+            </div>
+
+            <!-- WORKLOAD -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Weekly Commitment</label>
+                <div class="form-text mb-2">
+                    How many hours a week do you need to dedicate to comfortably keep up?
+                </div>
+
+                <!--
+                    Submitted value is actual hours (2, 4, 7, 10, 13).
+                    Hourglass count (1–5) is derived from hours on display pages.
+                    Mapping: 2hrs=1⏳  4hrs=2⏳  7hrs=3⏳  10hrs=4⏳  13hrs=5⏳
+                -->
+                <input type="hidden" id="workload" name="workload"
+                       value="{{ request.form.get('workload', '') }}" required>
+
+                <div class="hourglass-picker">
+                    {% set workload_levels = [
+                        (1, 2,  '~2 hrs/week',  'Very light — skim lectures, minimal assessments.'),
+                        (2, 4,  '~4 hrs/week',  'Light — steady but manageable week to week.'),
+                        (3, 7,  '~7 hrs/week',  'Moderate — consistent effort required.'),
+                        (4, 10, '~10 hrs/week', 'Heavy — significant time outside class.'),
+                        (5, 13, '12+ hrs/week', 'Intense — treat it like a part-time internship.')
+                    ] %}
+                    {% for hourglasses, hours, label, desc in workload_levels %}
+                        <button
+                            type="button"
+                            class="hourglass-btn {% if request.form.get('workload')|int == hours %}selected{% endif %}"
+                            data-value="{{ hours }}"
+                            title="{{ label }} — {{ desc }}">
+
+                            <div class="hourglass-icons">
+                                {% for j in range(1, 6) %}
+                                    <span class="hg {% if j <= hourglasses %}filled{% endif %}">⏳</span>
+                                {% endfor %}
+                            </div>
+                            <div class="hourglass-hours">{{ label }}</div>
+                            <div class="hourglass-desc">{{ desc }}</div>
+                        </button>
+                    {% endfor %}
+                </div>
+
+                <div class="form-text mt-2" id="workload-error" style="color: #dc3545; display: none;">
+                    Please select a workload level.
+                </div>
+            </div>
+
+            <!-- REVIEW CONTENT -->
+            <div class="mb-4">
+                <label for="content" class="form-label fw-semibold">Your Review</label>
+                <textarea
+                    class="form-control"
+                    id="content"
+                    name="content"
+                    rows="6"
+                    minlength="30"
+                    maxlength="5000"
+                    placeholder="How were the lectures, assessments, and labs? What did you enjoy or find challenging?"
+                    required>{{ request.form.get('content', '') }}</textarea>
+                <div class="form-text">Minimum 30 characters.</div>
+            </div>
+
+            <!-- GET AHEAD TIP -->
+            <div class="mb-4">
+                <label for="get_ahead_tip" class="form-label fw-semibold">
+                    💡 Get Ahead Tip
+                    <span class="badge badge-optional ms-1">Optional</span>
+                </label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="get_ahead_tip"
+                    name="get_ahead_tip"
+                    maxlength="200"
+                    placeholder="e.g. Brush up on recursion in Python before semester starts — it comes up in week 2."
+                    value="{{ request.form.get('get_ahead_tip', '') }}">
+                <div class="form-text">
+                    One sentence: what could an incoming student study or do <em>right now</em> to hit the ground running?
+                </div>
+            </div>
+
+            <!-- SUBMIT / CANCEL -->
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('main.unit_reviews', unit_code=unit.code) }}"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-primary px-4">
+                    Submit Review
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/create_review.js') }}" defer></script>
+{% endblock %}

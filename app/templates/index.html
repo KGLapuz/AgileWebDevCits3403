@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="authors" content="Mambwe Nsanje, Bronte Watts, Keithlin Lapuz">
         <meta name="description" content="CITS3403 Group project">
-        <link href="index_stylesheet.css" rel="stylesheet"/>
+        <link href="{{url_for('static', filename='index_stylesheet.css')}}" rel="stylesheet">
     </head>
 
     <body>
@@ -13,7 +13,7 @@
             <div class="nav-bar">
                 <div class="company-name">UniReviews</div>
                 <a href="#home-page" class="nav-bar-link">Home</a>
-                <button>Write a Review</button>
+                <a href="{{url_for('main.login')}}" class="button">Login</a>
             </div>
         </header>
         <div id="home-page">

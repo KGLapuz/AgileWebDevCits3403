@@ -1,0 +1,55 @@
+{#
+    macros/workload.html
+    ---------------------
+    Reusable macro to display workload as:
+        X hrs/week  ⏳⏳⏳⬜⬜
+
+    Hours → hourglass mapping (mirrors create_review form):
+        < 3  hrs  → 1 hourglass
+        3–5  hrs  → 2 hourglasses
+        6–8  hrs  → 3 hourglasses
+        9–11 hrs  → 4 hourglasses
+        12+  hrs  → 5 hourglasses
+
+    Usage:
+        {% from "macros/workload.html" import workload_display %}
+        {{ workload_display(unit.workload) }}
+        {{ workload_display(review.workload, size="sm") }}
+
+    Parameters:
+        hours  — the numeric hours value stored in the DB
+        size   — "md" (default) or "sm" for the reviews list
+#}
+
+{% macro workload_display(hours, size="md") %}
+
+    {# Derive hourglass count from hours #}
+    {% if hours < 3 %}
+        {% set filled = 1 %}
+    {% elif hours < 6 %}
+        {% set filled = 2 %}
+    {% elif hours < 9 %}
+        {% set filled = 3 %}
+    {% elif hours < 12 %}
+        {% set filled = 4 %}
+    {% else %}
+        {% set filled = 5 %}
+    {% endif %}
+
+    <span class="workload-display workload-display--{{ size }}">
+        <span class="workload-hours">
+            {% if hours == hours | int %}
+                {{ hours | int }}
+            {% else %}
+                {{ "%.1f" | format(hours) }}
+            {% endif %}
+            hrs/week
+        </span>
+        <span class="workload-hourglasses">
+            {% for i in range(1, 6) %}
+                <span class="wl-hg {% if i <= filled %}wl-hg--filled{% else %}wl-hg--empty{% endif %}">⏳</span>
+            {% endfor %}
+        </span>
+    </span>
+
+{% endmacro %}
