@@ -217,23 +217,16 @@ def add_comment_route():
 
     data = request.get_json()
 
-    discussion_id = int(
-        data.get("discussion_id")
-    )
-
+    discussion_id = int(data.get("discussion_id"))
     content = data.get("content")
-
     parent_id = data.get("parent_id")
 
     if parent_id is not None:
         parent_id = int(parent_id)
 
-    discussion = Discussion.query.get(
-        discussion_id
-    )
+    discussion = Discussion.query.get(discussion_id)
 
     if not discussion or not content:
-
         return jsonify({
             "error": "Invalid"
         }), 400
@@ -246,7 +239,6 @@ def add_comment_route():
     )
 
     db.session.add(new_comment)
-
     db.session.commit()
     
     # Set up an empty replies cache for the new comment so jinja renders correctly

@@ -10,7 +10,12 @@
     <div class="card-meta">
 
         <span>
-            Posted by {{ item.author.username }}
+            Posted by 
+            {% if item.author_id == current_user_id %}
+                You
+            {% else %}
+                {{ item.author.username }}
+            {% endif %}
         </span>
 
         <span>

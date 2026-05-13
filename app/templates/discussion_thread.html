@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div id="thread-root"
      data-discussion-id="{{ discussion.discussion_id }}"
      data-current-user="{{ current_user_id }}"
@@ -30,7 +30,7 @@
     <div class="thread-sticky">
         <div class="thread-sticky-inner">
             <h2>{{ discussion.title }}</h2>
-            <p class="sticky-meta">
+            <p class="sticky-meta"> Posted by 
                 {% if discussion.author_id == current_user_id %}
                     You
                 {% else %}

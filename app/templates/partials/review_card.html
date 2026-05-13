@@ -8,7 +8,13 @@
             <div class="review-meta">
                 <span>{{ item.created_at.year }}</span>
                 <span>•</span>
-                <span>{{ item.author.username }}</span>
+                <span>
+                {% if item.author_id == current_user_id %}
+                    You
+                {% else %}
+                    {{ item.author.username }}
+                {% endif %}
+                </span>
             </div>
 
             <p class="review-preview">
