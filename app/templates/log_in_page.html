@@ -10,6 +10,7 @@
 
 <body>
     <div class="content">
+        <a href="{{ url_for('main.index') }}" class="home-redirect">&#x21D0; Home</a>
         <div class="greetings">
             <div class="logo-container">
                 <div class="logo"></div>
@@ -76,6 +77,10 @@
                 </div>
                  <div class="password">
                     <p>Password</p>
+
+                    <div class="helper-text">
+                        Password must be 8+ chars, have 1 uppercase, 1 lowercase, 1 number, and 1 special char.
+                    </div>
                     {{ signup_form.password(placeholder="••••••••") }}
                     {% for error in signup_form.password.errors %}
                         <div class="error-text">{{ error }}</div>
