@@ -43,7 +43,13 @@ pip install -r requirements.txt
 
 ### 4. Seed the Database with Sample Data
 
-Populate the SQLite database with sample users, units, reviews, discussions, comments, and projects:
+Populate the SQLite database with sample users and all UWA CS units.
+
+```bash
+python seed_database.py
+```
+
+To add sample reviews, discussions, comments, and projects:
 
 ```bash
 python seed.py

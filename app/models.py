@@ -382,7 +382,7 @@ class Project(db.Model):
 
     created_at = db.Column(
         db.DateTime,
-        default=datetime.utcnow
+        default=lambda: datetime.now(timezone.utc)
     )
 
     year = db.Column(db.Integer)
