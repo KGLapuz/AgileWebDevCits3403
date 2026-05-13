@@ -20,6 +20,7 @@
 
         <form class="login-container" action="{{url_for('main.login')}}" method="POST">
             {{ login_form.hidden_tag() }} 
+            {{ login_form.csrf_token }}
             <div class="flash-msg-container">
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
@@ -57,6 +58,7 @@
             
             <form class="SignUp-container" action="{{ url_for('main.login')}}" method="POST">
                 {{ signup_form.hidden_tag() }}
+                {{ signup_form.csrf_token }}
             <div class="Credentials">
                 <div class="UserName">
                     <p>Username</p>
