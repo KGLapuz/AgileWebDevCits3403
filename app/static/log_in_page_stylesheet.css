@@ -3,7 +3,7 @@
 }
 
 body {
-    background-color: rgb(245, 245, 245);
+    background-color: rgb(0, 48, 135);
     margin: 0;
     width: 100%;
     min-height: 100vh;
@@ -24,6 +24,11 @@ body {
 .greetings h2 {
     font-weight: bolder;
     margin-bottom: 5px;
+    color:white;
+}
+
+.greetings p {
+    color: rgb(226, 182, 0); 
 }
 
 .login-container, .SignUpForm-content {
@@ -116,7 +121,7 @@ input {
 .signup-popup {
     margin-top: 20px;
     cursor: pointer;
-    color: #070d71;
+    color: white;
     font-size: 14px;
     font-weight: bold;
 }
