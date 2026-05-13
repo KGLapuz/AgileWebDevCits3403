@@ -352,7 +352,7 @@ def create_discussion(unit_code):
     )
 
 @main.route("/<unit_code>/projects")
-def unit_projects(unit_code):
+def unit_project(unit_code):
 
     unit = Unit.query.get_or_404(unit_code)
 
@@ -389,7 +389,23 @@ def project_detail(project_id):
         "project_detail.html",
         project=project
     )
-    
+
+@main.route("/<unit_code>/create_project", methods=["GET"])
+def create_project(unit_code):
+    """Render the create-project form."""
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    # Only logged-in users should reach this page
+    if not get_current_user():
+        flash("You must be logged in to start a discussion.", "error")
+        return redirect(url_for("main.login"))
+
+    return render_template(
+        "create_project.html",
+        unit=unit
+    )
+
 @main.route('/log_in', methods=['GET','POST'])
 def login():
     login_form = LoginForm()
