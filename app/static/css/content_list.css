@@ -20,12 +20,13 @@ body {
 
 .breadcrumb {
     margin-bottom: 20px;
-    font-size: 0.95rem;
-    color: grey;
+    font-size: 1rem;
+    color: rgb(0, 48, 135);
+    gap: 12px;
 }
 
 .breadcrumb a {
-    color: grey;
+    color: rgb(0, 48, 135);
     text-decoration: none;
     font-weight: 500;
 }

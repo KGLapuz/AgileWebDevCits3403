@@ -47,7 +47,7 @@
             <div class="card p-4 flex-fill">
 
                 <h1 class="fw-bold">
-                    {{ unit.code }}
+                    {{ unit.code }} 
                 </h1>
 
                 <h5 class="text-muted mb-3">
@@ -68,7 +68,7 @@
                     {% for review in reviews[:5] %}
                         <li class="review-wide-card">
                             <span class="review-date">
-                            {{ review.created_at.strftime("%d/%B") }}
+                            {{ review.created_at.strftime("%d.%m") }}
                             </span>
                             <span class="review-rating">
                                 {{ review.content[:100] }}...
@@ -128,8 +128,7 @@
 
         <!-- DISCUSSIONS -->
         <div class="col-md-4">
-            <a
-                href={{ url_for('main.unit_discussions', unit_code=unit.code) }}
+            <a href={{ url_for('main.unit_discussions', unit_code=unit.code) }}
                 class="text-decoration-none text-dark">
                 <div class="card p-3 h-100">
                     <h5>
@@ -138,8 +137,8 @@
                     <ul class="mt-2">
                         {% for d in discussions[:5] %}
                             <li>
-                                {{ d.created_at.strftime("%d %b") }}
-                                -
+                                {{ d.created_at.strftime("%d.%m") }}
+                                |
                                 {{ d.title[:50] }}
                             </li>
                         {% else %}
@@ -171,8 +170,8 @@
 
                             <li>
 
-                                {{ p.created_at.strftime("%d %b") }}
-                                -
+                                {{ p.created_at.strftime("%d.%m") }}
+                                |
 
                                 {{ p.title[:50] }}
 
@@ -213,8 +212,8 @@
 
                             <li>
 
-                                {{ r.created_at.strftime("%d/%m") }}
-                                -
+                                {{ r.created_at.strftime("%d.%m") }}
+                                |
 
                                 {{ r.content[:50] }}
 

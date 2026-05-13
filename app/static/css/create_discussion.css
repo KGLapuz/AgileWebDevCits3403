@@ -10,7 +10,7 @@ body {
 /* Breadcrumb links */
 .breadcrumb-item a {
     text-decoration: none;
-    color: grey;
+    color: rgb(0, 48, 135);
 }
 
 /* Card matches site-wide style */
