@@ -224,8 +224,10 @@ body {
     font-size: 1rem;
 }
 
-.workload-hours {
-    font-weight: 500;
+.workload-display--sm .workload-hours {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
 }
 
 /* ========================= */
