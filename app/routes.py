@@ -3,6 +3,9 @@ from .models import *
 from .controllers import user_registration, verify_login
 from flask import url_for, redirect, flash, render_template,session, Blueprint
 from .log_in_page import RegistrationForm, LoginForm, User
+
+from datetime import datetime
+
 import os
 
 from flask import (
@@ -23,7 +26,8 @@ def inject_globals():
 
     return dict(
         current_user_id=get_current_user(),
-        current_user=get_current_user_obj()
+        current_user=get_current_user_obj(),
+        greeting=get_greeting()
     )
 
 
@@ -45,6 +49,25 @@ def get_current_user_obj():
     if not user_id:
         return None
     return User.query.get(get_current_user())
+
+# -----------------------------------------
+# Greeting Helper Function
+# -----------------------------------------
+
+def get_greeting():
+    current_hour = datetime.now().hour
+
+    if 5 <= current_hour < 12:
+        return "Good Morning"
+
+    elif 12 <= current_hour < 17:
+        return "Good Afternoon"
+
+    elif 17 <= current_hour < 21:
+        return "Good Evening"
+
+    else:
+        return "Good Night"
 
 
 # -------------------------------------------------
@@ -173,40 +196,6 @@ def build_comment_tree(comments):
                 parent.replies_cache.append(comment)
 
     return root_comments
-
-
-# -------------------------------------------------
-# CREATE REVIEW
-# -------------------------------------------------
-
-@main.route("/create_review/<unit_code>", methods=["POST"])
-def create_review(unit_code):
-
-    unit = Unit.query.get_or_404(unit_code)
-
-    author_id = get_current_user()
-
-    # placeholder values
-    rating = 5
-    workload = 3
-    content = "This is a great unit!"
-
-    review = Review(
-        unit_code=unit.code,
-        author_id=author_id,
-        rating=rating,
-        workload=workload,
-        content=content
-    )
-
-    db.session.add(review)
-
-    db.session.commit()
-
-    return jsonify({
-        "success": True
-    })
-
 
 # -------------------------------------------------
 # ADD COMMENT / REPLY
@@ -386,7 +375,7 @@ def project_detail(project_id):
         project=project
     )
     
-@main.route('/log_in', methods=['GET','POST'])
+@main.route('/login', methods=['GET','POST'])
 def login():
     login_form = LoginForm()
     signup_form = RegistrationForm()
@@ -401,16 +390,9 @@ def login():
         user = verify_login(login_form.email.data, login_form.password.data)
         if user:
             session['user_id'] = user.user_id
-            return redirect(url_for('main.dashboard'))
+            return redirect(url_for('main.index'))
         flash('Login Unsuccessful. Please Check email and password', 'error')
     return render_template('log_in_page.html', login_form=login_form, signup_form=signup_form)
-
-@main.route('/dashboard')
-def dashboard():
-    if 'user_id' not in session:
-        return redirect(url_for('main.login'))
-    
-    return render_template('dashboard.html')
 
 @main.route('/logout')
 def logout():
@@ -513,7 +495,7 @@ def submit_review(unit_code):
     db.session.add(review)
     db.session.commit()
 
-    flash("Review submitted — thanks for helping your fellow students!", "success")
+    flash("Review submitted - thanks for helping your fellow students!", "success")
 
     return redirect(
         url_for("main.unit_reviews", unit_code=unit.code)
@@ -525,11 +507,15 @@ def get_ahead_tips(unit_code):
 
     search = request.args.get("search", "")
 
-    query = Review.query.filter_by(unit_code=unit_code)
+    query = Review.query.filter(
+        Review.unit_code == unit_code,
+        Review.get_ahead_tip.is_not(None)
+    )
 
     if search:
         query = query.filter(
-            Review.content.ilike(f"%{search}%")
+            Review.content.ilike(f"%{search}%"),
+            Review.get_ahead_tip.is_not(None)
         )
 
     tips = query.order_by(
@@ -616,7 +602,8 @@ def search_get_ahead_tips(unit_code):
 
     if search:
         query = query.filter(
-            Review.get_ahead_tip.ilike(f"%{search}%")
+            Review.get_ahead_tip.ilike(f"%{search}%"),
+            Review.get_ahead_tip.is_not(None)
         )
     tips = query.order_by(
         Review.created_at.desc()
