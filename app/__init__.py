@@ -5,16 +5,16 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 import flask_wtf.csrf
 
-from config import Config
+from config import DevelopmentConfig, TestingConfig 
 
 csrf = flask_wtf.csrf.CSRFProtect()
 db = SQLAlchemy()
 migrate = Migrate()
 moment = Moment()
 
-def create_app():
+def create_app(config_class=DevelopmentConfig):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config.from_object(config_class)
 
     csrf.init_app(app)
     db.init_app(app)
@@ -25,4 +25,5 @@ def create_app():
         from . import models
         from .routes import main
         app.register_blueprint(main)
-        return app
+        
+    return app
