@@ -12,6 +12,9 @@
         <!-- Global Header CSS -->
         <link href="{{ url_for('static', filename='css/header.css') }}" rel="stylesheet">
 
+        <!-- Global Footer CSS -->
+        <link href="{{ url_for('static', filename='css/footer.css') }}" rel="stylesheet">
+
         <!-- Workload CSS -->
          <link href="{{ url_for('static', filename='css/workload_display.css')}}" rel="stylesheet">
          
@@ -26,6 +29,9 @@
         <main>
             {% block content %}{% endblock %}
         </main>
+
+         <!-- Footer -->
+        {% include "partials/footer.html" %}
 
         {% block scripts %}{% endblock %}
 
