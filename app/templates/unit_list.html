@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link 
+    rel="stylesheet" 
+    href="{{ url_for('static', filename='css/content_list.css') }}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1>Browse Units</h1>
+        <p>
+            Search for a unit by its code or name to see what others have to say.<br>
+            Read reviews, projects, study tips and join discussions.
+        </p>
+    </div>
+
+    <!-- SEARCH -->
+    <form class="search-bar">
+        <input
+            id = "live-search"
+            type="search"
+            name="search"
+            placeholder="Search units..."
+            value="{{ request.args.get('search', '') }}"
+        >
+    </form>
+    <!-- UNIT LIST -->
+    <div id="search-results" class="content-list">
+        {% if units %}
+            {% for item in units[:10] %}
+                {% include "partials/unit_card.html" %}
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <h3>No matching units found.</h3>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const searchInput = document.getElementById("live-search");
+        const resultsContainer = document.getElementById("search-results");
+
+        let debounceTimer;
+
+        searchInput.addEventListener("input", () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                const searchValue = searchInput.value;
+                const response = await fetch(
+                    `/units/search?search=${encodeURIComponent(searchValue)}`
+                );
+                const html = await response.text();
+                resultsContainer.innerHTML = html;
+            }, 500);
+        });
+    </script>
+{% endblock %}

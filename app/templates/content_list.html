@@ -41,6 +41,9 @@
                 Read reviews from previous students.<br><br>
                 To get started:
                 Click on the ⭐ on the bottom right of the page to write your own review, or search keywords into the search bar to see how the unit has been reviewed by past students!
+            {% elif content_type == "tips" %}
+                We know how quickly things can pile up and cause us to fall behind.<br><br>
+                Get-Ahead tips help prevent that by letting you know what previous students in this unit would've found helpful before the semester began.
             {% endif %}
         </p>
     </div>
@@ -48,6 +51,7 @@
     <!-- SEARCH -->
     <form method="GET" class="search-bar">
         <input
+            id = "live-search"
             type="search"
             name="search"
             placeholder="Search {{ content_type }}..."
@@ -69,31 +73,34 @@
 
     <!-- CONTENT LIST -->
     <div class="content-list">
-
         {% if items %}
-
-            {% for item in items %}
-
-                {% if content_type == "discussions" %}
-                    {% include "partials/discussion_card.html" %}
-                {% elif content_type == "projects" %}
-                    {% include "partials/project_card.html" %}
-                {% elif content_type == "reviews" %}
-                    {% include "partials/review_card.html" %}
-                {% endif %}
-
-            {% endfor %}
-
+            <div id="search-results" class="content-list">
+                {% include "partials/content_search_results.html" %}
+            </div>
         {% else %}
-
             <div class="empty-state">
                 <h3>No {{ content_type }} to see yet. Be the first to add one!</h3>
             </div>
-
         {% endif %}
-
     </div>
-
 </div>
+{% endblock %}
 
+{% block scripts %}
+    <script>
+        const searchInput = document.getElementById("live-search");
+        const resultsContainer = document.getElementById("search-results");
+        let debounceTimer;
+        searchInput.addEventListener("input", () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                const searchValue = searchInput.value;
+                const response = await fetch(
+                    `${window.location.pathname}/search?search=${encodeURIComponent(searchValue)}`
+                );
+                const html = await response.text();
+                resultsContainer.innerHTML = html;
+            }, 500);
+        });
+    </script>
 {% endblock %}

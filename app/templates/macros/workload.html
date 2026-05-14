@@ -2,7 +2,7 @@
     macros/workload.html
     ---------------------
     Reusable macro to display workload as:
-        X hrs/week  ⏳⏳⏳⬜⬜
+        X hrs/wk  ⏳⏳⏳⬜⬜
 
     Hours → hourglass mapping (mirrors create_review form):
         < 3  hrs  → 1 hourglass
@@ -18,7 +18,7 @@
 
     Parameters:
         hours  — the numeric hours value stored in the DB
-        size   — "md" (default) or "sm" for the reviews list
+        size   — "md" (default) for cards, "sm" for compact inline display
 #}
 
 {% macro workload_display(hours, size="md") %}
@@ -36,20 +36,40 @@
         {% set filled = 5 %}
     {% endif %}
 
-    <span class="workload-display workload-display--{{ size }}">
-        <span class="workload-hours">
-            {% if hours == hours | int %}
-                {{ hours | int }}
-            {% else %}
-                {{ "%.1f" | format(hours) }}
-            {% endif %}
-            hrs/week
+    {% set hours_str = (hours | int) | string if hours == hours | int else "%.1f" | format(hours) %}
+
+    {% if size == "md" %}
+
+        {#
+            md: mirrors the rating card's .rating-info > h2 + .rating-stars
+            structure exactly, so all sizing/colour CSS is inherited for free.
+        #}
+        <div class="rating-info">
+            <h2 class="fw-bold">
+                {{ hours_str }}<span class="workload-unit">hrs/week</span>
+            </h2>
+            <div class="rating-stars">
+                {% for i in range(1, 6) %}
+                    <span class="wl-hg {% if i <= filled %}wl-hg--filled{% else %}wl-hg--empty{% endif %}">⏳</span>
+                {% endfor %}
+            </div>
+        </div>
+
+    {% else %}
+
+        {# sm: compact inline display for reviews list, project cards, etc. #}
+        <span class="workload-display workload-display--sm">
+            <span>
+                <span class="workload-hours">{{ hours_str }}</span>
+                <br> hrs/wk
+            </span>
+            <span class="workload-hourglasses">
+                {% for i in range(1, 6) %}
+                    <span class="wl-hg {% if i <= filled %}wl-hg--filled{% else %}wl-hg--empty{% endif %}">⏳</span>
+                {% endfor %}
+            </span>
         </span>
-        <span class="workload-hourglasses">
-            {% for i in range(1, 6) %}
-                <span class="wl-hg {% if i <= filled %}wl-hg--filled{% else %}wl-hg--empty{% endif %}">⏳</span>
-            {% endfor %}
-        </span>
-    </span>
+
+    {% endif %}
 
 {% endmacro %}
