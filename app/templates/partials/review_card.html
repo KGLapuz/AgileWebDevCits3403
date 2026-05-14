@@ -14,7 +14,7 @@
                 </span>
             </div>
             <p class="review-preview">
-                {{ item.content[:600] }}...
+                {{ item.content[:600] }}{% if item.content|length > 600 %}...{% endif %}
             </p>
         </div>
         <!-- RIGHT SIDE -->

@@ -29,7 +29,7 @@
     </div>
 
     <p class="card-preview">
-        {{ item.body[:120] }}...
+        {{ item.body[:120] }}{% if item.body|length > 120 %}...{% endif%}
     </p>
 
 </a>
