@@ -6,13 +6,12 @@
     <h3>{{ item.title }}</h3>
 
     <div class="card-meta">
-        <span>{{ item.year }}</span>
-        <span>• {{ item.author.username }}</span>
+        <span> {{ item.author.username }}</span>
         <span>• {{ moment(item.created_at).fromNow() }}</span>
     </div>
 
     <p>
-        {{ item.description[:140] }}{% if item.description > 140 %}...{% endif%}
+        {{ item.description[:140] }}{% if item.description|length > 140 %}...{% endif%}
     </p>
 
 </a>

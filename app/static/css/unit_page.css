@@ -219,3 +219,7 @@ li {
     border-color: rgb(0, 48, 135) !important;
     cursor: pointer;
 }
+
+a {
+    color: rgb(0, 48, 135);
+}

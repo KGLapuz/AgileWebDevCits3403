@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Projects Page{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link href="{{ url_for('static', filename='css/discussion_thread_styles.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<div id="thread-root"
+     data-project-id="{{ project.project_id }}"
+     data-current-user="{{ current_user_id }}"
+     class="container mt-5 pt-5 thread-container">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+        <p>
+            <a href="{{ url_for('main.index') }}">Home</a> >
+            <a href="{{ url_for('main.unit_page', code=unit.code) }}">
+                {{ unit.code }}
+            </a> > 
+            <a href="{{ url_for('main.unit_project', unit_code=unit.code) }}">
+                Projects
+            </a> > {{project.title}}
+        </p>
+    </div>
+
+    <!-- STICKY THREAD HEADER -->
+    <div class="thread-sticky">
+        <div class="thread-sticky-inner">
+            <h2>{{ project.title }}</h2>
+            <p class="sticky-meta"> Posted by 
+                {% if project.author_id == current_user_id %}
+                    You
+                {% else %}
+                    {{ project.author.username }}
+                {% endif %}
+                •
+                <time
+                    class="relative-time"
+                    datetime="{{ project.created_at.isoformat() }}Z">
+                </time>
+                •
+                <a href="{{ project.external_link }}" target="_blank">External link</a> <i class="bi bi-box-arrow-up-right"></i>
+            </p>
+        </div>
+    </div>
+
+    <!-- ORIGINAL POST -->
+    <div class="card thread-card p-4 mb-4">
+        <p class="thread-body">
+            {{ project.description }}
+        </p>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/discussion_thread_script.js') }}"></script>
+{% endblock %}

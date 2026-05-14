@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Share a Project— {{ unit.code }}{% endblock %}
+
+{% block styles %}
+<link href="{{ url_for('static', filename='css/create_project.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-5">
+
+    <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.unit_project', unit_code=unit.code) }}">Project</a>
+            </li>
+            <li class="breadcrumb-item active">Share a Project</li>
+        </ol>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Share a Project</h1>
+        <p class="text-muted">Share your work and repositiory with <strong>{{ unit.code }} — {{ unit.name }}</strong></p>
+    </div>
+
+    <!-- FLASH MESSAGES -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- FORM CARD -->
+    <div class="card shadow-sm p-4 mb-5">
+        <form method="POST" action="{{ url_for('main.create_project', unit_code=unit.code) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+            <!-- Title -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Project Title</label>
+                <input
+                    type="text"
+                    class="form-control"
+                    id="project_title"
+                    name="project_title"
+                    maxlength="100"
+                    minlength="10"
+                    placeholder="Projects Done In This Unit"
+                    value="{{ request.form.get('project_title', '') }}"
+                    required>
+                <div class="form-text">10-100 characters.</div>
+            </div>
+
+            <!-- WORKLOAD -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Repository Link</label>
+                <input 
+                    type="url"
+                    class="form-control"
+                    id="repo_link"
+                    name="repo_link"
+                    placeholder="e.g., https://github.com/username/repo"
+                    value="{{ request.form.get('repo_link', '') }}"
+                    required>
+                <div class="form-text">Provide a direct link to your Github, Gitlab, or Bitbucket repository.</div>
+            </div>
+
+            <!-- BODY -->
+            <div class="mb-3">
+                <label for="body" class="form-label fw-semibold">Description</label>
+                <textarea
+                    class="form-control"
+                    id="project_body"
+                    name="project_body"
+                    rows="6"
+                    maxlength="5000"
+                    minlength="15"
+                    placeholder="How would you describe your project? Any challenges you faced along the way? Specification?"
+                    required>{{ request.form.get('project_body', '') }}</textarea>
+                <div class="form-text">15–5000 characters.</div>
+            </div>
+
+            <!-- SUBMIT / CANCEL -->
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('main.unit_project', unit_code=unit.code) }}"
+                   class="btn btn-outline-secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-primary px-4">
+                    Submit 
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/create_project.js') }}" defer></script>
+{% endblock %}

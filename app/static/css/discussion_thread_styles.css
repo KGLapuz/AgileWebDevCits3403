@@ -255,6 +255,13 @@ textarea.form-control:focus {
 }
 
 /* ========================= */
+/* EXTERNAL PAGE THREAD STICKY */
+/* ========================= */
+.thread-sticky a {
+    color: rgb(0,48,135);
+}
+
+/* ========================= */
 /* MOBILE */
 /* ========================= */
 
@@ -283,3 +290,4 @@ textarea.form-control:focus {
     }
 
 }
+
