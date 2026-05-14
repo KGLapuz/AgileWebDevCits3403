@@ -6,18 +6,28 @@
             </a>
         </div>
         <div class="nav-actions">
-            {% if current_user_id %}
+            <!-- LOGIN PAGE ONLY -->
+            {% if request.endpoint == 'main.login' %}
+                <a
+                    href="{{ url_for('main.index') }}"
+                    class="guest-btn"
+                >
+                    Continue as Guest
+                </a>
+            <!-- LOGGED IN -->
+            {% elif current_user_id %}
                 <span class="text-white small">
-                    {{greeting}} {{ current_user.username }}
+                    {{ greeting }} {{ current_user.username }}
                 </span>
-                <button 
+                <button
                     class="logout-btn"
                     onclick="confirmLogout()"
                 >
                     <i class="bi bi-box-arrow-right"></i>
                 </button>
+            <!-- LOGGED OUT -->
             {% else %}
-                <a 
+                <a
                     href="{{ url_for('main.login') }}"
                     class="login-btn"
                 >

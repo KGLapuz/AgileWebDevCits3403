@@ -7,14 +7,10 @@
 
 {% block content %}
     <div class="content">
-        <a href="{{ url_for('main.index') }}" class="home-redirect">&#x21D0; Home</a>
         <div class="greetings">
-            <div class="logo-container">
-                <div class="logo"></div>
-            </div>
             <h2>UniReviews</h2>
             <p>Shares Your Experience</p>
-            <p> Get access to up to date reviews, discussions, past projects and hot tips for all Computer Science units! </p>
+            <p> Get access to up-to-date reviews, discussions, past projects and hot tips for all Computer Science units! </p>
         </div>
 
         <form class="login-container" action="{{url_for('main.login')}}" method="POST">

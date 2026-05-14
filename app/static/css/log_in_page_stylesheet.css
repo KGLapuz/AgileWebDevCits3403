@@ -3,17 +3,27 @@
 }
 
 body {
-    background-color: rgb(0, 48, 135);
+    background-color: whitesmoke;
+}
+
+main {
+    background-color: whitesmoke;
     margin: 0;
     width: 100%;
-    min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
-    
-    /* Stacks elements vertically and ensures they center in the viewport */
     display: flex;
     flex-direction: column;
     align-items: center; 
-    justify-content: flex-start;
+}
+
+.nav-bar {
+    background-color: rgb(0, 48, 135);
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center;
+    padding: 0px;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .content {
@@ -21,20 +31,19 @@ body {
     flex-direction: column;
     align-items: center; /* Ensures the form card stays centered */
     text-align: center;
-    width: 90%;
-    max-width: 850px; 
-    flex: 1; 
-    padding: 60px 0;
+    width: 100%;
+    max-width: 850px;
+    padding-top: 60px;
 }
 
 .greetings h2 {
     font-weight: bolder;
     margin-bottom: 5px;
-    color: white;
+    color: black;
 }
 
 .greetings p {
-    color: white; 
+    color: #333; 
     line-height: 1.5;
 }
 
@@ -96,7 +105,7 @@ input {
 .signup-popup {
     margin-top: 20px;
     cursor: pointer;
-    color: white;
+    color: rgb(0, 48, 135);
     font-size: 14px;
     font-weight: bold;
     text-decoration: underline;
@@ -116,11 +125,36 @@ input {
     justify-content: center;
 }
 
-.home-redirect {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
+/* Login page footer sizing override */
+.site-footer .footer-container {
+    width: 100%;
+    max-width: 600px; /* ~120% of 400px form width */
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Prevent overly stretched disclaimer text */
+.site-footer .footer-liability p,
+.site-footer .footer-contact p,
+.site-footer .footer-brand p {
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+/* Optional: stack footer sections vertically on login page */
+.site-footer .footer-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.close {
+    font-size: 25px;
+}
+
+.close:hover {
+    cursor: pointer;
 }
