@@ -528,10 +528,12 @@ def unit_project(unit_code):
 def project_detail(project_id):
 
     project = Project.query.get_or_404(project_id)
+    unit = project.unit
 
     return render_template(
         "project_detail.html",
-        project=project
+        project=project,
+        unit=unit
     )
 
 @main.route("/<unit_code>/create_project", methods=["GET"])

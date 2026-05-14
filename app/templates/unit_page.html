@@ -173,7 +173,7 @@
                                 {{ p.created_at.strftime("%d.%m") }}
                                 |
 
-                                {{ p.title[:50] }}
+                                {{ p.title[:25] }}{% if p.title|length > 25 %}...{% endif %}
 
                             </li>
 
