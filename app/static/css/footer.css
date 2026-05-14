@@ -10,17 +10,15 @@
     max-width: 1100px;
     margin: 0 auto;
     display: flex;
-    justify-content: space-between; /* Spreads the 4 sections out */
+    justify-content: space-between; 
     gap: 2rem;
 }
 
-/* Clear out list defaults in one go */
 .footer-links ul {
     list-style: none;
     padding: 0;
 }
 
-/* Keep headings and text clean */
 .site-footer h5 {
     color: #fff;
     margin-bottom: 0.8rem;
@@ -33,7 +31,6 @@
     margin-bottom: 0.4rem;
 }
 
-/* Liability specific: just stop it from being too wide */
 .footer-liability {
     max-width: 300px;
 }
