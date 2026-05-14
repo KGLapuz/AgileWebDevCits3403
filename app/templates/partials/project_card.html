@@ -11,7 +11,7 @@
     </div>
 
     <p>
-        {{ item.description[:140] }}{% if item.description > 140 %}...{% endif%}
+        {{ item.description[:140] }}{% if item.description|length > 140 %}...{% endif%}
     </p>
 
 </a>

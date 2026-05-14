@@ -504,6 +504,8 @@ def get_ahead_tips(unit_code):
 @main.route("/<unit_code>/projects")
 def unit_project(unit_code):
 
+    unit = Unit.query.get_or_404(unit_code)
+    search = request.args.get("search", "")
     query = Project.query.filter_by(unit_code=unit_code)
 
     if search:
@@ -594,7 +596,7 @@ def submit_project(unit_code):
     flash("Project posted successfully!", "success")
 
     return redirect(
-        url_for("main.unit_project", unit_code=unit.code
+        url_for("main.unit_project", unit_code=unit.code))
  
 @main.route("/units")
 def units():
@@ -733,4 +735,27 @@ def search_unit_discussions(unit_code):
         unit=unit,
         items=discussions,
         content_type="discussions"
+    )
+    
+#search projects
+@main.route("/<unit_code>/projects/search")
+def search_projects(unit_code):
+    unit = Unit.query.get_or_404(unit_code)
+    search = request.args.get("search", "")
+    query = Project.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            Project.title.ilike(f"%{search}%"),
+            Project.description.ilike(f"%{search}%")
+        )
+    projects = query.order_by(
+        Project.created_at.desc()
+    ).all()
+ 
+    return render_template(
+        "partials/content_search_results.html",
+        unit=unit,
+        items=projects,
+        content_type="projects"
     )
