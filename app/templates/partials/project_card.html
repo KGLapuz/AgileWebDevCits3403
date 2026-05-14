@@ -6,8 +6,7 @@
     <h3>{{ item.title }}</h3>
 
     <div class="card-meta">
-        <span>{{ item.year }}</span>
-        <span>• {{ item.author.username }}</span>
+        <span> {{ item.author.username }}</span>
         <span>• {{ moment(item.created_at).fromNow() }}</span>
     </div>
 

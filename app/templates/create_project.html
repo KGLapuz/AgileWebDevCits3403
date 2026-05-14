@@ -52,11 +52,12 @@
                 <input
                     type="text"
                     class="form-control"
-                    id="title"
+                    id="project_title"
+                    name="project_title"
                     maxlength="100"
                     minlength="10"
                     placeholder="Projects Done In This Unit"
-                    value="{{ request.form.get('title', '') }}"
+                    value="{{ request.form.get('project_title', '') }}"
                     required>
                 <div class="form-text">10-100 characters.</div>
             </div>
@@ -67,7 +68,8 @@
                 <input 
                     type="url"
                     class="form-control"
-                    id="repo-link"
+                    id="repo_link"
+                    name="repo_link"
                     placeholder="e.g., https://github.com/username/repo"
                     value="{{ request.form.get('repo_link', '') }}"
                     required>
@@ -79,13 +81,13 @@
                 <label for="body" class="form-label fw-semibold">Description</label>
                 <textarea
                     class="form-control"
-                    id="body"
-                    name="body"
+                    id="project_body"
+                    name="project_body"
                     rows="6"
                     maxlength="5000"
                     minlength="15"
                     placeholder="How would you describe your project? Any challenges you faced along the way? Specification?"
-                    required>{{ request.form.get('body', '') }}</textarea>
+                    required>{{ request.form.get('project_body', '') }}</textarea>
                 <div class="form-text">15–5000 characters.</div>
             </div>
 

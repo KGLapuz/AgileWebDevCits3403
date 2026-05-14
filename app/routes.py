@@ -351,60 +351,10 @@ def create_discussion(unit_code):
         url_for("main.unit_discussions", unit_code=unit.code)
     )
 
-@main.route("/<unit_code>/projects")
-def unit_project(unit_code):
 
-    unit = Unit.query.get_or_404(unit_code)
-
-    search = request.args.get("search", "")
-
-    query = Project.query.filter_by(unit_code=unit_code)
-
-    if search:
-        query = query.filter(
-            db.or_(
-                Project.title.ilike(f"%{search}%"),
-                Project.description.ilike(f"%{search}%")
-            )
-        )
-
-    projects = query.order_by(
-        Project.created_at.desc()
-    ).all()
-
-    return render_template(
-        "content_list.html",
-        unit=unit,
-        items=projects,
-        content_type="projects",
-        page_title=f"{unit.code} Projects"
-    )
-
-@main.route("/projects/<int:project_id>")
-def project_detail(project_id):
-
-    project = Project.query.get_or_404(project_id)
-
-    return render_template(
-        "project_detail.html",
-        project=project
-    )
-
-@main.route("/<unit_code>/create_project", methods=["GET"])
-def create_project(unit_code):
-    """Render the create-project form."""
-
-    unit = Unit.query.get_or_404(unit_code)
-
-    # Only logged-in users should reach this page
-    if not get_current_user():
-        flash("You must be logged in to start a discussion.", "error")
-        return redirect(url_for("main.login"))
-
-    return render_template(
-        "create_project.html",
-        unit=unit
-    )
+# -------------------------------------------------
+# LOGIN page
+# -------------------------------------------------
 
 @main.route('/log_in', methods=['GET','POST'])
 def login():
@@ -539,4 +489,106 @@ def submit_review(unit_code):
 
     return redirect(
         url_for("main.unit_reviews", unit_code=unit.code)
+    )
+
+# -------------------------------------------------
+# PROJECT pages
+# -------------------------------------------------
+
+@main.route("/<unit_code>/projects")
+def unit_project(unit_code):
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    search = request.args.get("search", "")
+
+    query = Project.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            db.or_(
+                Project.title.ilike(f"%{search}%"),
+                Project.description.ilike(f"%{search}%")
+            )
+        )
+
+    projects = query.order_by(
+        Project.created_at.desc()
+    ).all()
+
+    return render_template(
+        "content_list.html",
+        unit=unit,
+        items=projects,
+        content_type="projects",
+        page_title=f"{unit.code} Projects"
+    )
+
+@main.route("/projects/<int:project_id>")
+def project_detail(project_id):
+
+    project = Project.query.get_or_404(project_id)
+
+    return render_template(
+        "project_detail.html",
+        project=project
+    )
+
+@main.route("/<unit_code>/create_project", methods=["GET"])
+def create_project(unit_code):
+    """Render the create-project form."""
+
+    unit = Unit.query.get_or_404(unit_code)
+
+    # Only logged-in users should reach this page
+    if not get_current_user():
+        flash("You must be logged in to submit project.", "error")
+        return redirect(url_for("main.login"))
+
+    return render_template(
+        "create_project.html",
+        unit=unit
+    )
+
+# -------------------------------------------------
+# PROJECT submit pages
+# -------------------------------------------------
+
+@main.route("/<unit_code>/create_project", methods=["POST"])
+def submit_project(unit_code):
+    unit = Unit.query.get_or_404(unit_code)
+
+    author_id = get_current_user()
+
+    if not author_id:
+        flash("You must be logged in to submit a project.", "error")
+        return redirect(url_for("main.login"))
+    
+    title     = request.form.get("project_title", "").strip()
+    repo_link   = request.form.get("repo_link", "").strip()
+    project_body = request.form.get("project_body", "").strip()
+
+    if not title or len(title) < 10:
+        flash("Title must be at least 10 characters.", "error")
+        return render_template("create_project.html", unit = unit)
+    
+    if not project_body or len(project_body) < 15: 
+        flash("Description must be at least 15 characters.", "error")
+        return render_template("create_project.html", unit = unit)
+    
+    project = Project(
+        unit_code=unit.code,
+        author_id=author_id,
+        title=title,
+        external_link=repo_link,
+        description=project_body,
+    )
+
+    db.session.add(project)
+    db.session.commit()
+
+    flash("Project posted successfully!", "success")
+
+    return redirect(
+        url_for("main.unit_project", unit_code=unit.code)
     )
