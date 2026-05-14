@@ -1,0 +1,160 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: whitesmoke;
+}
+
+main {
+    background-color: whitesmoke;
+    margin: 0;
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+}
+
+.nav-bar {
+    background-color: rgb(0, 48, 135);
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center;
+    padding: 0px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Ensures the form card stays centered */
+    text-align: center;
+    width: 100%;
+    max-width: 850px;
+    padding-top: 60px;
+}
+
+.greetings h2 {
+    font-weight: bolder;
+    margin-bottom: 5px;
+    color: black;
+}
+
+.greetings p {
+    color: #333; 
+    line-height: 1.5;
+}
+
+/* The "White Card" styling */
+.login-container, .SignUpForm-content {
+    background-color: white;
+    padding: 2rem;
+    margin: 20px 0; /* Vertical spacing */
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Defined shadow for depth */
+    width: 100%;
+    max-width: 400px; /* Forces it into a card shape */
+}
+
+.credentials, .Credentials {
+    text-align: left;
+}
+
+.email, .password, .UserName, .Email {
+    margin: 10px 0;
+    min-height: 75px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.email p, .password p, .UserName p, .Email p {
+    margin: 0px;
+    padding-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333; /* Darker text for readability inside white card */
+}
+
+input {
+    border-radius: 8px;
+    border: 1px solid rgb(195, 195, 195);
+    padding: 10px;
+    width: 100%;
+}
+
+.button {
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 8px;
+    padding: 12px;
+    border: none;
+    background: rgb(0, 48, 135);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+.button:hover {
+    opacity: 0.9;
+}
+
+.signup-popup {
+    margin-top: 20px;
+    cursor: pointer;
+    color: rgb(0, 48, 135);
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Rest of your existing modal and error styles remain the same */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Login page footer sizing override */
+.site-footer .footer-container {
+    width: 100%;
+    max-width: 600px; /* ~120% of 400px form width */
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Prevent overly stretched disclaimer text */
+.site-footer .footer-liability p,
+.site-footer .footer-contact p,
+.site-footer .footer-brand p {
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+/* Optional: stack footer sections vertically on login page */
+.site-footer .footer-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.close {
+    font-size: 25px;
+}
+
+.close:hover {
+    cursor: pointer;
+}
