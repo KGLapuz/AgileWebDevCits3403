@@ -45,3 +45,18 @@
     text-align: center;
     font-size: 0.7rem;
 }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
