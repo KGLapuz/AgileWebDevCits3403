@@ -1,0 +1,20 @@
+{% if items %}
+    {% for item in items %}
+        {% if content_type == "discussions" %}
+            {% include "partials/discussion_card.html" %}
+        {% elif content_type == "projects" %}
+            {% include "partials/project_card.html" %}
+        {% elif content_type == "reviews" %}
+            {% include "partials/review_card.html" %}
+        {% elif content_type == "tips" %}
+            {% include "partials/get_ahead_card.html" %}
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <h3>
+            Couldn't find any {{ content_type }} about that.
+            Be the first to add one!
+        </h3>
+    </div>
+{% endif %}

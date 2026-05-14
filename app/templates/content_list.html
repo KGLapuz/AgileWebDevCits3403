@@ -51,6 +51,7 @@
     <!-- SEARCH -->
     <form method="GET" class="search-bar">
         <input
+            id = "live-search"
             type="search"
             name="search"
             placeholder="Search {{ content_type }}..."
@@ -73,17 +74,9 @@
     <!-- CONTENT LIST -->
     <div class="content-list">
         {% if items %}
-            {% for item in items %}
-                {% if content_type == "discussions" %}
-                    {% include "partials/discussion_card.html" %}
-                {% elif content_type == "projects" %}
-                    {% include "partials/project_card.html" %}
-                {% elif content_type == "reviews" %}
-                    {% include "partials/review_card.html" %}
-                {% elif content_type == "tips" %}
-                    {% include "partials/get_ahead_card.html" %}
-                {% endif %}
-            {% endfor %}
+            <div id="search-results" class="content-list">
+                {% include "partials/content_search_results.html" %}
+            </div>
         {% else %}
             <div class="empty-state">
                 <h3>No {{ content_type }} to see yet. Be the first to add one!</h3>
@@ -91,5 +84,23 @@
         {% endif %}
     </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
+    <script>
+        const searchInput = document.getElementById("live-search");
+        const resultsContainer = document.getElementById("search-results");
+        let debounceTimer;
+        searchInput.addEventListener("input", () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(async () => {
+                const searchValue = searchInput.value;
+                const response = await fetch(
+                    `${window.location.pathname}/search?search=${encodeURIComponent(searchValue)}`
+                );
+                const html = await response.text();
+                resultsContainer.innerHTML = html;
+            }, 500);
+        });
+    </script>
 {% endblock %}
