@@ -90,7 +90,6 @@ li {
 
 .rating-info h2 {
     font-size: 3rem !important;
-    font-size:3rem !important;
     margin: 0 !important;
     line-height: 1;
     text-align: center !important;
@@ -103,12 +102,40 @@ li {
     color: #FFD700;
 }
 
-.workload-icon {
-    display: flex !important;
-    align-items: center;
-    flex-direction: row !important;
-    gap:4px;
+.workload-unit {
+    font-size: 1rem;
+    font-weight: normal;
+    color: #555;
+    margin-left: 6px;
 }
+
+<<<<<<< Updated upstream
+.rating-stars span {
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.wl-hg--empty {
+    opacity: 0.18;
+}
+
+.wl-hg--filled {
+    opacity: 1;
+=======
+.workload-display--md .workload-hours {
+    font-size: 1rem;
+    color: #333;
+}
+
+.workload-display--md h2 {
+    font-weight: 700;
+}
+
+.workload-display--md .wl-hg {
+    font-size: 2rem;
+>>>>>>> Stashed changes
+}
+
 .rating-card h6 {
     white-space: nowrap !important;
 }

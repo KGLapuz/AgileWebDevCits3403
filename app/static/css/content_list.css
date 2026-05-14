@@ -10,8 +10,10 @@ body {
 .page-container {
     max-width: 1000px;
     margin: 0 auto;
-    padding-top: 110px;
+    padding-top: 40px;
     padding-bottom: 60px;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 
 /* ========================= */
@@ -189,6 +191,10 @@ body {
     gap: 4px;
 }
 
+.review-stat h2 {
+    font-weight: 700 !important;
+}
+
 .stat-label {
     font-size: 0.8rem;
     color: #666;
@@ -203,10 +209,27 @@ body {
 }
 
 .stat-value {
-    font-size: 1.25rem;
+    font-size: 2rem;
     font-weight: bold;
-    color: rgb(0,48,135);
+    color: #333;
     min-width: 40px;
+}
+
+.workload-display--sm {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #333;
+    min-width: 40px;
+}
+
+.workload-display--sm .wl-hg {
+    font-size: 1rem;
+}
+
+.workload-display--sm .workload-hours {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
 }
 
 /* ========================= */
@@ -237,6 +260,33 @@ body {
 
 .hourglass.filled {
     opacity: 1;
+}
+
+/* ========================= */
+/* UNIT CARD */
+/* ========================= */
+
+.unit-card {
+    cursor: pointer;
+}
+
+.unit-code {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: rgb(0,48,135);
+    letter-spacing: 0.5px;
+}
+
+.unit-name {
+    margin: 0 0 10px 0;
+    font-size: 1.5rem;
+    color: #222;
+}
+
+.unit-review-count {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
 }
 
 /* ========================= */

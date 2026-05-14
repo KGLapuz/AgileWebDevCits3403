@@ -1,0 +1,11 @@
+{% if units %}
+    {% for item in units %}
+        <div>
+            {% include "partials/unit_card.html" %}
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state">
+        <h3>No matching units found.</h3>
+    </div>
+{% endif %}

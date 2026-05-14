@@ -1,0 +1,62 @@
+.site-footer {
+    background: rgb(0, 48, 135);
+    color: white;
+    padding: 2rem 20px;
+    margin-top: 3rem;
+    font-size: 0.65rem;
+}
+
+.footer-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between; /* Spreads the 4 sections out */
+    gap: 2rem;
+}
+
+/* Clear out list defaults in one go */
+.footer-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Keep headings and text clean */
+.site-footer h5 {
+    color: #fff;
+    margin-bottom: 0.8rem;
+    font-size: 1rem;
+}
+
+.site-footer p, .site-footer a {
+    color: #cbd5e0;
+    text-decoration: none;
+    margin-bottom: 0.4rem;
+}
+
+/* Liability specific: just stop it from being too wide */
+.footer-liability {
+    max-width: 300px;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 2rem;
+    padding-top: 1rem;
+    text-align: center;
+    font-size: 0.7rem;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}

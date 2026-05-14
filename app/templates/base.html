@@ -12,11 +12,17 @@
         <!-- Global Header CSS -->
         <link href="{{ url_for('static', filename='css/header.css') }}" rel="stylesheet">
 
+        <!-- Global Footer CSS -->
+        <link href="{{ url_for('static', filename='css/footer.css') }}" rel="stylesheet">
+
         <!-- Workload CSS -->
          <link href="{{ url_for('static', filename='css/workload_display.css')}}" rel="stylesheet">
          
         <!-- Page-specific CSS -->
         {% block styles %}{% endblock %}
+
+        <!-- Bootstrap JS for flash messages -->
+         <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </head>
 
     <body>
@@ -27,31 +33,36 @@
             {% block content %}{% endblock %}
         </main>
 
+         <!-- Footer -->
+        {% include "partials/footer.html" %}
+
         {% block scripts %}{% endblock %}
 
         {{ moment.include_moment() }}
 
         <!-- FLOATING ACTION BUTTONS -->
-        <div class="fab-container">
+        {% if unit %}
+            <div class="fab-container">
 
-            <a href="{{ url_for('main.create_review_page', unit_code=unit.code)}}"
-            class="fab fab-review"
-            title="Write Review">
-                ⭐
-            </a>
+                <a href="{{ url_for('main.create_review_page', unit_code=unit.code)}}"
+                class="fab fab-review"
+                title="Write Review">
+                    ⭐
+                </a>
 
-            <a href="{{ url_for('main.create_discussion_page', unit_code=unit.code) }}"
-            class="fab fab-discussion"
-            title="Start Discussion">
-                💬
-            </a>
+                <a href="{{ url_for('main.create_discussion_page', unit_code=unit.code) }}"
+                class="fab fab-discussion"
+                title="Start Discussion">
+                    💬
+                </a>
 
-            <a href="{{ url_for('main.create_project', unit_code=unit.code) }}"
-            class="fab fab-project"
-            title="Post Project">
-                📁
-            </a>
+                <a href="#"
+                class="fab fab-project"
+                title="Post Project">
+                    📁
+                </a>
 
-        </div>
+            </div>
+        {% endif%}
     </body>
 </html>

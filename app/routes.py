@@ -3,6 +3,9 @@ from .models import *
 from .controllers import user_registration, verify_login
 from flask import url_for, redirect, flash, render_template,session, Blueprint
 from .log_in_page import RegistrationForm, LoginForm, User
+
+from datetime import datetime
+
 import os
 
 from flask import (
@@ -23,7 +26,8 @@ def inject_globals():
 
     return dict(
         current_user_id=get_current_user(),
-        current_user=get_current_user_obj()
+        current_user=get_current_user_obj(),
+        greeting=get_greeting()
     )
 
 
@@ -45,6 +49,25 @@ def get_current_user_obj():
     if not user_id:
         return None
     return User.query.get(get_current_user())
+
+# -----------------------------------------
+# Greeting Helper Function
+# -----------------------------------------
+
+def get_greeting():
+    current_hour = datetime.now().hour
+
+    if 5 <= current_hour < 12:
+        return "Good Morning"
+
+    elif 12 <= current_hour < 17:
+        return "Good Afternoon"
+
+    elif 17 <= current_hour < 21:
+        return "Good Evening"
+
+    else:
+        return "Good Night"
 
 
 # -------------------------------------------------
@@ -76,7 +99,7 @@ def set_user():
 
 @main.route('/')
 def index():
-    return render_template('index.html')
+    return redirect(url_for('main.units'))
 
 # -------------------------------------------------
 # UNIT PAGE
@@ -174,40 +197,6 @@ def build_comment_tree(comments):
 
     return root_comments
 
-
-# -------------------------------------------------
-# CREATE REVIEW
-# -------------------------------------------------
-
-@main.route("/create_review/<unit_code>", methods=["POST"])
-def create_review(unit_code):
-
-    unit = Unit.query.get_or_404(unit_code)
-
-    author_id = get_current_user()
-
-    # placeholder values
-    rating = 5
-    workload = 3
-    content = "This is a great unit!"
-
-    review = Review(
-        unit_code=unit.code,
-        author_id=author_id,
-        rating=rating,
-        workload=workload,
-        content=content
-    )
-
-    db.session.add(review)
-
-    db.session.commit()
-
-    return jsonify({
-        "success": True
-    })
-
-
 # -------------------------------------------------
 # ADD COMMENT / REPLY
 # -------------------------------------------------
@@ -260,11 +249,8 @@ def add_comment_route():
 
 @main.route("/<unit_code>/discussions")
 def unit_discussions(unit_code):
-
     unit = Unit.query.get_or_404(unit_code)
-
     search = request.args.get("search", "")
-
     query = Discussion.query.filter_by(unit_code=unit_code)
 
     if search:
@@ -323,7 +309,7 @@ def create_discussion(unit_code):
     title   = request.form.get("title",    "").strip()
     body    = request.form.get("body",     "").strip()
     # category is stored as a tag; extend the model later if you want a dedicated column
-    category = request.form.get("category", "General")
+    category = " " # request.form.get("category", "General")
 
     # Basic server-side validation
     if not title or len(title) < 10:
@@ -339,7 +325,6 @@ def create_discussion(unit_code):
         author_id=author_id,
         title=title,
         body=body,
-        # voters list initialised by model default
     )
 
     db.session.add(discussion)
@@ -356,7 +341,7 @@ def create_discussion(unit_code):
 # LOGIN page
 # -------------------------------------------------
 
-@main.route('/log_in', methods=['GET','POST'])
+@main.route('/login', methods=['GET','POST'])
 def login():
     login_form = LoginForm()
     signup_form = RegistrationForm()
@@ -371,16 +356,9 @@ def login():
         user = verify_login(login_form.email.data, login_form.password.data)
         if user:
             session['user_id'] = user.user_id
-            return redirect(url_for('main.dashboard'))
+            return redirect(url_for('main.index'))
         flash('Login Unsuccessful. Please Check email and password', 'error')
     return render_template('log_in_page.html', login_form=login_form, signup_form=signup_form)
-
-@main.route('/dashboard')
-def dashboard():
-    if 'user_id' not in session:
-        return redirect(url_for('main.login'))
-    
-    return render_template('dashboard.html')
 
 @main.route('/logout')
 def logout():
@@ -389,9 +367,7 @@ def logout():
 
 # -------------------------------------------------
 # REVIEW pages
-# -------------------------------------------------
-
-    
+# -------------------------------------------------    
 @main.route("/<unit_code>/reviews")
 def unit_reviews(unit_code):
 
@@ -485,11 +461,41 @@ def submit_review(unit_code):
     db.session.add(review)
     db.session.commit()
 
-    flash("Review submitted — thanks for helping your fellow students!", "success")
+    flash("Review submitted - thanks for helping your fellow students!", "success")
 
     return redirect(
         url_for("main.unit_reviews", unit_code=unit.code)
     )
+    
+@main.route("/<unit_code>/get_ahead_tips")
+def get_ahead_tips(unit_code):
+    unit = Unit.query.get_or_404(unit_code)
+
+    search = request.args.get("search", "")
+    
+    query = Review.query.filter(
+        Review.unit_code == unit_code,
+        Review.get_ahead_tip.is_not(None)
+    )
+
+    if search:
+        query = query.filter(
+            Review.content.ilike(f"%{search}%"),
+            Review.get_ahead_tip.is_not(None)
+        )
+
+    tips = query.order_by(
+        Review.created_at.desc()
+    ).all()
+ 
+    return render_template(
+        "content_list.html",
+        unit=unit,
+        items=tips,
+        content_type="tips",
+        page_title=f"{unit.code} Get-Ahead tips"
+    )
+
 
 # -------------------------------------------------
 # PROJECT pages
@@ -497,10 +503,6 @@ def submit_review(unit_code):
 
 @main.route("/<unit_code>/projects")
 def unit_project(unit_code):
-
-    unit = Unit.query.get_or_404(unit_code)
-
-    search = request.args.get("search", "")
 
     query = Project.query.filter_by(unit_code=unit_code)
 
@@ -592,5 +594,143 @@ def submit_project(unit_code):
     flash("Project posted successfully!", "success")
 
     return redirect(
-        url_for("main.unit_project", unit_code=unit.code)
+        url_for("main.unit_project", unit_code=unit.code
+ 
+@main.route("/units")
+def units():
+    search = request.args.get("search", "").strip()
+
+    query = Unit.query
+    if search:
+        query = query.filter(
+            db.or_(
+                Unit.code.ilike(f"%{search}%"),
+                Unit.name.ilike(f"%{search}%")
+            )
+        )
+
+    units = query.order_by(Unit.code.asc()).all()
+
+    return render_template(
+        "unit_list.html",
+        units=units
+    )
+    
+@main.route("/units/search")
+def search_units():
+    search = request.args.get("search", "").strip()
+
+    query = Unit.query
+    if search:
+        query = query.filter(
+            db.or_(
+                Unit.code.ilike(f"%{search}%"),
+                Unit.name.ilike(f"%{search}%")
+            )
+        )
+
+    units = query.order_by(Unit.code.asc()).all()
+
+    return render_template(
+        "partials/unit_search_results.html",
+        units=units
+    )
+    
+# Search routes for content lists
+
+#search reviews
+@main.route("/<unit_code>/reviews/search")
+def search_reviews(unit_code):
+    unit = Unit.query.get_or_404(unit_code)
+    search = request.args.get("search", "")
+    query = Review.query.filter_by(unit_code=unit_code)
+    if search:
+        query = query.filter(
+            Review.content.ilike(f"%{search}%")
+        )
+    reviews = query.order_by(
+        Review.created_at.desc()
+    ).all()
+
+    return render_template(
+        "partials/content_search_results.html",
+        unit=unit,
+        items=reviews,
+        content_type="reviews"
+    )
+    
+#search tips
+@main.route("/<unit_code>/get_ahead_tips/search")
+def search_get_ahead_tips(unit_code):
+    unit = Unit.query.get_or_404(unit_code)
+    search = request.args.get("search", "")
+    query = Review.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            Review.get_ahead_tip.ilike(f"%{search}%"),
+            Review.get_ahead_tip.is_not(None)
+        )
+    tips = query.order_by(
+        Review.created_at.desc()
+    ).all()
+ 
+    return render_template(
+        "partials/content_search_results.html",
+        unit=unit,
+        items=tips,
+        content_type="tips"
+    )
+    
+# search projects
+@main.route("/<unit_code>/projects/search")
+def search_unit_projects(unit_code):
+
+    unit = Unit.query.get_or_404(unit_code)
+    search = request.args.get("search", "")
+    query = Project.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            db.or_(
+                Project.title.ilike(f"%{search}%"),
+                Project.description.ilike(f"%{search}%")
+            )
+        )
+
+    projects = query.order_by(
+        Project.created_at.desc()
+    ).all()
+
+    return render_template(
+        "partials/content_search_results.html",
+        unit=unit,
+        items=projects,
+        content_type="projects"
+    )
+    
+# search discussions
+@main.route("/<unit_code>/discussions/search")
+def search_unit_discussions(unit_code):
+    unit = Unit.query.get_or_404(unit_code)
+    search = request.args.get("search", "")
+    query = Discussion.query.filter_by(unit_code=unit_code)
+
+    if search:
+        query = query.filter(
+            db.or_(
+                Discussion.title.ilike(f"%{search}%"),
+                Discussion.body.ilike(f"%{search}%")
+            )
+        )
+
+    discussions = query.order_by(
+        Discussion.created_at.desc()
+    ).all()
+
+    return render_template(
+        "partials/content_search_results.html",
+        unit=unit,
+        items=discussions,
+        content_type="discussions"
     )

@@ -1,17 +1,47 @@
 <header>
     <div class="nav-bar">
         <div class="company-name">
-            <a href="{{ url_for('main.index') }}">UniReviews</a>
-        </div>
-
-        <div class="d-flex align-items-center gap-2 me-2">
-            {% if current_user_id %}
-                <span class="text-white small">Hi, {{ current_user.username }}</span>
-            {% endif %}
-
-            <a href="{{ url_for('main.create_review', unit_code='CITS3403') }}">
-                <button>Write a Review</button>
+            <a href="{{ url_for('main.index') }}">
+                UniReviews
             </a>
+        </div>
+        <div class="nav-actions">
+            {% if current_user_id %}
+                <span class="text-white small">
+                    {{greeting}} {{ current_user.username }}
+                </span>
+                <button 
+                    class="logout-btn"
+                    onclick="confirmLogout()"
+                >
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            {% else %}
+                <a 
+                    href="{{ url_for('main.login') }}"
+                    class="login-btn"
+                >
+                    Log In / Sign Up
+                </a>
+            {% endif %}
         </div>
     </div>
 </header>
+
+<!-- Bootstrap Icons -->
+<link 
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+<script>
+    function confirmLogout() {
+        const confirmed = confirm(
+            "Are you sure you want to log out?"
+        );
+
+        if (confirmed) {
+            window.location.href = "{{ url_for('main.logout') }}";
+        }
+    }
+</script>
