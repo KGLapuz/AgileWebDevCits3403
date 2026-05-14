@@ -1,0 +1,41 @@
+<footer class="site-footer">
+    <div class="footer-container">
+        
+        <!-- LEFT: Branding -->
+        <div class="footer-brand">
+            <span class="logo-text">UniReviews</span><br>
+            <span class="tagline"> By Students, For Students</span>
+            <p class="created-by">Created by Keithlin, Bronte & Mambwe </p>
+        </div>
+
+        <!-- NEW: Important Links Section -->
+        <div class="footer-links">
+            <h5>Quick Links</h5>
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li><a href="{{ url_for('main.create_review_page', unit_code='CITS3403') }}">Write Review</a></li>
+            </ul>
+        </div>
+
+        <!-- CENTER: Liability -->
+        <div class="footer-liability">
+            <h5>Disclaimer</h5>
+            <p>
+                UniReviews is a student run platform. Any links opened or content 
+                viewed is at the users discretion. Any unsafe content or links does not reflect UniReviews purpose, and UniReviews is not liable for any content posted or viewed by users.
+            </p>
+        </div>
+
+        <!-- RIGHT: Contact -->
+        <div class="footer-contact">
+            <h5>Contact</h5>
+            <p>** support@unireviews.edu.au **</p>
+            <p>UWA, Crawley, Perth, Western Australia </p>
+        </div>
+
+    </div>
+    
+    <div class="footer-bottom">
+        <p>&copy; 2026 UniReviews | Built for CITS3403</p>
+    </div>
+</footer>
