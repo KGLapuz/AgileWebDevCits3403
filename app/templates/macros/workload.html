@@ -36,6 +36,7 @@
         {% set filled = 5 %}
     {% endif %}
 
+<<<<<<< Updated upstream
     {% set hours_str = (hours | int) | string if hours == hours | int else "%.1f" | format(hours) %}
 
     {% if size == "md" %}
@@ -65,6 +66,17 @@
                     <span class="wl-hg {% if i <= filled %}wl-hg--filled{% else %}wl-hg--empty{% endif %}">⏳</span>
                 {% endfor %}
             </span>
+=======
+    <span class="workload-display workload-display--{{ size }}">
+        <span class="workload-hours">
+            <h2>
+                {% if hours == hours | int %}
+                    {{ hours | int }}
+                {% else %}
+                    {{ "%.1f" | format(hours) }}
+                {% endif %}
+            </h2>hrs/week
+>>>>>>> Stashed changes
         </span>
 
     {% endif %}
