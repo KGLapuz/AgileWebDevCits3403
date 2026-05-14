@@ -109,19 +109,6 @@ li {
     margin-left: 6px;
 }
 
-<<<<<<< Updated upstream
-.rating-stars span {
-    font-size: 2rem;
-    line-height: 1;
-}
-
-.wl-hg--empty {
-    opacity: 0.18;
-}
-
-.wl-hg--filled {
-    opacity: 1;
-=======
 .workload-display--md .workload-hours {
     font-size: 1rem;
     color: #333;
@@ -133,7 +120,6 @@ li {
 
 .workload-display--md .wl-hg {
     font-size: 2rem;
->>>>>>> Stashed changes
 }
 
 .rating-card h6 {
