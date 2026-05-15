@@ -28,6 +28,17 @@ class UniReviewsAuthTest(unittest.TestCase):
 
         self.asserTrue(greeting_span.is_displayed())
 
+    def test_2_silent_login_failures(self):
+        '''Verifies invalid credentials trigger the flash error message'''
+        self.driver.find_element(By.NAME, "email").send_keys("keithlin@unireviews.com")
+        self.driver.find_element(By.NAME, "password").send_keys("badpassword")
+        self.driver.find_element(By.NAME, "submit_login").click()
+
+        #wait for the flash-error CSS class to appear
+        error_msg = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".flash-error")))
+
+        self.assertTrue(error_msg.is_displayed())
+
         
 
 
