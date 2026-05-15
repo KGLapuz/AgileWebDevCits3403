@@ -496,7 +496,7 @@ with app.app_context():
             discussion_id=discussion_id,
             comment_author_id=author_id,
             content=content,
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
             parent_comment_id=parent_id
         )
 

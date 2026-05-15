@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from flask_moment import Moment
 import flask_wtf.csrf
 
-from config import DevelopmentConfig, TestingConfig 
+from config import DevelopmentConfig
 
 csrf = flask_wtf.csrf.CSRFProtect()
 db = SQLAlchemy()
