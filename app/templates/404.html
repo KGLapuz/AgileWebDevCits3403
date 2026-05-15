@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}404 Not Found - UniReviews{% endblock %}
+
+{% block content %}
+<div class="content">
+    <a href="{{ url_for('main.index') }}" class="home-redirect">&larr; Home</a>
+
+    <div class="container">
+        <div class = "greetings">
+            <h2>404 - Page Not Found</h2>
+            <p>Oops! Seems like this page flaked out of the site!</p>
+            <p class="helper-text">The unit, discussion, or project you are looking for no longer exist or has beed moved.</p>
+        </div>
+
+        <a href="{{ url_for('main.index') }}" class="button">
+            Return to Safety
+        </a>
+    </div>
+</div>
+{% endblock %}
