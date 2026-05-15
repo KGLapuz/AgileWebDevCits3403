@@ -2,6 +2,8 @@ from datetime import datetime, timezone
 from enum import Enum
 
 from . import db
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.ext.hybrid import hybrid_property
 
 
 # -------------------------------------------------
@@ -12,7 +14,6 @@ class UserRole(Enum):
     STUDENT = "student"
     MODERATOR = "moderator"
     ADMIN = "admin"
-
 
 # -------------------------------------------------
 # USER MODEL
@@ -35,7 +36,7 @@ class User(db.Model):
         nullable=False
     )
 
-    password_hash = db.Column(
+    _password_hash = db.Column(
         db.String(256),
         nullable=False
     )
@@ -45,14 +46,6 @@ class User(db.Model):
         default=UserRole.STUDENT,
         nullable=False
     )
-
-    # Dynamic / temporary data
-    recently_viewed_units = db.Column(db.JSON, default=list)
-    recently_viewed_discussions = db.Column(db.JSON, default=list)
-    recently_viewed_projects = db.Column(db.JSON, default=list)
-
-    study_plan = db.Column(db.JSON, default=list)
-    bookmarks = db.Column(db.JSON, default=list)
 
     # Relationships
     reviews = db.relationship(
@@ -83,9 +76,23 @@ class User(db.Model):
         order_by="desc(Project.created_at)"
     )
 
+    # -------------------------------------------------
+    # PASSWORD — hybrid property, setter, authenticator
+    # -------------------------------------------------
+
+    @property
+    def password_hash(self):
+        raise AttributeError("Password hashes may not be viewed.")
+
+    @password_hash.setter
+    def password_hash(self, plaintext):
+        self._password_hash = generate_password_hash(plaintext)
+
+    def authenticate(self, plaintext):
+        return check_password_hash(self._password_hash, plaintext)
+
     def __repr__(self):
         return f"<User {self.username}>"
-
 
 # -------------------------------------------------
 # UNIT MODEL
@@ -112,9 +119,6 @@ class Unit(db.Model):
     handbook_link = db.Column(db.String(500))
 
     tags = db.Column(db.JSON, default=list)
-    prerequisites = db.Column(db.JSON, default=list)
-
-    tips = db.Column(db.Text)
 
     # Relationships
     reviews = db.relationship(
@@ -146,19 +150,16 @@ class Unit(db.Model):
     def rating(self):
         if not self.reviews:
             return 0.0
-
         return sum(r.rating for r in self.reviews) / len(self.reviews)
 
     @property
     def workload(self):
         if not self.reviews:
             return 0.0
-
         return sum(r.workload for r in self.reviews) / len(self.reviews)
 
     def __repr__(self):
         return f"<Unit {self.code}>"
-
 
 # -------------------------------------------------
 # REVIEW MODEL
@@ -185,7 +186,7 @@ class Review(db.Model):
     workload = db.Column(db.Float, nullable=False)
 
     content = db.Column(db.Text, nullable=False)
-    
+
     get_ahead_tip = db.Column(db.String(200), nullable=True)
 
     created_at = db.Column(
@@ -206,7 +207,6 @@ class Review(db.Model):
 
     def __repr__(self):
         return f"<Review {self.review_id}>"
-
 
 # -------------------------------------------------
 # DISCUSSION MODEL
@@ -247,11 +247,6 @@ class Discussion(db.Model):
         default=lambda: datetime.now(timezone.utc)
     )
 
-    upvotes = db.Column(db.Integer, default=0)
-    downvotes = db.Column(db.Integer, default=0)
-
-    voters = db.Column(db.JSON, default=list)
-
     # Relationships
     unit = db.relationship(
         "Unit",
@@ -271,16 +266,11 @@ class Discussion(db.Model):
     )
 
     @property
-    def score(self):
-        return self.upvotes - self.downvotes
-
-    @property
     def reply_count(self):
         return len(self.comments)
 
     def __repr__(self):
         return f"<Discussion {self.title}>"
-
 
 # -------------------------------------------------
 # COMMENT MODEL
@@ -322,9 +312,6 @@ class Comment(db.Model):
         nullable=True
     )
 
-    upvotes = db.Column(db.Integer, default=0)
-    downvotes = db.Column(db.Integer, default=0)
-
     # Relationships
     discussion = db.relationship(
         "Discussion",
@@ -346,13 +333,8 @@ class Comment(db.Model):
         cascade="all, delete-orphan"
     )
 
-    @property
-    def score(self):
-        return self.upvotes - self.downvotes
-
     def __repr__(self):
         return f"<Comment {self.comment_id}>"
-
 
 # -------------------------------------------------
 # PROJECT MODEL
@@ -393,8 +375,6 @@ class Project(db.Model):
         default=lambda: datetime.now(timezone.utc)
     )
 
-    year = db.Column(db.Integer)
-
     external_link = db.Column(db.String(500))
 
     # Relationships
@@ -402,11 +382,11 @@ class Project(db.Model):
         "Unit",
         back_populates="projects"
     )
-
+    
     author = db.relationship(
         "User",
         back_populates="projects"
     )
-
+    
     def __repr__(self):
         return f"<Project {self.title}>"
