@@ -4,7 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 DEFAULT_DB_DIR = 'sqlite:///' + os.path.join(basedir, 'app.db')
 
 class Config:
-    SECRET_KEY = "bronte-keithlin-mambwe" 
+    SECRET_KEY = os.getenv("SECRET_KEY", "bronte-keithlin-mambwe") 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
 class DevelopmentConfig(Config):
