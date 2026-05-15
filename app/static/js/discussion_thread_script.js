@@ -96,6 +96,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // =======================
+    // SHOW INLINE ALERT
+    // Inserts a Bootstrap alert above the comment box,
+    // matching the flash message style in the template.
+    // =======================
+
+    function showAlert(message, category = "error") {
+        const alertClass = category === "error" ? "danger" : category;
+
+        const alert = document.createElement("div");
+        alert.className = `alert alert-${alertClass} alert-dismissible fade show`;
+        alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        // Insert above the comment box, after any existing alerts
+        const commentBox = document.querySelector(".card.p-3.mt-4");
+        commentBox.parentElement.insertBefore(alert, commentBox);
+
+        // Auto-dismiss after 4 seconds
+        setTimeout(() => alert.remove(), 4000);
+    }
+
+
+    // =======================
     // POST TOP-LEVEL COMMENT
     // =======================
 
@@ -119,8 +144,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 parent_id: null
             })
         })
-        .then(res => res.json())
+        .then(res => {
+            if (res.status === 401) {
+                showAlert("You must be logged in to post a comment.");
+                return null;
+            }
+            return res.json();
+        })
         .then(data => {
+            if (!data) return;
             document.querySelector(".comments-section")
                 .insertAdjacentHTML("beforeend", data.html);
             input.value = "";
@@ -213,9 +245,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             })
 
-            .then(res => res.json())
+            .then(res => {
+                if (res.status === 401) {
+                    showAlert("You must be logged in to post a reply.");
+                    replyBox.remove();
+                    const replyButton = parent.querySelector(".reply-btn");
+                    if (replyButton) { replyButton.textContent = "Reply"; }
+                    return null;
+                }
+                return res.json();
+            })
 
             .then(data => {
+                if (!data) return;
                 let replies = parent.querySelector(".replies");
 
                 // CREATE REPLIES CONTAINER
@@ -246,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
                 // UPDATE REPLY COUNT
-                const count = replies.children.length;
+                const count = parent.querySelectorAll(".replies .comment").length;
                 toggleBtn.querySelector(".reply-count").textContent =
                     count === 1
                         ? "1 reply"
