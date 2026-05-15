@@ -15,7 +15,6 @@ class UserRole(Enum):
     MODERATOR = "moderator"
     ADMIN = "admin"
 
-
 # -------------------------------------------------
 # USER MODEL
 # -------------------------------------------------
@@ -95,7 +94,6 @@ class User(db.Model):
     def __repr__(self):
         return f"<User {self.username}>"
 
-
 # -------------------------------------------------
 # UNIT MODEL
 # -------------------------------------------------
@@ -163,7 +161,6 @@ class Unit(db.Model):
     def __repr__(self):
         return f"<Unit {self.code}>"
 
-
 # -------------------------------------------------
 # REVIEW MODEL
 # -------------------------------------------------
@@ -210,7 +207,6 @@ class Review(db.Model):
 
     def __repr__(self):
         return f"<Review {self.review_id}>"
-
 
 # -------------------------------------------------
 # DISCUSSION MODEL
@@ -276,7 +272,6 @@ class Discussion(db.Model):
     def __repr__(self):
         return f"<Discussion {self.title}>"
 
-
 # -------------------------------------------------
 # COMMENT MODEL
 # -------------------------------------------------
@@ -341,7 +336,6 @@ class Comment(db.Model):
     def __repr__(self):
         return f"<Comment {self.comment_id}>"
 
-
 # -------------------------------------------------
 # PROJECT MODEL
 # -------------------------------------------------
@@ -388,11 +382,11 @@ class Project(db.Model):
         "Unit",
         back_populates="projects"
     )
-
+    
     author = db.relationship(
         "User",
         back_populates="projects"
     )
-
+    
     def __repr__(self):
         return f"<Project {self.title}>"
