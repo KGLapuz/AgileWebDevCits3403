@@ -417,10 +417,17 @@ def create_discussion(unit_code):
 
 @main.route("/add_comment", methods=["POST"])
 def add_comment_route():
-
+    comment_author=get_current_user()
+     
     data = request.get_json()
 
     discussion_id = int(data.get("discussion_id"))
+    
+    if not comment_author:
+        return jsonify({
+            "error": "unauthenticated"
+        }), 401
+       
     content = data.get("content")
     parent_id = data.get("parent_id")
 
@@ -437,7 +444,7 @@ def add_comment_route():
 
     new_comment = Comment(
         discussion_id=discussion_id,
-        comment_author_id=get_current_user(),
+        comment_author_id=comment_author,
         content=content,
         parent_comment_id=parent_id
     )
