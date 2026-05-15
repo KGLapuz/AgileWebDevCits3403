@@ -1,8 +1,6 @@
 from app import db, create_app
 from app.models import *
 
-from werkzeug.security import generate_password_hash
-
 
 # -------------------------------------------------
 # APP CONTEXT
@@ -20,89 +18,100 @@ with app.app_context():
     db.create_all()
 
 
-    # -------------------------------------------------
+     # -------------------------------------------------
     # USERS
     # -------------------------------------------------
 
-    users = [
+    users = []
+
+    user_data = [
 
         # -------------------------
         # MAMBWE
         # -------------------------
 
-        User(
-            username="mambwe_admin",
-            email="mambwe.admin@unireviews.com",
-            password_hash=generate_password_hash("hash1"),
-            role=UserRole.ADMIN
-        ),
+        {
+            "username": "mambwe_admin",
+            "email": "mambwe.admin@unireviews.com",
+            "password": "hash1",
+            "role": UserRole.ADMIN
+        },
 
-        User(
-            username="mambwe_mod",
-            email="mambwe.mod@unireviews.com",
-            password_hash=generate_password_hash("hash2"),
-            role=UserRole.MODERATOR
-        ),
+        {
+            "username": "mambwe_mod",
+            "email": "mambwe.mod@unireviews.com",
+            "password": "hash2",
+            "role": UserRole.MODERATOR
+        },
 
-        User(
-            username="mambwe_student",
-            email="mambwe.student@unireviews.com",
-            password_hash=generate_password_hash("hash3"),
-            role=UserRole.STUDENT
-        ),
-
+        {
+            "username": "mambwe_student",
+            "email": "mambwe.student@unireviews.com",
+            "password": "hash3",
+            "role": UserRole.STUDENT
+        },
 
         # -------------------------
         # KEITHLIN
         # -------------------------
 
-        User(
-            username="keithlin_admin",
-            email="keithlin.admin@unireviews.com",
-            password_hash=generate_password_hash("hash4"),
-            role=UserRole.ADMIN
-        ),
+        {
+            "username": "keithlin_admin",
+            "email": "keithlin.admin@unireviews.com",
+            "password": "hash4",
+            "role": UserRole.ADMIN
+        },
 
-        User(
-            username="keithlin_mod",
-            email="keithlin.mod@unireviews.com",
-            password_hash=generate_password_hash("hash5"),
-            role=UserRole.MODERATOR
-        ),
+        {
+            "username": "keithlin_mod",
+            "email": "keithlin.mod@unireviews.com",
+            "password": "hash5",
+            "role": UserRole.MODERATOR
+        },
 
-        User(
-            username="keithlin_student",
-            email="keithlin.student@unireviews.com",
-            password_hash=generate_password_hash("hash6"),
-            role=UserRole.STUDENT
-        ),
-
+        {
+            "username": "keithlin_student",
+            "email": "keithlin.student@unireviews.com",
+            "password": "hash6",
+            "role": UserRole.STUDENT
+        },
 
         # -------------------------
         # BRONTE
         # -------------------------
 
-        User(
-            username="bronte_admin",
-            email="bronte.admin@unireviews.com",
-            password_hash=generate_password_hash("hash7"),
-            role=UserRole.ADMIN
-        ),
+        {
+            "username": "bronte_admin",
+            "email": "bronte.admin@unireviews.com",
+            "password": "hash7",
+            "role": UserRole.ADMIN
+        },
 
-        User(
-            username="bronte_mod",
-            email="bronte.mod@unireviews.com",
-            password_hash=generate_password_hash("hash8"),
-            role=UserRole.MODERATOR
-        ),
+        {
+            "username": "bronte_mod",
+            "email": "bronte.mod@unireviews.com",
+            "password": "hash8",
+            "role": UserRole.MODERATOR
+        },
 
-        User(
-            username="bronte_student",
-            email="bronte.student@unireviews.com",
-            password_hash=generate_password_hash("hash9"),
-            role=UserRole.STUDENT
-        ),
+        {
+            "username": "bronte_student",
+            "email": "bronte.student@unireviews.com",
+            "password": "hash9",
+            "role": UserRole.STUDENT
+        },
     ]
+
+    for data in user_data:
+        user = User(
+            username=data["username"],
+            email=data["email"],
+            role=data["role"]
+        )
+
+        # Call the hybrid-property setter
+        user.password_hash = data["password"]
+        users.append(user)
 
     db.session.add_all(users)
 
