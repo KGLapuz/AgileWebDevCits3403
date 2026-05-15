@@ -1,12 +1,9 @@
-import pytest
-import sys
+import unittest
 
 if __name__ == "__main__":
+    # Discover and run all tests in the tests/ directory
+    loader = unittest.TestLoader()
+    suite = loader.discover(start_dir="tests", pattern="test_*.py")
 
-    # Run pytest in verbose mode
-    exit_code = pytest.main([
-        "-v",
-        "tests"
-    ])
-
-    sys.exit(exit_code)
+    runner = unittest.TextTestRunner(verbosity=2)
+    runner.run(suite)

@@ -14,7 +14,7 @@ The application is a **UniReviews platform** where students can view and contrib
 - Unit reviews
 - Discussion threads
 - Project ideas and submissions
-- Study tips (“Get Ahead” tips)
+- Study tips ("Get Ahead" tips)
 
 All content is organised by UWA unit codes (e.g. `CITS1401`), with user-generated contributions tied to authentication and session state.
 
@@ -27,7 +27,7 @@ All content is organised by UWA unit codes (e.g. `CITS1401`), with user-generate
 ```bash
 git clone https://github.com/KGLapuz/AgileWebDevCits3403
 cd AgileWebDevCits3403
-````
+```
 
 ---
 
@@ -65,21 +65,61 @@ pip install -r requirements.txt
 
 ---
 
-### 5. Set Environment Variables (optional but recommended)
+### 5. Set Environment Variables
 
-For development mode:
+This project requires a secret key for Flask session security. **Do not hardcode secrets into the codebase.**
 
-#### Windows (PowerShell)
+#### I. Create a `.env` file
 
-```bash
-set FLASK_DEBUG=True
+In the root directory of the project, create a file named:
+
+```
+.env
 ```
 
-#### macOS / Linux
+Add the following variables:
+
+```env
+SECRET_KEY=your-secret-key-here
+DATABASE_URL=sqlite:///app.db
+```
+
+You can generate a secure secret key using Python:
 
 ```bash
-export FLASK_DEBUG=True
+python -c "import secrets; print(secrets.token_hex(32))"
 ```
+
+#### II. Install dependencies for environment loading
+
+If not already installed:
+
+```bash
+pip install python-dotenv
+```
+
+#### III. Ensure environment variables are loaded
+
+Make sure your application loads the `.env` file before running. In your main entry file (e.g. `app.py`):
+
+```python
+from dotenv import load_dotenv
+load_dotenv()
+```
+
+#### IV. Do NOT commit `.env`
+
+Ensure your `.env` file is excluded from version control:
+
+```
+.env
+```
+
+(Already included in `.gitignore`)
+
+#### Security Note
+
+The `SECRET_KEY` is used to secure user sessions and protect against tampering. Never share or expose this value publicly or commit it to Git.
 
 ---
 
@@ -119,7 +159,7 @@ http://127.0.0.1:5000
 
 ## Running Tests
 
-The project uses **pytest** for automated testing.
+The project uses Python's built-in **unittest** framework for automated testing.
 
 ### Run all tests
 
@@ -127,36 +167,36 @@ The project uses **pytest** for automated testing.
 python run_tests.py
 ```
 
-or directly:
+Tests are discovered automatically from the `tests/` directory. Each test file follows the `test_*.py` naming convention and each test function is prefixed with `test_`.
 
-```bash
-pytest
-```
+### Test structure
+
+Each test class:
+- Extends `unittest.TestCase`
+- Uses `setUp` to spin up a fresh in-memory SQLite database and populate it with helper data before every test
+- Uses `tearDown` to drop all tables and pop the app context after every test, ensuring no state leaks between tests
 
 ### What tests cover
 
 The test suite validates:
 
-* Authentication (login-required routes)
-* Unit pages exist and render correctly
-* Discussion creation and retrieval
-* Project submission workflow
-* Review creation and validation rules
+* User model — password hashing, authentication, role defaults, and uniqueness constraints
+* Unit model — computed properties (rating, workload, review count) and nullable constraints
+* Review model — field validation, optional fields, and model relationships
+* Discussion model — nullable constraints, reply count, and unit linkage
+* Comment model — content constraints, author requirement, and nested reply linking
+* Project model — nullable constraints, optional fields, and model relationships
 
 ### Interpreting results
 
-* `PASSED` → Feature behaves as expected
-* `FAILED` → Likely one of:
+Each test prints its name and result to the terminal when run with `verbosity=2`:
 
-  * Missing route or incorrect URL pattern
-  * Authentication/session logic not behaving as expected
-  * Database constraints not met in test setup (e.g. required fields missing)
-  * Validation rules rejecting expected test input
-* `ERROR` → Typically:
-
-  * Database setup issue
-  * Missing test configuration (e.g. TestingConfig not applied)
-  * Import/path problems in test setup
+* `OK` → Feature behaves as expected
+* `FAIL` → An `assert` method did not hold — check the printed traceback for which assertion failed and why
+* `ERROR` → The test itself raised an unexpected exception before reaching any assertion — typically caused by:
+  * A missing or misconfigured `TestingConfig`
+  * Import or path errors in the test setup
+  * A database constraint violation in a helper function
 
 ---
 
@@ -197,7 +237,7 @@ Example:
 * Rating must be between 1 and 5 stars
 * Workload must be between 1 and 20 hours
 * Review content must be at least 30 characters
-* Optional “Get Ahead” tips are limited to 200 characters
+* Optional "Get Ahead" tips are limited to 200 characters
 
 ---
 
@@ -233,7 +273,6 @@ Example:
 
 * Logging out clears the session `user_id`
 * This prevents access to:
-
   * Creating reviews
   * Posting discussions
   * Submitting projects
@@ -253,7 +292,7 @@ If a user is not logged in:
 
 ---
 
-## “Get Ahead” Tips Feature
+## "Get Ahead" Tips Feature
 
 Each unit supports optional **Get Ahead tips**, which allow students to:
 
@@ -273,11 +312,10 @@ Rules:
 
 * Flask app uses application factory pattern (`create_app`)
 * Config classes:
-
   * `DevelopmentConfig`
   * `TestingConfig` (uses in-memory SQLite + CSRF disabled)
 * Database is managed via SQLAlchemy + Flask-Migrate
-* Tests must run using `TestingConfig`
+* All tests must run under `TestingConfig` — this is applied automatically via `run_tests.py`
 
 ---
 
@@ -286,10 +324,10 @@ Rules:
 Tests are designed to validate:
 
 * Behaviour, not implementation
-* Route accessibility
-* Authentication enforcement
 * Database integrity constraints
-* Form validation logic
+* Model property correctness
+* Nullable and uniqueness constraint enforcement
+* Authentication logic (password hashing, `authenticate()` method)
 
 ---
 
@@ -305,23 +343,23 @@ Usually means:
 
 ---
 
-### 2. SQLite IntegrityError (NOT NULL constraint)
+### 2. `IntegrityError` (NOT NULL or UNIQUE constraint)
 
 Usually means:
 
 * Test data missing required model fields
-* Seed/helper functions not supplying all required attributes
+* Helper functions not supplying all required attributes
 * Model constraints stricter than test assumptions
 
 ---
 
-### 3. Tests pass locally but fail in CI or vice versa
+### 3. `ERROR` instead of `FAIL` on a test
 
-Check:
+Usually means:
 
-* Environment config (`TestingConfig` not applied)
-* Database state leakage between tests
-* Session state not reset properly
+* `TestingConfig` not applied — check `create_app` accepts a config argument
+* Database state not cleaned up — confirm `tearDown` calls `db.drop_all()` and `db.session.remove()`
+* Import path issue — confirm `tests/` is discoverable from the project root
 
 ---
 
@@ -330,4 +368,5 @@ Check:
 This project is for educational use as part of [[CITS3403]: Agile Web Development](https://www.handbooks.uwa.edu.au/unitdetails?code=CITS3403) at the University of Western Australia in semester 1 of 2026.
 
 ```
+Disclaimer: This application is a student-built educational tool and is not affiliated with, endorsed by, or representative of the University of Western Australia; all official unit information is sourced directly from the [UWA Handbook](https://www.handbooks.uwa.edu.au/) and users should refer there for authoritative and up-to-date unit details.
 ```
