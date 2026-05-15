@@ -419,7 +419,7 @@ with app.app_context():
             rating=rating,
             workload=workload,
             content=content,
-            created_at=datetime.utcnow()
+            created_at=datetime.now(timezone.utc)
         )
 
         db.session.add(review)
@@ -454,9 +454,7 @@ with app.app_context():
             title=title,
             author_id=author_id,
             body=body,
-            created_at=datetime.utcnow(),
-            upvotes=10,
-            downvotes=2
+            created_at=datetime.now(timezone.utc),
         )
 
         db.session.add(d)
