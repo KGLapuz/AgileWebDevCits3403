@@ -99,8 +99,7 @@ def set_user():
 
 @main.route('/')
 def index():
-    return redirect(url_for('main.units'))
-
+    return render_template('home_page.html')
 # -------------------------------------------------
 # UNIT PAGE
 # -------------------------------------------------

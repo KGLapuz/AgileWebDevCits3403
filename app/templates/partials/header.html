@@ -2,13 +2,13 @@
     <div class="nav-bar">
         <div class="company-name">
             <a href="{{ url_for('main.index') }}">
-                UniReviews
+                UniReviews 📚
             </a>
         </div>
         <div class="nav-actions">
             {% if current_user_id %}
                 <span class="text-white small">
-                    {{greeting}} {{ current_user.username }}
+                    {{greeting}} {{ current_user.username|capitalize}}
                 </span>
                 <button 
                     class="logout-btn"
