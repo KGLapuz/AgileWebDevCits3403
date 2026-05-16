@@ -1,14 +1,16 @@
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class UniReviewsAuthTest(unittest.TestCase):
     def setUp(self):
         #initiliazes the chrome browser before each test
-        self.driver = webdriver.Chrome
-        self.driver.get("http://127.0.0.1:5000/")
+        self.driver = webdriver.Chrome()
+        self.driver.maximize_window()
+        self.driver.get("http://127.0.0.1:5000")
         self. wait = WebDriverWait(self.driver, 10) #explicitly wait for dynamic elements
 
     def tearDown(self):
@@ -16,7 +18,8 @@ class UniReviewsAuthTest(unittest.TestCase):
 
     def test_1_successful_login(self):
         '''Verifies successful login redirects to index and logout redirects to login page'''
-        self.driver.find_element(By.CSS_SELECTOR, ".login-btn").click()
+        login_btn = self.driver.find_element(By.CSS_SELECTOR, ".login-btn")
+        login_btn.click()
 
         #waits for login container to render
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
@@ -34,7 +37,17 @@ class UniReviewsAuthTest(unittest.TestCase):
 
         self.assertTrue(greeting_span.is_displayed())
 
-        logout_confirm = self.driver.find_element(By.CSS_SELECTOR, ".logout-btn").click()
+        #looks for the logout button and clicks it
+        logout_confirm = self.driver.find_element(By.CSS_SELECTOR, ".logout-btn")
+        logout_confirm.click()
+
+        #wait till the logout alert opens
+        self.wait.until(EC.alert_is_present())
+
+        logout_alert = self.driver.switch_to.alert
+        
+        #accepts logout alert
+        logout_alert.accept()
 
         # verifies redirect to login
         login_redirect = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
@@ -45,7 +58,8 @@ class UniReviewsAuthTest(unittest.TestCase):
 
     def test_2_silent_login_failures(self):
         '''Verifies invalid credentials trigger the flash error message'''
-        self.driver.find_element(By.CSS_SELECTOR, ".login-btn").click()
+        login_btn = self.driver.find_element(By.CSS_SELECTOR, ".login-btn")
+        login_btn.click()
 
         #waits for login container to render
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
@@ -62,7 +76,8 @@ class UniReviewsAuthTest(unittest.TestCase):
 
     def test_3_signup_validation(self):
         '''Verifies failed signup triggers a flash error message'''
-        self.driver.find_element(By.CSS_SELECTOR, ".login-btn").click()
+        login_btn = self.driver.find_element(By.CSS_SELECTOR, ".login-btn")
+        login_btn.click()
 
         #waits for login container to render
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
@@ -72,29 +87,29 @@ class UniReviewsAuthTest(unittest.TestCase):
 
         #wait until the specific signup username field appears
         username_field = self.wait.until(
-            (EC.presence_of_element_located((By.CSS_SELECTOR, "#SigunpForm [name='username']")))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "#SignUpForm [name='username']"))
         )
         
         #input data intended to trigger a backend error
-        username_field.send_keys("keithlin_student")
+        self.driver.find_element(By.CSS_SELECTOR, "#SignUpForm [name='username']").send_keys("keithlin_student")
 
         #target specific email and password
-        self.driver.find_element(By.CSS_SELECTOR, "#SigunpForm [name='email']").send_keys("keithlin.student@unireviews.com")
-        self.driver.find_element(By.CSS_SELECTOR, "#SigunpForm [name='password']").send_keys("weakpassword")
+        self.driver.find_element(By.CSS_SELECTOR, "#SignUpForm [name='email']").send_keys("keithlin.student@unireviews.com")
+        self.driver.find_element(By.CSS_SELECTOR, "#SignUpForm [name='password']").send_keys("weakpassword")
 
         #click to submit
         self.driver.find_element(By.CSS_SELECTOR, ".signup-btn").click()
 
-        # wait for the page to reloed and generic flash message to appear
+        # wait for the page to reload and generic flash message to appear
         flash_msg = self.wait.until(
-            (EC.presence_of_element_located((By.CSS_SELECTOR, ".flash-msg")))
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".flash-msg"))
         )
         self.assertTrue(flash_msg.is_displayed())
 
         self.driver.find_element(By.CSS_SELECTOR, ".signup-popup").click()
 
         inline_error =  self.wait.until(
-            (EC.presence_of_element_located((By.CSS_SELECTOR, "#SignupForm .error-text")))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "#SignUpForm .error-text"))
         )
 
         self.assertTrue(inline_error.is_displayed())
@@ -118,7 +133,8 @@ class UniReviewsAuthTest(unittest.TestCase):
     def test_5_loggedIn_Submit_Form(self):
         '''Verifies that the user's submission was added to the page'''
         # --login process--
-        self.driver.find_element(By.CSS_SELECTOR, ".login-btn").click()
+        login_btn = self.driver.find_element(By.CSS_SELECTOR, ".login-btn")
+        login_btn.click()
 
         #waits for login container to render
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
@@ -138,7 +154,8 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fab-review"))).click()
 
         # waits until the ratings have rendered and click it once it is
-        four_star_label = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label[data-value='4']"))).click()
+        four_star_label = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label[data-value='4']")))
+        four_star_label.click()
 
         #--filling out the form--
         # checks that the user was able to interact with the star rating
@@ -146,7 +163,8 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.assertTrue(four_star_input.is_selected(), "star rating failed to select")
 
         #clicks on the hour glass
-        hourglass_label = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label[data-value='7]"))).click()
+        hourglass_button = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "button[data-value='7']")))
+        hourglass_button.click()
         button_input = self.driver.find_element(By.ID, "workload")
 
         #checks for the value of workload
@@ -162,7 +180,17 @@ class UniReviewsAuthTest(unittest.TestCase):
         )
 
         #submit the form
-        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+        submit_btn = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "button[type='submit']"))
+        )
+
+        actions = ActionChains(self.driver)
+
+        actions.scroll_to_element(submit_btn).perform()
+
+        self.wait.until(EC.element_to_be_clickable(submit_btn))
+
+        submit_btn.click()
 
         #waits until it locates the flash
         flash_msg = self.wait.until(
@@ -188,5 +216,8 @@ class UniReviewsAuthTest(unittest.TestCase):
         star_text = latest_review_card.find_element(By.CSS_SELECTOR, ".stat-value").text
         self.assertEqual(star_text.strip(), "4", "the rendered star rating was not 4")
 
-        workload_container = latest_review_card.find_element(By.CSS_SELECTOR, ".review-stat")[1]
+        workload_container = latest_review_card.find_elements(By.CSS_SELECTOR, ".review-stat")[1]
         self.assertIn("7", workload_container.text, "workload mismatch")
+
+if __name__ == "__main__":
+    unittest.main()
