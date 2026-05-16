@@ -13,6 +13,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('main.units') }}">Units</a></li>
             <li class="breadcrumb-item">
                 <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
             </li>
@@ -62,7 +63,6 @@
                 <div class="form-text">10-100 characters.</div>
             </div>
 
-            <!-- WORKLOAD -->
             <div class="mb-4">
                 <label class="form-label fw-semibold">Repository Link</label>
                 <input 
@@ -72,7 +72,7 @@
                     name="repo_link"
                     placeholder="e.g., https://github.com/username/repo"
                     value="{{ request.form.get('repo_link', '') }}"
-                    required>
+                >
                 <div class="form-text">Provide a direct link to your Github, Gitlab, or Bitbucket repository.</div>
             </div>
 
@@ -106,8 +106,4 @@
     </div>
 
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/create_project.js') }}" defer></script>
 {% endblock %}

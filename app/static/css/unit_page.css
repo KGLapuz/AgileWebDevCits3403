@@ -3,6 +3,23 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.breadcrumb {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: rgb(0, 48, 135);
+    gap: 12px;
+}
+
+.breadcrumb a {
+    color: rgb(0, 48, 135);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
 .container {
     padding-top: 80px;
 }
