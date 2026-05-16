@@ -3,7 +3,8 @@ body, html {
     padding: 0;
     overflow-x: hidden;
     color: rgb(0, 48, 135); 
-    font-family: sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: whitesmoke;
 }
 
 a { 
@@ -32,6 +33,7 @@ footer { margin-top: 0 !important; }
     max-width: 1000px;
     margin: 0 auto 20px auto;
     overflow: hidden;
+    font-weight: bold;
 }
 
 .hero-box-title h1 {
@@ -45,10 +47,13 @@ footer { margin-top: 0 !important; }
 .hero-box-description {
     border: 2px solid rgb(0, 48, 135);
     border-radius: 20px;
+    border-width: 5px;
     max-width: 950px;
     margin: 0 auto 40px auto;
     padding: 25px 45px;
     background-color: white;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 1.3rem;
 }
 
 .cta-container { 
@@ -58,7 +63,7 @@ footer { margin-top: 0 !important; }
 .btn-primary-large {
     background-color: rgb(226, 182, 0);
     color: rgb(0, 48, 135) !important;
-    padding: 25px 120px; 
+    padding: 40px 160px; 
     border-radius: 75px;
     font-weight: bold;
     font-size: 1.8rem;
@@ -77,9 +82,11 @@ footer { margin-top: 0 !important; }
 
 .grid-section-title {
     color: rgb(0, 48, 135);
-    font-size: 2.2rem;
+    font-size: 2.8rem;
     font-weight: bold;
-    margin: 0 0 15px 0;
+    margin: 0 0 50px 0;
+    text-decoration: underline;
+    text-underline-offset: 8px;
 }
 
 .full-page-divider {
@@ -94,7 +101,8 @@ footer { margin-top: 0 !important; }
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     width: 100%;
-    background: white;
+    background: rgb(0, 48, 135);
+    margin-bottom: 120px;
 }
 
 .feature-card {
@@ -109,10 +117,11 @@ footer { margin-top: 0 !important; }
 .feature-card:last-child { border-right: none; }
 
 .feature-title-box {
-    border: 2px solid rgb(0, 48, 135);
+    border: 2px solid rgb(226, 182, 0);
+    background-color: rgb(226, 182, 0);
     border-radius: 15px;
     padding: 12px 0;
-    margin-bottom: 25px;
+    margin-bottom: 60px;
     width: 90%;          
     display: flex;
     justify-content: center;
@@ -122,7 +131,7 @@ footer { margin-top: 0 !important; }
 
 .feature-title-box:hover {
     transform: scale(1.02);
-    background-color: rgba(0, 48, 135, 0.05);
+    background-color: rgb(226, 182, 0);
 }
 
 .feature-desc-box {
@@ -138,7 +147,7 @@ footer { margin-top: 0 !important; }
 }
 
 .feature-card h3 {
-    color: rgb(226, 182, 0);
+    color: rgb(0, 48, 135);
     font-weight: bold;
     margin: 0;
     font-size: 1.5rem;
@@ -157,7 +166,7 @@ footer { margin-top: 0 !important; }
     justify-content: center; 
 }
 
-/* --- 6. Mobile --- */
+/* --- Mobile Responsiveness --- */
 @media (max-width: 900px) {
     .features-grid-full { grid-template-columns: 1fr; }
     .feature-card { 

@@ -125,36 +125,29 @@ input {
     justify-content: center;
 }
 
-/* Login page footer sizing override */
-.site-footer .footer-container {
-    width: 100%;
-    max-width: 600px; /* ~120% of 400px form width */
-    margin: 0 auto;
-    padding-left: 20px;
-    padding-right: 20px;
-}
-
-/* Prevent overly stretched disclaimer text */
-.site-footer .footer-liability p,
-.site-footer .footer-contact p,
-.site-footer .footer-brand p {
-    line-height: 1.5;
-    word-wrap: break-word;
-}
-
-/* Optional: stack footer sections vertically on login page */
-.site-footer .footer-container {
+.footer-text {
     display: flex;
-    flex-direction: row;
+    justify-content: center;
     align-items: center;
+    flex-direction: column;
+    padding: 50px;
+}
+
+.footer-text p {
+    color: gray;
+}
+
+.footer-text button {
     text-align: center;
-    gap: 20px;
+    background-color: rgb(0, 85, 255);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 20px 20px;
+    font-size: medium;
 }
 
-.close {
-    font-size: 25px;
+.footer-header, .footer-message {
+    align-self: center;
 }
 
-.close:hover {
-    cursor: pointer;
-}
