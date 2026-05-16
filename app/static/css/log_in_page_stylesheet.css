@@ -1,5 +1,6 @@
 * {
     box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
 body {
@@ -29,7 +30,7 @@ main {
 .content {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Ensures the form card stays centered */
+    align-items: center;
     text-align: center;
     width: 100%;
     max-width: 850px;
@@ -47,15 +48,14 @@ main {
     line-height: 1.5;
 }
 
-/* The "White Card" styling */
 .login-container, .SignUpForm-content {
     background-color: white;
     padding: 2rem;
-    margin: 20px 0; /* Vertical spacing */
+    margin: 20px 0; 
     border-radius: 20px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.3); /* Defined shadow for depth */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3); 
     width: 100%;
-    max-width: 400px; /* Forces it into a card shape */
+    max-width: 400px; 
 }
 
 .credentials, .Credentials {
@@ -75,7 +75,7 @@ main {
     padding-bottom: 5px;
     font-size: 14px;
     font-weight: bold;
-    color: #333; /* Darker text for readability inside white card */
+    color: #333; 
 }
 
 input {
@@ -111,7 +111,7 @@ input {
     text-decoration: underline;
 }
 
-/* Rest of your existing modal and error styles remain the same */
+
 .modal {
     display: none;
     position: fixed;
