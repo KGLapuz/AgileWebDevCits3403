@@ -16,6 +16,12 @@ class UniReviewsAuthTest(unittest.TestCase):
 
     def test_1_successful_login(self):
         '''Verifies successful login redirects to index'''
+        self.driver.find_element(By.CSS_SELECTOR, ".login-btn").click()
+
+        #waits for login contianer to render
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
+
+        #enter credentials
         self.driver.find_element(By.NAME, "email").send_keys("keithlin.student@unireviews.com")
         self.driver.find_element(By.NAME, "password").send_keys("hash6")
         self.driver.find_element(By.NAME, "submit_login").click()
@@ -26,7 +32,16 @@ class UniReviewsAuthTest(unittest.TestCase):
         #verify the greeting text span renders
         greeting_span = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "span.text-white.small")))
 
-        self.asserTrue(greeting_span.is_displayed())
+        self.assertTrue(greeting_span.is_displayed())
+
+        logout_confirm = self.driver.find_element(By.CSS_SELECTOR, ".logout-btn").click()
+
+        # verifies redirect to login
+        login_redirect = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
+
+        self.assertTrue(login_redirect.is_displayed())
+
+        
 
     def test_2_silent_login_failures(self):
         '''Verifies invalid credentials trigger the flash error message'''
@@ -38,6 +53,49 @@ class UniReviewsAuthTest(unittest.TestCase):
         error_msg = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".flash-error")))
 
         self.assertTrue(error_msg.is_displayed())
+
+    def test_3_signup_validation(self):
+        '''Verifies failed signup triggers a flash error message'''
+        #click the text to pop open the signup modal
+        self.driver.find_element(By.CSS_SELECTOR, ".signup-popup").click()
+
+        #wait until the specific signup username field appears
+        username_field = self.wait.until(
+            (EC.presence_of_element_located((By.CSS_SELECTOR, "#SigunpForm [name='username']")))
+        )
+        
+        #input data intended to trigger a backend error
+        username_field.send_keys("keithlin_student")
+
+        #target specific email and password
+        self.driver.find_element(By.CSS_SELECTOR, "#SigunpForm [name='email']").send_keys("keithlin.student@unireviews.com")
+        self.driver.find_element(By.CSS_SELECTOR, "#SigunpForm [name='password']").send_keys("weakpassword")
+
+        #click to submit
+        self.driver.find_element(By.CSS_SELECTOR, ".signup-btn").click()
+
+        # wait for the page to reloed and generic flash message to appear
+        flash_msg = self.wait.until(
+            (EC.presence_of_element_located((By.CSS_SELECTOR, ".flash-msg")))
+        )
+        self.assertTrue(flash_msg.is_displayed())
+
+        self.driver.find_element(By.CSS_SELECTOR, ".signup-popup").click()
+
+        inline_error =  self.wait.until(
+            (EC.presence_of_element_located((By.CSS_SELECTOR, "#SignupForm .error-text")))
+        )
+
+        self.assertTrue(inline_error.is_displayed())
+
+    def test_4_
+
+
+        
+
+
+
+
 
         
 
