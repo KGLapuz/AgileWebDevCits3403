@@ -1,0 +1,9 @@
+.no-page a {
+    text-decoration: none;
+    color: rgb(0, 48, 135);
+    font-weight: 500;
+}
+
+.no-page a:hover {
+    text-decoration: underline;
+}
