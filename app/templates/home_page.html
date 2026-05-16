@@ -8,29 +8,33 @@
 <div class="home-wrapper">
     
     <div class="home-container">
-        <section class="hero-section">
+        <section class="hero-stacked-layout">
+            
             <div class="hero-box-title">
                 <h1>📚 Welcome to UniReviews 📚</h1>
             </div>
             
-            <div class="hero-box-description">
-                <p>Your all-in-one platform for real advice on the Computer Science units offered at UWA!<br>
-                    Take it from those who have been in your shoes - with access to reviews, discussions, tips to get ahead and past student projects, UniReviews sets you up for a great semester!</p>
-            </div>
-
             <div class="cta-container">
                 <a href="{{ url_for('main.units') }}" class="btn-primary-large">Start Browsing Units</a>
             </div>
+
+            <div class="hero-box-description">
+                <p> Gain access to up-to-date reviews, discussions, tips to get ahead and past student projects for all Computer Science units offered at UWA!</p>
+            </div>
+
+           
+
         </section>
-    </div>
+        </div>
 
     <div class="full-width-title-container">
-        <h2 class="grid-section-title">What's on offer?</h2>
+        <h2 class="grid-section-title">What's on offer from UniReviews?</h2>
     </div>
 
     <hr class="full-page-divider">
 
     <section class="features-grid-full">
+
         <div class="feature-card">
             <a href="{{ url_for('main.units') }}" class="feature-link-wrapper">
                 <div class="feature-title-box">
@@ -60,7 +64,7 @@
                 </div>
             </a>
             <div class="feature-desc-box">
-                <p>This is your zone to ask specific questions, vent about a bad exam, or share insights for future students.<br><br>Lay it all out there!</p>
+                <p>This is your zone to ask specific questions, vent about a bad exam, or share insights for future students. Lay it all out there!</p>
             </div>
         </div>
 

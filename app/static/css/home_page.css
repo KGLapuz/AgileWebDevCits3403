@@ -4,7 +4,7 @@ body, html {
     overflow-x: hidden;
     color: rgb(0, 48, 135); 
     font-family: Arial, Helvetica, sans-serif;
-    background-color: whitesmoke;
+    background-color: white; 
 }
 
 a { 
@@ -12,173 +12,209 @@ a {
     color: inherit; 
 }
 
-footer { margin-top: 0 !important; }
-
-.home-wrapper { display: flex; flex-direction: column; }
-
-.home-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
+footer { 
+    margin-top: 60px !important; 
 }
 
-.hero-section {
-    text-align: center;
-    padding: 60px 20px 0 20px;
+.home-wrapper { 
+    display: flex; 
+    flex-direction: column; 
+}
+
+.home-container {
+    max-width: 1000px; 
+    margin: 0 auto;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.hero-stacked-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;       
+    text-align: center;  
+    margin-top: 0;            
+    padding: 20px; 
+    box-sizing: border-box;
 }
 
 .hero-box-title {
-    border: 3px solid rgb(0, 48, 135);
-    border-radius: 20px;
-    max-width: 1000px;
-    margin: 0 auto 20px auto;
+    border: 2px solid rgb(0, 48, 135); 
+    border-radius: 25px;               
+    width: 100%;
+    max-width: 1000px;          
+    margin: 88px auto 30px auto; 
     overflow: hidden;
-    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(0, 48, 135, 0.05);
 }
 
 .hero-box-title h1 {
-    font-size: 3.5rem;
-    background: rgb(0, 48, 135);
-    color: white;
+    background: whitesmoke;
+    color: rgb(0, 48, 135);
+    font-weight: bold;
     margin: 0;
-    padding: 40px 20px;
+    padding: 35px 120px;
+    text-align: center;
+    font-size: 3rem;
 }
 
 .hero-box-description {
-    border: 2px solid rgb(0, 48, 135);
-    border-radius: 20px;
-    border-width: 5px;
-    max-width: 950px;
-    margin: 0 auto 40px auto;
-    padding: 25px 45px;
-    background-color: white;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 1.3rem;
+    border: none;              
+    background-color: transparent;
+    width: 100%;
+    max-width: 750px; 
+    margin: 0 auto 40px auto;  
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    text-align: center;
+    line-height: 1.65;
+    color: #555; /* Fixed broken 'dark gray' syntax */        
+    box-sizing: border-box;
 }
 
 .cta-container { 
-    margin-bottom: 120px; 
+    margin-bottom: 50px;       
+    width: 100%;
+    display: flex;
+    justify-content: center;   
 }
 
 .btn-primary-large {
     background-color: rgb(226, 182, 0);
     color: rgb(0, 48, 135) !important;
-    padding: 40px 160px; 
-    border-radius: 75px;
-    font-weight: bold;
-    font-size: 1.8rem;
     display: inline-block;
-    min-width: 400px; 
-    transition: transform 0.2s ease;
+    text-align: center;
+    font-weight: bold;
+    transition: 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0, 48, 135, 0.1);
+    font-size: 2.2rem; 
+    padding: 0.55em 0; 
+    width: 18em; 
+    border-radius: 0.65em; 
 }
 
-.btn-primary-large:hover { transform: scale(1.03); }
+.btn-primary-large:hover { 
+    transform: translateY(-3px); 
+    background-color: rgb(240, 195, 0);
+    box-shadow: 0 6px 16px rgba(0, 48, 135, 0.15);
+}
 
 .full-width-title-container {
     width: 100%;
-    padding-left: 40px;
+    max-width: 1000px;
+    margin: 25px auto 0 10px;
+    padding-left: 10px;
     box-sizing: border-box;
 }
 
 .grid-section-title {
     color: rgb(0, 48, 135);
-    font-size: 2.8rem;
+    font-size: 2.3rem;
     font-weight: bold;
-    margin: 0 0 50px 0;
-    text-decoration: underline;
-    text-underline-offset: 8px;
+    margin: 0 0 15px 10px;
 }
 
 .full-page-divider {
     border: none !important;
-    border-top: 3px solid rgb(0, 48, 135) !important;
-    opacity: 1 !important;
-    width: 100vw;
-    margin: 0;
+    border-top: 2px solid rgba(0, 48, 135, 0.5) !important; 
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 40px 10px;        
 }
 
+/* --- FIXED CARD GRID LAYOUT --- */
 .features-grid-full {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    width: 100%;
-    background: rgb(0, 48, 135);
-    margin-bottom: 120px;
+    grid-template-columns: repeat(2, 1fr); 
+    grid-auto-rows: 1fr; /* This forces all cards in a row to automatically match heights */
+    gap: 25px; 
+    padding: 0 10px 60px 10px;
+    box-sizing: border-box;
+    background: transparent; 
 }
 
+/* --- FIXED INDIVIDUAL CARDS --- */
 .feature-card {
-    padding: 30px 15px 60px 15px; 
-    text-align: center;
-    border-right: 3px solid rgb(0, 48, 135);
+    padding: 24px; 
+    text-align: left; 
+    background-color: white; 
+    border: 2px solid rgb(0, 48, 135); 
+    border-radius: 25px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; 
+    height: 100%; /* Spans the entire height provided by grid-auto-rows */
+    box-sizing: border-box;
+    transition: 0.2s ease-in-out;
 }
 
-.feature-card:last-child { border-right: none; }
+.feature-card:hover {
+    background-color: rgb(250, 250, 250); 
+    transform: translateY(-5px);
+}
+
+.feature-link-wrapper { 
+    width: 100%; 
+    display: flex; 
+    height: 100%; /* Ensures anchor wrapper stretches completely if you are wrapping the card */
+}
 
 .feature-title-box {
-    border: 2px solid rgb(226, 182, 0);
-    background-color: rgb(226, 182, 0);
-    border-radius: 15px;
-    padding: 12px 0;
-    margin-bottom: 60px;
-    width: 90%;          
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 12px;
+    width: 100%;          
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    transition: transform 0.2s ease;
-}
-
-.feature-title-box:hover {
-    transform: scale(1.02);
-    background-color: rgb(226, 182, 0);
 }
 
 .feature-desc-box {
-    border: 2px solid rgb(0, 48, 135);
-    border-radius: 20px;
-    padding: 20px;
-    width: 90%;
-    flex-grow: 1; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
+    border-radius: 0;
+    padding: 0;
+    width: 100%;
+    background-color: transparent; 
+    display: block;
 }
 
 .feature-card h3 {
     color: rgb(0, 48, 135);
     font-weight: bold;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
 }
 
 .feature-card p {
-    color: rgb(0, 48, 135);
-    font-size: 1.1rem;
-    line-height: 1.4;
+    color: #333; 
+    font-size: 1rem;
+    line-height: 1.6;
     margin: 0;
 }
 
-.feature-link-wrapper { 
-    width: 100%; 
-    display: flex; 
-    justify-content: center; 
-}
+@media (max-width: 768px) { 
+    .hero-box-title {
+        margin-top: 110px;              
+    }
 
-/* --- Mobile Responsiveness --- */
-@media (max-width: 900px) {
-    .features-grid-full { grid-template-columns: 1fr; }
-    .feature-card { 
-        border-right: none; 
-        border-bottom: 3px solid rgb(0, 48, 135); 
+    .hero-box-title h1 {
+        font-size: 2rem;
+        padding: 20px 15px;
     }
-    .feature-desc-box { 
-        margin-bottom: 20px; 
+    
+    .hero-box-description {
+        font-size: 1.05rem;
+        padding: 10px;
     }
+
+    .features-grid-full { 
+        grid-template-columns: 1fr; 
+        grid-auto-rows: auto; /* Drops matching row rule on mobile layout so cards wrap naturally */
+        padding-bottom: 40px;
+    }
+    
     .btn-primary-large { 
-        min-width: auto; 
-        width: 90%; 
-        padding: 20px 0; 
+        width: 100%; 
     }
 }
