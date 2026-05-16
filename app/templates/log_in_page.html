@@ -10,7 +10,7 @@
         <div class="greetings">
             <h2>UniReviews</h2>
             <p>Shares Your Experience</p>
-            <p> Get access to up-to-date reviews, discussions, past projects and hot tips for all Computer Science units! </p>
+            <p> Get access to up-to-date reviews, discussions, past projects and hot tips for all Computer Science units!<br> By signing up/logging in, gain the access to contribute to the conversation. </p>
         </div>
 
         <form class="login-container" action="{{url_for('main.login')}}" method="POST">
@@ -89,5 +89,5 @@
 
 {% block scripts %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{url_for('static',filename='log_in_page.js')}}"></script>
+    <script src="{{url_for('static',filename='js/log_in_page.js')}}"></script>
 {% endblock %}

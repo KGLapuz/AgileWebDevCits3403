@@ -16,15 +16,19 @@
 
     <!-- BREADCRUMB -->
     <div class="breadcrumb">
-        <p>
-            <a href="{{ url_for('main.index') }}">Home</a> >
-            <a href="{{ url_for('main.unit_page', code=unit.code) }}">
-                {{ unit.code }}
-            </a> > 
-            <a href="{{ url_for('main.unit_project', unit_code=unit.code) }}">
-                Projects
-            </a> > {{project.title}}
-        </p>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.units') }}">Units</a></li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('main.unit_reviews', unit_code=unit.code) }}">Reviews</a>
+                </li>
+                <li class="breadcrumb-item active">Write a Review</li>
+            </ol>
+        </nav>
     </div>
 
     <!-- STICKY THREAD HEADER -->
@@ -42,8 +46,10 @@
                     class="relative-time"
                     datetime="{{ project.created_at.isoformat() }}Z">
                 </time>
+                {% if project.external_link != '' %}
                 •
                 <a href="{{ project.external_link }}" target="_blank">External link</a> <i class="bi bi-box-arrow-up-right"></i>
+                {% endif %}
             </p>
         </div>
     </div>

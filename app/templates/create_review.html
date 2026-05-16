@@ -13,6 +13,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('main.units') }}">Units</a></li>
             <li class="breadcrumb-item">
                 <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
             </li>
