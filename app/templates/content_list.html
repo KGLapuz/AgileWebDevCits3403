@@ -21,10 +21,9 @@
             <li class="breadcrumb-item">
                 <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
             </li>
-            <li class="breadcrumb-item">
-                <a href="{{ url_for('main.unit_reviews', unit_code=unit.code) }}">Reviews</a>
+            <li class="breadcrumb-item active">
+                {{content_type.title()}}
             </li>
-            <li class="breadcrumb-item active">Write a Review</li>
         </ol>
     </nav>
 

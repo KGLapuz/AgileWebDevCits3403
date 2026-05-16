@@ -15,15 +15,19 @@
 
     <!-- BREADCRUMB -->
     <div class="breadcrumb">
-        <p>
-            <a href="{{ url_for('main.index') }}">Home</a> >
-            <a href="{{ url_for('main.unit_page', code=unit.code) }}">
-                {{ unit.code }}
-            </a> > 
-            <a href="{{ url_for('main.unit_discussions', unit_code=unit.code) }}">
-                Discussions
-            </a> > Thread
-        </p>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.units') }}">Units</a></li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ url_for('main.unit_discussions', unit_code=unit.code) }}">Discussions</a>
+                </li>
+                <li class="breadcrumb-item active">Discussion thread</li>
+            </ol>
+        </nav>
     </div>
 
     <!-- STICKY THREAD HEADER -->
