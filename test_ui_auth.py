@@ -15,7 +15,7 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.driver.quit()
 
     def test_1_successful_login(self):
-        '''Verifies successful login redirects to index'''
+        '''Verifies successful login redirects to index and logout redirects to login page'''
         self.driver.find_element(By.CSS_SELECTOR, ".login-btn").click()
 
         #waits for login contianer to render
@@ -45,6 +45,12 @@ class UniReviewsAuthTest(unittest.TestCase):
 
     def test_2_silent_login_failures(self):
         '''Verifies invalid credentials trigger the flash error message'''
+        self.driver.find_element(By.CSS_SELECTOR, ".login-btn").click()
+
+        #waits for login contianer to render
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
+
+        #enter credentials
         self.driver.find_element(By.NAME, "email").send_keys("keithlin@unireviews.com")
         self.driver.find_element(By.NAME, "password").send_keys("badpassword")
         self.driver.find_element(By.NAME, "submit_login").click()
@@ -56,6 +62,11 @@ class UniReviewsAuthTest(unittest.TestCase):
 
     def test_3_signup_validation(self):
         '''Verifies failed signup triggers a flash error message'''
+        self.driver.find_element(By.CSS_SELECTOR, ".login-btn").click()
+
+        #waits for login contianer to render
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
+        
         #click the text to pop open the signup modal
         self.driver.find_element(By.CSS_SELECTOR, ".signup-popup").click()
 
@@ -88,7 +99,22 @@ class UniReviewsAuthTest(unittest.TestCase):
 
         self.assertTrue(inline_error.is_displayed())
 
-    def test_4_
+    def test_4_redirect_guest_to_login_if_they_attempt_to_submit_review_form(self):
+        # clicks on the first button that is of class feature-title-box
+        # figured since all the buttons are all redirecting to the home-page the test shouldn't need to look into each specific button
+        self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box").click()
+
+        # this waits for unit cards to show up before it clicks
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content"))).click()
+
+        #this waits for the forum button redirects before it clicks
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fab-review"))).click()
+
+        checkfor_login = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
+
+        self.assertTrue(checkfor_login.is_displayed())
+
+
 
 
         
