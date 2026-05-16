@@ -13,16 +13,20 @@
 
 <div class="page-container">
 
-    <!-- BREADCRUMB -->
-    <div class="breadcrumb">
-        <a href="{{ url_for('main.index') }}">Home</a>
-        >
-        <a href="{{ url_for('main.unit_page', code=unit.code) }}">
-            {{ unit.code }}
-        </a>
-        >
-        <span>{{ content_type.title() }}</span>
-    </div>
+        <!-- BREADCRUMB -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('main.units') }}">Units</a></li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.unit_page', code=unit.code) }}">{{ unit.code }}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ url_for('main.unit_reviews', unit_code=unit.code) }}">Reviews</a>
+            </li>
+            <li class="breadcrumb-item active">Write a Review</li>
+        </ol>
+    </nav>
 
     <!-- HEADER -->
     <div class="page-header">
