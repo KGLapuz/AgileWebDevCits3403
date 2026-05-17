@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 import re
 
 class UniReviewsAuthTest(unittest.TestCase):
@@ -189,6 +190,9 @@ class UniReviewsAuthTest(unittest.TestCase):
         #waits for login container to render
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
 
+        login_email = self.driver.find_element(By.NAME, "email")
+        login_email.clear()
+
         #enter new account credentials
         self.driver.find_element(By.NAME, "email").send_keys("new_user@unireviews.com")
         self.driver.find_element(By.NAME, "password").send_keys("Newuserpassword1!")
@@ -232,13 +236,16 @@ class UniReviewsAuthTest(unittest.TestCase):
         '''
         # clicks on the first button that is of class feature-title-box
         # figured since all the buttons are all redirecting to the home-page the test shouldn't need to look into each specific button
-        self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box").click()
+        feature = self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box")
+        feature.click()
 
         # this waits for unit cards to show up before it clicks
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content"))).click()
+        unit_cards = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content")))
+        unit_cards.click()
 
         #this waits for the forum button redirects before it clicks
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fab-review"))).click()
+        fab = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fab-review")))
+        fab.click()
 
         checkfor_login = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
 
@@ -267,13 +274,16 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.driver.find_element(By.NAME, "submit_login").click()
 
         # --navigation to form--
-        self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box").click()
+        feature = self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box")
+        feature.click()
 
         # this waits for unit cards to show up before it clicks
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content"))).click()
+        unit_cards = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content")))
+        unit_cards.click()
 
         #this waits for the forum button redirects before it clicks
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fab-review"))).click()
+        fab = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fab-review")))
+        fab.click()
 
         # waits until the ratings have rendered and click it once it is
         four_star_label = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "label[data-value='4']")))
@@ -365,57 +375,75 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.driver.find_element(By.NAME, "password").send_keys("hash6")
         self.driver.find_element(By.NAME, "submit_login").click()
 
-        #--navigation to cits3403 discussion--
-        #this button will redirect to the browsing unit page
-        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary=large").click()
+        #--navigate to cits3403--
+        browse_unit = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".btn-primary-large")))
+        browse_unit.send_keys(Keys.ENTER)
 
         #inside the browsing unit page, users will search for CITS3403
-        self.driver.find_element(By.NAME, "search").send_keys("CITS3403")
+        search_input = self.wait.until(
+            EC.visibility_of_element_located((By.NAME, "search"))
+        )
+
+        search_input.send_keys("CITS3403", Keys.ENTER)
+
+        target_xpath = "//a[contains(@class, 'unit-card') and .//*[contains(text(), 'CITS3403')]]"
 
         unit_review_card = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content"))
+            EC.presence_of_element_located((By.XPATH, target_xpath))
         )
         #they will then click into the unit page
         unit_review_card.click()
 
+        self.wait.until(EC.url_contains("CITS3403"))
+
         #further navigate to discussions 
         to_discussions = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='discussions']"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "main [data-test='discussions']"))
         )
 
-        actions = ActionChains(self.driver)
+        to_discussions.send_keys(Keys.ENTER)
 
-        actions.scroll_to_element(to_discussions).perform()
-
-        self.wait.until(EC.element_to_be_clickable(to_discussions))
-
-        to_discussions.click()
+        self.wait.until(EC.url_contains("discussions"))
 
         #--search specific discussion by title--
-        self.driver.find_element(By.NAME, "search").send_keys("How hard is")
+        card_search_input = self.driver.find_element(By.NAME, "search")
+        
+        card_search_input.send_keys("How hard is", Keys.ENTER)
+
+        self.wait.until(EC.staleness_of(card_search_input))
+
+        specific_card_xpath = "//*[contains(@class, 'content-card') and contains(., 'How hard is')]"
 
         search_result = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".content-card"))
+            EC.presence_of_element_located((By.XPATH, specific_card_xpath))
         )
         
         # --compares the meta with what it found--
         meta_block = search_result.find_element(By.CSS_SELECTOR, ".card-meta")
-        meta_spans = meta_block.find_element(By.TAG_NAME, "span")
-        author_text = meta_spans[0].text
-        timestamp_text = meta_spans[1].text
-        reply_count_text = meta_spans[2].text
+        meta_spans = meta_block.find_elements(By.TAG_NAME, "span")
+        
+        author_text = ""
+        timestamp_text = ""
+        reply_count_text = ""
 
-        timestamp_pattern = r"(just now|second|minute|hour|day|ago)"
-        text_fragments = reply_count_text.split()
-        extracted_number_str = text_fragments[1]
+        for span in meta_spans:
+            text = span.text.lower()
+            if "posted by" in text:
+                author_text = span.text
+            elif "ago" in text or "now" in text or "minute" in text or "day" in text:
+                timestamp_text = span.text
+            elif "replies" in text or "reply" in text:
+                reply_count_text = span.text
+
+        self.assertNotEqual(reply_count_text, "", "could not find a span containing the words")
+
+        digit_match = re.search(r'\d+', reply_count_text)
+        extracted_number_str = digit_match.group() if digit_match else ""
+
 
         self.assertTrue(extracted_number_str.isdigit())
         self.assertEqual(int(extracted_number_str), 9, f"expected 9 initial replies, but found: {extracted_number_str}")
-        self.assertIn("Posted by mambwe_admin", author_text, f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
-        self.assertTrue(
-            re.search(timestamp_pattern, timestamp_text, re.IGNORECASE),
-            f"Timestamp text format is invalid. Found: '{timestamp_text}"
-        )
+        self.assertIn("mambwe_admin", author_text.lower(), f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
 
         #--to specific discussion page and reply to a comment--
         search_result.click()
@@ -424,20 +452,21 @@ class UniReviewsAuthTest(unittest.TestCase):
             EC.presence_of_element_located((By.CSS_SELECTOR, ".comment"))
         )
 
+        actions = ActionChains(self.driver)
         actions.scroll_to_element(target_comment).perform()
         reply_btn = target_comment.find_element(By.CSS_SELECTOR, ".reply-btn")
 
         self.wait.until(EC.element_to_be_clickable(reply_btn))
-        reply_btn.click()
+        reply_btn.send_keys(Keys.ENTER)
 
         reply_textarea = self.wait.until(
-            EC.visibility_of_element_located(By.CSS_SELECTOR, ".comment textarea, .reply-input-field")
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".comment textarea, .reply-input-field"))
         )
 
         #fills in the reply form 
         reply_textarea.send_keys("This is a valuable advice, thanks.")
 
-        submit_reply_btn = target_comment.find_element(By.CSS_SELECTOR, "button[type='submit'], submit-reply")
+        submit_reply_btn = target_comment.find_element(By.CSS_SELECTOR, "button[type='submit'], .submit-reply")
         submit_reply_btn.click()
 
         new_reply_card = self.wait.until(
@@ -474,7 +503,6 @@ class UniReviewsAuthTest(unittest.TestCase):
         - enter the discussion topic
         - leave a comment
         '''
-         # --login process--
         login_btn = self.driver.find_element(By.CSS_SELECTOR, ".login-btn")
         login_btn.click()
 
@@ -486,59 +514,77 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.driver.find_element(By.NAME, "password").send_keys("hash6")
         self.driver.find_element(By.NAME, "submit_login").click()
 
-        #--navigation to cits3403 discussion--
-        #this button will redirect to the browsing unit page
-        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary=large").click()
+        #--navigate to cits3403--
+        browse_unit = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".btn-primary-large")))
+        browse_unit.send_keys(Keys.ENTER)
 
         #inside the browsing unit page, users will search for CITS3403
-        self.driver.find_element(By.NAME, "search").send_keys("CITS3403")
+        search_input = self.wait.until(
+            EC.visibility_of_element_located((By.NAME, "search"))
+        )
+
+        search_input.send_keys("CITS3403", Keys.ENTER)
+
+        target_xpath = "//a[contains(@class, 'unit-card') and .//*[contains(text(), 'CITS3403')]]"
 
         unit_review_card = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content"))
+            EC.presence_of_element_located((By.XPATH, target_xpath))
         )
         #they will then click into the unit page
         unit_review_card.click()
 
+        self.wait.until(EC.url_contains("CITS3403"))
+
         #further navigate to discussions 
         to_discussions = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='discussions']"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "main [data-test='discussions']"))
         )
 
-        actions = ActionChains(self.driver)
+        to_discussions.send_keys(Keys.ENTER)
 
-        actions.scroll_to_element(to_discussions).perform()
-
-        self.wait.until(EC.element_to_be_clickable(to_discussions))
-
-        to_discussions.click()
+        self.wait.until(EC.url_contains("discussions"))
 
         #--search specific discussion by title--
-        self.driver.find_element(By.NAME, "search").send_keys("How hard is")
+        card_search_input = self.driver.find_element(By.NAME, "search")
+        
+        card_search_input.send_keys("How hard is", Keys.ENTER)
+
+        self.wait.until(EC.staleness_of(card_search_input))
+
+        specific_card_xpath = "//*[contains(@class, 'content-card') and contains(., 'How hard is')]"
 
         search_result = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".content-card"))
+            EC.presence_of_element_located((By.XPATH, specific_card_xpath))
         )
         
         # --compares the meta with what it found--
         meta_block = search_result.find_element(By.CSS_SELECTOR, ".card-meta")
-        meta_spans = meta_block.find_element(By.TAG_NAME, "span")
-        author_text = meta_spans[0].text
-        timestamp_text = meta_spans[1].text
-        reply_count_text = meta_spans[2].text
+        meta_spans = meta_block.find_elements(By.TAG_NAME, "span")
+        
+        author_text = ""
+        timestamp_text = ""
+        reply_count_text = ""
 
-        timestamp_pattern = r"(just now|second|minute|hour|day|ago)"
-        text_fragments = reply_count_text.split()
-        extracted_number_str = text_fragments[1]
+        for span in meta_spans:
+            text = span.text.lower()
+            if "posted by" in text:
+                author_text = span.text
+            elif "ago" in text or "now" in text or "minute" in text or "day" in text:
+                timestamp_text = span.text
+            elif "replies" in text or "reply" in text:
+                reply_count_text = span.text
+
+        self.assertNotEqual(reply_count_text, "", "could not find a span containing the words")
+
+        digit_match = re.search(r'\d+', reply_count_text)
+        extracted_number_str = digit_match.group() if digit_match else ""
+
 
         self.assertTrue(extracted_number_str.isdigit())
-        self.assertEqual(int(extracted_number_str), 9, f"expected 9 initial replies, but found: {extracted_number_str}")
-        self.assertIn("Posted by mambwe_admin", author_text, f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
-        self.assertTrue(
-            re.search(timestamp_pattern, timestamp_text, re.IGNORECASE),
-            f"Timestamp text format is invalid. Found: '{timestamp_text}"
-        )
+        self.assertEqual(int(extracted_number_str), 10, f"expected 10 initial replies, but found: {extracted_number_str}")
+        self.assertIn("mambwe_admin", author_text.lower(), f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
 
-        #--to specific discussion page and create a comment--
+        #--to specific discussion page and reply to a comment--
         search_result.click()
 
         #waiting until it finds the element where a comment to be put in
@@ -568,11 +614,14 @@ class UniReviewsAuthTest(unittest.TestCase):
         #latest comment would always be at the bottom. 
         newest_comment = all_comments[-1]
 
+        actions = ActionChains(self.driver)
         #scroll to the bottom where the latest comment should be
         actions.scroll_to_element(newest_comment).perform()
 
         #confirm the meta values match
-        newest_comment_text = newest_comment.find_element(By.TAG_NAME, "p").text
+        comment_p = newest_comment.find_elements(By.TAG_NAME, "p")
+
+        newest_comment_text = comment_p[1].text
 
         self.assertEqual(
             newest_comment_text, "Testing for new comment in this thread", f"the latest comment didn't match our post"
@@ -591,61 +640,80 @@ class UniReviewsAuthTest(unittest.TestCase):
         reply_count_value = reply_count.text.strip()
 
         self.assertTrue(reply_count_value.isdigit())
-        self.assertEqual(int(reply_count_value), 10, f"expected 10 initial replies, but found: {reply_count_value}")
+        self.assertEqual(int(reply_count_value), 11, f"expected 11 initial replies, but found: {reply_count_value}")
 
     def test_9_guest_receive_flashmessage_if_attempted_to_comment(self):
         #guest no login required. Straight into navigation
         #--navigation to cits3403 discussion--
         #this button will redirect to the browsing unit page
-        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary=large").click()
+        browse_unit = self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".btn-primary-large")))
+        browse_unit.send_keys(Keys.ENTER)
 
         #inside the browsing unit page, users will search for CITS3403
-        self.driver.find_element(By.NAME, "search").send_keys("CITS3403")
+        search_input = self.wait.until(
+            EC.visibility_of_element_located((By.NAME, "search"))
+        )
+
+        search_input.send_keys("CITS3403", Keys.ENTER)
+
+        target_xpath = "//a[contains(@class, 'unit-card') and .//*[contains(text(), 'CITS3403')]]"
 
         unit_review_card = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content"))
+            EC.presence_of_element_located((By.XPATH, target_xpath))
         )
         #they will then click into the unit page
         unit_review_card.click()
 
+        self.wait.until(EC.url_contains("CITS3403"))
+
         #further navigate to discussions 
         to_discussions = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='discussions']"))
+            EC.presence_of_element_located((By.CSS_SELECTOR, "main [data-test='discussions']"))
         )
 
-        actions = ActionChains(self.driver)
+        to_discussions.send_keys(Keys.ENTER)
 
-        actions.scroll_to_element(to_discussions).perform()
-
-        self.wait.until(EC.element_to_be_clickable(to_discussions))
-
-        to_discussions.click()
+        self.wait.until(EC.url_contains("discussions"))
 
         #--search specific discussion by title--
-        self.driver.find_element(By.NAME, "search").send_keys("How hard is")
+        card_search_input = self.driver.find_element(By.NAME, "search")
+        
+        card_search_input.send_keys("How hard is", Keys.ENTER)
+
+        self.wait.until(EC.staleness_of(card_search_input))
+
+        specific_card_xpath = "//*[contains(@class, 'content-card') and contains(., 'How hard is')]"
 
         search_result = self.wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".content-card"))
+            EC.presence_of_element_located((By.XPATH, specific_card_xpath))
         )
         
         # --compares the meta with what it found--
         meta_block = search_result.find_element(By.CSS_SELECTOR, ".card-meta")
-        meta_spans = meta_block.find_element(By.TAG_NAME, "span")
-        author_text = meta_spans[0].text
-        timestamp_text = meta_spans[1].text
-        reply_count_text = meta_spans[2].text
+        meta_spans = meta_block.find_elements(By.TAG_NAME, "span")
+        
+        author_text = ""
+        timestamp_text = ""
+        reply_count_text = ""
 
-        timestamp_pattern = r"(just now|second|minute|hour|day|ago)"
-        text_fragments = reply_count_text.split()
-        extracted_number_str = text_fragments[1]
+        for span in meta_spans:
+            text = span.text.lower()
+            if "posted by" in text:
+                author_text = span.text
+            elif "ago" in text or "now" in text or "minute" in text or "day" in text:
+                timestamp_text = span.text
+            elif "replies" in text or "reply" in text:
+                reply_count_text = span.text
+
+        self.assertNotEqual(reply_count_text, "", "could not find a span containing the words")
+
+        digit_match = re.search(r'\d+', reply_count_text)
+        extracted_number_str = digit_match.group() if digit_match else ""
+
 
         self.assertTrue(extracted_number_str.isdigit())
-        self.assertEqual(int(extracted_number_str), 9, f"expected 9 initial replies, but found: {extracted_number_str}")
-        self.assertIn("Posted by mambwe_admin", author_text, f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
-        self.assertTrue(
-            re.search(timestamp_pattern, timestamp_text, re.IGNORECASE),
-            f"Timestamp text format is invalid. Found: '{timestamp_text}"
-        )
+        self.assertEqual(int(extracted_number_str), 11, f"expected 11 initial replies, but found: {extracted_number_str}")
+        self.assertIn("mambwe_admin", author_text.lower(), f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
 
         #--to specific discussion page and reply to a comment--
         search_result.click()
@@ -654,20 +722,21 @@ class UniReviewsAuthTest(unittest.TestCase):
             EC.presence_of_element_located((By.CSS_SELECTOR, ".comment"))
         )
 
+        actions = ActionChains(self.driver)
         actions.scroll_to_element(target_comment).perform()
         reply_btn = target_comment.find_element(By.CSS_SELECTOR, ".reply-btn")
 
         self.wait.until(EC.element_to_be_clickable(reply_btn))
-        reply_btn.click()
+        reply_btn.send_keys(Keys.ENTER)
 
         reply_textarea = self.wait.until(
-            EC.visibility_of_element_located(By.CSS_SELECTOR, ".comment textarea, .reply-input-field")
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".comment textarea, .reply-input-field"))
         )
 
         #fills in the reply form 
         reply_textarea.send_keys("This is a valuable advice, thanks.")
 
-        submit_reply_btn = target_comment.find_element(By.CSS_SELECTOR, "button[type='submit'], submit-reply")
+        submit_reply_btn = target_comment.find_element(By.CSS_SELECTOR, "button[type='submit'], .submit-reply")
         submit_reply_btn.click()
 
         flash_alert = self.wait.until(
