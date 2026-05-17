@@ -873,7 +873,7 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.assertEqual(int(extracted_number_str), 0, f"expected 0 initial replies, but found: {extracted_number_str}")
         self.assertIn("you", author_text.lower(), f"expected author text to show 'Posted by you', but found: {author_text}")
 
-    def test_11_logged_in_user_create_discussion(self):
+    def test_11_logged_in_user_create_project(self):
         '''
         Verifies that the user's submission was added to the page
         
