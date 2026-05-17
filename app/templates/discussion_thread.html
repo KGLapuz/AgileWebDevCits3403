@@ -42,7 +42,7 @@
                 {% endif %}
                 •
                 <span>
-                    <time class="relative-time" datetime="{{ discussion.created_at.isoformat() }}"></time>
+                    {{ moment(discussion.created_at).fromNow() }}
                 </span>
                 •
                 <span class="thread-reply-count">
