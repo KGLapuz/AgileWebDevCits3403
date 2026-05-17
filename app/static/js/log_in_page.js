@@ -16,5 +16,3 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
-
-//This js is completed by Keithlin it should be working when used...

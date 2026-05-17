@@ -25,6 +25,10 @@ body {
     text-decoration: underline;
 }
 
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
 /* Card matches site-wide style */
 .card {
     border-radius: 25px;

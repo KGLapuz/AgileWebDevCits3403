@@ -21,8 +21,7 @@ body {
     margin-bottom: 20px;
 }
 
-.breadcrumb a,
-.breadcrumb p {
+.breadcrumb a {
     text-decoration: none;
     color: rgb(0, 48, 135);
 }

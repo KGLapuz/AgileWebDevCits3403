@@ -13,6 +13,10 @@ body {
     color: rgb(0, 48, 135);
 }
 
+.breadcrumb-item a:hover {
+    text-decoration: underline;
+}
+
 /* Card matches site-wide style */
 .card {
     border-radius: 25px;
