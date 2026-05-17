@@ -9,7 +9,11 @@ body {
 
 .breadcrumb-item a {
     text-decoration: none;
-    color: grey;
+    color: rgb(0, 48, 135);
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline;
 }
 
 .card {
