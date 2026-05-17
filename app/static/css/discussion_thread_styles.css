@@ -3,19 +3,11 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* ========================= */
-/* PAGE CONTAINER */
-/* ========================= */
-
 .thread-container {
     max-width: 950px;
     padding-top: 100px;
     padding-bottom: 60px;
 }
-
-/* ========================= */
-/* BREADCRUMB */
-/* ========================= */
 
 .breadcrumb {
     margin-bottom: 20px;
@@ -55,17 +47,11 @@ body {
     font-weight: bold;
 }
 
-/* sticky metadata */
-
 .sticky-meta {
     margin: 0;
     color: #666;
     font-size: 0.95rem;
 }
-
-/* ========================= */
-/* MAIN THREAD CARD */
-/* ========================= */
 
 .thread-card {
     border-radius: 25px;
@@ -86,10 +72,6 @@ body {
     margin: 0;
 }
 
-/* ========================= */
-/* ADD COMMENT CARD */
-/* ========================= */
-
 .card {
     border-radius: 25px;
     border: 1px solid rgba(0,48,135);
@@ -101,8 +83,6 @@ body {
 .card:hover {
     background-color: rgb(250,250,250);
 }
-
-/* textarea */
 
 textarea.form-control {
     border-radius: 15px;
