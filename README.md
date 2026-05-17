@@ -131,14 +131,6 @@ Populate the database with sample UWA units and users, we used CSSE units for st
 python seed_database.py
 ```
 
-[Optional] - Add sample reviews, discussions, and projects:
-
-```bash
-python seed.py
-```
-
-> Ensure seeding is completed before running the app so all pages contain content.
-
 ---
 
 ### 7. Run the Application
@@ -180,12 +172,10 @@ Each test class:
 
 The test suite validates:
 
-* User model — password hashing, authentication, role defaults, and uniqueness constraints
-* Unit model — computed properties (rating, workload, review count) and nullable constraints
-* Review model — field validation, optional fields, and model relationships
-* Discussion model — nullable constraints, reply count, and unit linkage
-* Comment model — content constraints, author requirement, and nested reply linking
-* Project model — nullable constraints, optional fields, and model relationships
+* User Model (Auth & Session Flow): Password hashing, uniqueness constraints, and role defaults are tested via successful login/logout routing, registration pipelines, and UI flash errors for missing or duplicate credentials.
+* Unit & Review Models (Submission & Metrics): Validation rules, optional fields, and relationships are tested by verifying that logged-in users can submit complete review forms to update dynamic list views, while unauthenticated guests are automatically redirected to login.
+* Discussion & Comment Models (Interactivity & Hierarchy): Content constraints, linkage requirements, and auto-incrementing reply counts are tested via deep UI page traversal, verifying that authenticated users can post top-level thread comments and nested replies while guests trigger a flash warning.
+* Project Model (Global Pipeline): Model relationships, structural constraints, and optional field inputs are tested via a standalone global submission pipeline that successfully renders custom project entries directly into the extended template listing view.
 
 ### Interpreting results
 
