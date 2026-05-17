@@ -462,6 +462,240 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.assertTrue(reply_count_value.isdigit())
         self.assertEqual(int(reply_count_value), 10, f"expected 10 initial replies, but found: {reply_count_value}")
 
+    def test_8_create_comment_in_discussion(self):
+        '''
+        Verifies logged in users can create a comments
+        This replicates a user's interaction:
+        - login using correct credentials
+        - search for a unit 
+        - enter its unit page
+        - enter its discussion page
+        - search for a discussion topic
+        - enter the discussion topic
+        - leave a comment
+        '''
+         # --login process--
+        login_btn = self.driver.find_element(By.CSS_SELECTOR, ".login-btn")
+        login_btn.click()
+
+        #waits for login container to render
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
+
+        #enter credentials
+        self.driver.find_element(By.NAME, "email").send_keys("keithlin.student@unireviews.com")
+        self.driver.find_element(By.NAME, "password").send_keys("hash6")
+        self.driver.find_element(By.NAME, "submit_login").click()
+
+        #--navigation to cits3403 discussion--
+        #this button will redirect to the browsing unit page
+        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary=large").click()
+
+        #inside the browsing unit page, users will search for CITS3403
+        self.driver.find_element(By.NAME, "search").send_keys("CITS3403")
+
+        unit_review_card = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content"))
+        )
+        #they will then click into the unit page
+        unit_review_card.click()
+
+        #further navigate to discussions 
+        to_discussions = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='discussions']"))
+        )
+
+        actions = ActionChains(self.driver)
+
+        actions.scroll_to_element(to_discussions).perform()
+
+        self.wait.until(EC.element_to_be_clickable(to_discussions))
+
+        to_discussions.click()
+
+        #--search specific discussion by title--
+        self.driver.find_element(By.NAME, "search").send_keys("How hard is")
+
+        search_result = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".content-card"))
+        )
+        
+        # --compares the meta with what it found--
+        meta_block = search_result.find_element(By.CSS_SELECTOR, ".card-meta")
+        meta_spans = meta_block.find_element(By.TAG_NAME, "span")
+        author_text = meta_spans[0].text
+        timestamp_text = meta_spans[1].text
+        reply_count_text = meta_spans[2].text
+
+        timestamp_pattern = r"(just now|second|minute|hour|day|ago)"
+        text_fragments = reply_count_text.split()
+        extracted_number_str = text_fragments[1]
+
+        self.assertTrue(extracted_number_str.isdigit())
+        self.assertEqual(int(extracted_number_str), 9, f"expected 9 initial replies, but found: {extracted_number_str}")
+        self.assertIn("Posted by mambwe_admin", author_text, f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
+        self.assertTrue(
+            re.search(timestamp_pattern, timestamp_text, re.IGNORECASE),
+            f"Timestamp text format is invalid. Found: '{timestamp_text}"
+        )
+
+        #--to specific discussion page and create a comment--
+        search_result.click()
+
+        #waiting until it finds the element where a comment to be put in
+        comment_input = self.wait.until(
+            EC.presence_of_element_located((By.ID, "new-comment"))
+        )
+
+        #type in the comment
+        comment_input.send_keys("Testing for new comment in this thread")
+        
+        #looked for the post button through ID
+        post_btn = self.driver.find_element(By.ID, "post-comment-btn")
+
+        self.wait.until(EC.element_to_be_clickable(post_btn))
+        post_btn.click()
+
+        #--checks if posting the comment was successful--
+        #checks if the comment input field is now empty
+        self.wait.until(lambda d: comment_input.get_attribute("value") == "")
+
+        #wait until comments are rendered
+        self.wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".comment")))
+
+        #collects all the existing comments in the page
+        all_comments = self.driver.find_elements(By.CSS_SELECTOR, ".comment")
+
+        #latest comment would always be at the bottom. 
+        newest_comment = all_comments[-1]
+
+        #scroll to the bottom where the latest comment should be
+        actions.scroll_to_element(newest_comment).perform()
+
+        #confirm the meta values match
+        newest_comment_text = newest_comment.find_element(By.TAG_NAME, "p").text
+
+        self.assertEqual(
+            newest_comment_text, "Testing for new comment in this thread", f"the latest comment didn't match our post"
+        )
+
+         #--Check for update in meta value and if existing author value is the same--
+        sticky_header = self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".thread-sticky"))
+        )
+
+        meta_text_block = sticky_header.find_element(By.CSS_SELECTOR, ".sticky-meta").text
+        self.assertIn("Posted by mambwe_admin", meta_text_block, f"author name verification failed in sticky header")
+
+        #reply count will update, so we are checking here if it turns to 10. 
+        reply_count = sticky_header.find_element(By.CSS_SELECTOR, ".thread-reply-count")
+        reply_count_value = reply_count.text.strip()
+
+        self.assertTrue(reply_count_value.isdigit())
+        self.assertEqual(int(reply_count_value), 10, f"expected 10 initial replies, but found: {reply_count_value}")
+
+    def test_9_guest_receive_flashmessage_if_attempted_to_comment(self):
+        #guest no login required. Straight into navigation
+        #--navigation to cits3403 discussion--
+        #this button will redirect to the browsing unit page
+        self.driver.find_element(By.CSS_SELECTOR, ".btn-primary=large").click()
+
+        #inside the browsing unit page, users will search for CITS3403
+        self.driver.find_element(By.NAME, "search").send_keys("CITS3403")
+
+        unit_review_card = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content"))
+        )
+        #they will then click into the unit page
+        unit_review_card.click()
+
+        #further navigate to discussions 
+        to_discussions = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-test='discussions']"))
+        )
+
+        actions = ActionChains(self.driver)
+
+        actions.scroll_to_element(to_discussions).perform()
+
+        self.wait.until(EC.element_to_be_clickable(to_discussions))
+
+        to_discussions.click()
+
+        #--search specific discussion by title--
+        self.driver.find_element(By.NAME, "search").send_keys("How hard is")
+
+        search_result = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".content-card"))
+        )
+        
+        # --compares the meta with what it found--
+        meta_block = search_result.find_element(By.CSS_SELECTOR, ".card-meta")
+        meta_spans = meta_block.find_element(By.TAG_NAME, "span")
+        author_text = meta_spans[0].text
+        timestamp_text = meta_spans[1].text
+        reply_count_text = meta_spans[2].text
+
+        timestamp_pattern = r"(just now|second|minute|hour|day|ago)"
+        text_fragments = reply_count_text.split()
+        extracted_number_str = text_fragments[1]
+
+        self.assertTrue(extracted_number_str.isdigit())
+        self.assertEqual(int(extracted_number_str), 9, f"expected 9 initial replies, but found: {extracted_number_str}")
+        self.assertIn("Posted by mambwe_admin", author_text, f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
+        self.assertTrue(
+            re.search(timestamp_pattern, timestamp_text, re.IGNORECASE),
+            f"Timestamp text format is invalid. Found: '{timestamp_text}"
+        )
+
+        #--to specific discussion page and reply to a comment--
+        search_result.click()
+
+        target_comment = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".comment"))
+        )
+
+        actions.scroll_to_element(target_comment).perform()
+        reply_btn = target_comment.find_element(By.CSS_SELECTOR, ".reply-btn")
+
+        self.wait.until(EC.element_to_be_clickable(reply_btn))
+        reply_btn.click()
+
+        reply_textarea = self.wait.until(
+            EC.visibility_of_element_located(By.CSS_SELECTOR, ".comment textarea, .reply-input-field")
+        )
+
+        #fills in the reply form 
+        reply_textarea.send_keys("This is a valuable advice, thanks.")
+
+        submit_reply_btn = target_comment.find_element(By.CSS_SELECTOR, "button[type='submit'], submit-reply")
+        submit_reply_btn.click()
+
+        flash_alert = self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert"))
+        )
+
+        self.assertTrue(flash_alert.is_displayed(), "flash alert failed to appear")
+
+        #waiting until it finds the element where a comment to be put in
+        comment_input = self.wait.until(
+            EC.presence_of_element_located((By.ID, "new-comment"))
+        )
+
+        #type in the comment
+        comment_input.send_keys("Testing for new comment in this thread")
+        
+        #looked for the post button through ID
+        post_btn = self.driver.find_element(By.ID, "post-comment-btn")
+
+        self.wait.until(EC.element_to_be_clickable(post_btn))
+        post_btn.click()
+
+        second_flash_alert = self.wait.until(
+            EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert"))
+        )
+
+        self.assertTrue(second_flash_alert.is_displayed(), "second flash alert failed to appear")
+
 
 
 
