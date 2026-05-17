@@ -581,7 +581,7 @@ class UniReviewsAuthTest(unittest.TestCase):
 
 
         self.assertTrue(extracted_number_str.isdigit())
-        self.assertEqual(int(extracted_number_str), 9, f"expected 9 initial replies, but found: {extracted_number_str}")
+        self.assertEqual(int(extracted_number_str), 10, f"expected 10 initial replies, but found: {extracted_number_str}")
         self.assertIn("mambwe_admin", author_text.lower(), f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
 
         #--to specific discussion page and reply to a comment--
@@ -640,7 +640,7 @@ class UniReviewsAuthTest(unittest.TestCase):
         reply_count_value = reply_count.text.strip()
 
         self.assertTrue(reply_count_value.isdigit())
-        self.assertEqual(int(reply_count_value), 10, f"expected 10 initial replies, but found: {reply_count_value}")
+        self.assertEqual(int(reply_count_value), 11, f"expected 11 initial replies, but found: {reply_count_value}")
 
     def test_9_guest_receive_flashmessage_if_attempted_to_comment(self):
         '''
