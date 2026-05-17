@@ -175,6 +175,12 @@ def login():
         user_registration(signup_form)
 
         return redirect(url_for('main.login'))
+    
+    if signup_form.errors:
+        flash(
+            'Please correct the errors in the sign up form',
+            'error'
+        )
 
     # This handles the login post
     if login_form.submit_login.data and login_form.validate_on_submit():
