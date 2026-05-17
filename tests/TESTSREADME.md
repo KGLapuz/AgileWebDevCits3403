@@ -230,5 +230,7 @@ The test suite currently validates:
 * discussion creation
 * project submission
 * session handling
+* flash messages
+* comparison of meta values after and before creation
 
 ---
