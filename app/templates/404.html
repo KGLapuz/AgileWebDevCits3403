@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block styles %}
+<link 
+    rel="stylesheet" 
+    href="{{ url_for('static', filename='css/404.css') }}"
+></link>
+{% endblock %}
+
+{% block title %}404 Page Not Found - UniReviews{% endblock %}
+
+{% block content %}
+    <div class="container d-flex flex-column justify-content-center align-items-center text-center"
+        style="min-height: 75vh; font-family: inherit;">
+        <div
+            class="d-flex justify-content-center align-items-center text-secondary mb-4"
+            style="
+                width: 180px;
+                height: 180px;
+                border: 6px solid #cfcfcf;
+                border-radius: 50%;
+                font-size: 6rem;
+                font-weight: 700;
+                opacity: 0.5;
+                line-height: 1;
+            ">
+            ✕
+        </div>
+        <div class="no-page">
+            <h1 class="fw-bold mb-3" style="font-family: inherit;">
+                404 - Page Not Found
+            </h1>
+            <p class="mb-2" style="font-size: 1.2rem; font-family: inherit;">
+                Oops! Seems like this page flaked out of the site!
+            </p>
+            <p class="text-muted" style="font-family: inherit;">
+                You could head back to the 
+                <a href="{{ url_for('main.units') }}">
+                    units list
+                </a>,
+                or to find out what UniReviews is,
+                <a href="{{ url_for('main.index') }}">
+                    click here
+                </a>.
+            </p>
+        </div>
+    </div>
+{% endblock %}
