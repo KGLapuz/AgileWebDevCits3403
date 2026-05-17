@@ -41,23 +41,24 @@ footer {
 }
 
 .hero-box-title {
-    border: 2px solid rgb(0, 48, 135); 
-    border-radius: 25px;               
+    border: none;              
+    border-radius: 0;          
     width: 100%;
     max-width: 1000px;          
-    margin: 88px auto 30px auto; 
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 48, 135, 0.05);
+    margin: 88px auto 20px auto; 
+    overflow: visible;
+    box-shadow: none;          
 }
 
 .hero-box-title h1 {
-    background: whitesmoke;
+    background: transparent;   
     color: rgb(0, 48, 135);
     font-weight: bold;
     margin: 0;
-    padding: 35px 120px;
+    padding: 20px 0;           
     text-align: center;
-    font-size: 3rem;
+    font-size: 4.5rem;         
+    letter-spacing: -1px;      
 }
 
 .hero-box-description {
@@ -70,7 +71,7 @@ footer {
     font-size: 1.2rem;
     text-align: center;
     line-height: 1.65;
-    color: #555; /* Fixed broken 'dark gray' syntax */        
+    color: #555;         
     box-sizing: border-box;
 }
 
@@ -98,14 +99,14 @@ footer {
 .btn-primary-large:hover { 
     transform: translateY(-3px); 
     background-color: rgb(240, 195, 0);
-    box-shadow: 0 6px 16px rgba(0, 48, 135, 0.15);
+    box-shadow: 0 6px 166px rgba(0, 48, 135, 0.15);
 }
 
+/* --- TITLE AND HEADINGS LEFT-ALIGNED --- */
 .full-width-title-container {
     width: 100%;
-    max-width: 1000px;
-    margin: 25px auto 0 10px;
-    padding-left: 10px;
+    margin: 40px 0 0 0;
+    padding: 0 24px;
     box-sizing: border-box;
 }
 
@@ -113,29 +114,29 @@ footer {
     color: rgb(0, 48, 135);
     font-size: 2.3rem;
     font-weight: bold;
-    margin: 0 0 15px 10px;
+    margin: 0 0 15px 0; /* Cleared out the unbalanced left margin */
+    text-align: left;
 }
 
+/* --- THIS GOES EDGE-TO-EDGE FLUSH ACROSS SCREEN --- */
 .full-page-divider {
     border: none !important;
-    border-top: 2px solid rgba(0, 48, 135, 0.5) !important; 
+    border-top: 2px solid rgba(0, 48, 135, 0.2) !important; 
     width: 100%;
-    max-width: 1000px;
-    margin: 0 auto 40px 10px;        
+    margin: 0 0 40px 0; /* Completely removed 'auto' to let it run free */
 }
 
-/* --- FIXED CARD GRID LAYOUT --- */
+/* --- GRID CARDS ALIGNED --- */
 .features-grid-full {
     display: grid;
     grid-template-columns: repeat(2, 1fr); 
-    grid-auto-rows: 1fr; /* This forces all cards in a row to automatically match heights */
+    grid-auto-rows: 1fr; 
     gap: 25px; 
-    padding: 0 10px 60px 10px;
+    padding: 0 24px 60px 24px;
     box-sizing: border-box;
     background: transparent; 
 }
 
-/* --- FIXED INDIVIDUAL CARDS --- */
 .feature-card {
     padding: 24px; 
     text-align: left; 
@@ -145,7 +146,7 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: flex-start; 
-    height: 100%; /* Spans the entire height provided by grid-auto-rows */
+    height: 100%;
     box-sizing: border-box;
     transition: 0.2s ease-in-out;
 }
@@ -158,7 +159,6 @@ footer {
 .feature-link-wrapper { 
     width: 100%; 
     display: flex; 
-    height: 100%; /* Ensures anchor wrapper stretches completely if you are wrapping the card */
 }
 
 .feature-title-box {
@@ -199,8 +199,8 @@ footer {
     }
 
     .hero-box-title h1 {
-        font-size: 2rem;
-        padding: 20px 15px;
+        font-size: 2.8rem;   
+        padding: 15px 10px;
     }
     
     .hero-box-description {
@@ -210,7 +210,7 @@ footer {
 
     .features-grid-full { 
         grid-template-columns: 1fr; 
-        grid-auto-rows: auto; /* Drops matching row rule on mobile layout so cards wrap naturally */
+        grid-auto-rows: auto; 
         padding-bottom: 40px;
     }
     
