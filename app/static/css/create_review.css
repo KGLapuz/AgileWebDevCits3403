@@ -1,7 +1,3 @@
-/* ------------------------------------------------
-   Create Review page — consistent with unit_page.css
------------------------------------------------- */
-
 body {
     background-color: rgb(245, 245, 245);
     font-family: Arial, sans-serif;
@@ -23,14 +19,13 @@ body {
     transition: 0.2s;
 }
 
-/* Unit label */
 .unit-label {
     color: rgb(0, 48, 135);
     font-size: 1.05rem;
 }
 
 /* ------------------------------------------------
-   STAR RATING — left to right, JS-driven
+   STAR RATING — left to right
 ------------------------------------------------ */
 .star-rating-group {
     display: flex;
@@ -139,7 +134,7 @@ body {
 }
 
 /* ------------------------------------------------
-   GET AHEAD TIP
+   GET AHEAD TIPS
 ------------------------------------------------ */
 #get_ahead_tip {
     border-left: 4px solid rgb(226, 182, 0);
@@ -154,7 +149,7 @@ body {
 }
 
 /* ------------------------------------------------
-   INPUTS / TEXTAREA
+   INPUTS
 ------------------------------------------------ */
 .form-control:focus,
 .form-select:focus {

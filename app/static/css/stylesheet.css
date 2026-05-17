@@ -148,7 +148,7 @@ body {
 
 .project-page .pdf-card {
     background: white;
-    padding: 12px 15px; /* Compact padding */
+    padding: 12px 15px; 
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -160,9 +160,6 @@ body {
     box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
 
-/* =========================
-   5. DISCUSSION THREAD
-   ========================= */
 .discussion-thread-page .thread-container {
     max-width: 900px;
     margin: 40px auto;
