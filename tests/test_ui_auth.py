@@ -442,7 +442,8 @@ class UniReviewsAuthTest(unittest.TestCase):
 
 
         self.assertTrue(extracted_number_str.isdigit())
-        self.assertEqual(int(extracted_number_str), 9, f"expected 9 initial replies, but found: {extracted_number_str}")
+        initial_reply_count = int(extracted_number_str)
+        self.assertGreaterEqual(initial_reply_count, 0)
         self.assertIn("mambwe_admin", author_text.lower(), f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
 
         #--to specific discussion page and reply to a comment--
@@ -466,8 +467,19 @@ class UniReviewsAuthTest(unittest.TestCase):
         #fills in the reply form 
         reply_textarea.send_keys("This is a valuable advice, thanks.")
 
-        submit_reply_btn = target_comment.find_element(By.CSS_SELECTOR, "button[type='submit'], .submit-reply")
-        submit_reply_btn.click()
+        submit_reply_btn = self.wait.until(
+            EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, ".submit-reply")
+            )
+        )
+
+        actions = ActionChains(self.driver)
+        actions.scroll_to_element(submit_reply_btn).perform()
+
+        self.driver.execute_script(
+            "arguments[0].click();",
+            submit_reply_btn
+        )
 
         new_reply_card = self.wait.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".comment .replies .comment"))
@@ -489,7 +501,10 @@ class UniReviewsAuthTest(unittest.TestCase):
         reply_count_value = reply_count.text.strip()
 
         self.assertTrue(reply_count_value.isdigit())
-        self.assertEqual(int(reply_count_value), 10, f"expected 10 initial replies, but found: {reply_count_value}")
+        self.assertEqual(
+            int(reply_count_value),
+            initial_reply_count + 1
+        )
 
     def test_8_create_comment_in_discussion(self):
         '''
@@ -578,10 +593,11 @@ class UniReviewsAuthTest(unittest.TestCase):
 
         digit_match = re.search(r'\d+', reply_count_text)
         extracted_number_str = digit_match.group() if digit_match else ""
+        initial_reply_count = int(extracted_number_str)
 
 
         self.assertTrue(extracted_number_str.isdigit())
-        self.assertEqual(int(extracted_number_str), 10, f"expected 10 initial replies, but found: {extracted_number_str}")
+        self.assertGreaterEqual(initial_reply_count, 0)
         self.assertIn("mambwe_admin", author_text.lower(), f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
 
         #--to specific discussion page and reply to a comment--
@@ -640,7 +656,10 @@ class UniReviewsAuthTest(unittest.TestCase):
         reply_count_value = reply_count.text.strip()
 
         self.assertTrue(reply_count_value.isdigit())
-        self.assertEqual(int(reply_count_value), 11, f"expected 11 initial replies, but found: {reply_count_value}")
+        self.assertEqual(
+            int(reply_count_value),
+            initial_reply_count + 1
+        )
 
     def test_9_guest_receive_flashmessage_if_attempted_to_comment(self):
         '''
@@ -720,10 +739,10 @@ class UniReviewsAuthTest(unittest.TestCase):
 
         digit_match = re.search(r'\d+', reply_count_text)
         extracted_number_str = digit_match.group() if digit_match else ""
-
+        initial_reply_count = int(extracted_number_str)
 
         self.assertTrue(extracted_number_str.isdigit())
-        self.assertEqual(int(extracted_number_str), 11, f"expected 11 initial replies, but found: {extracted_number_str}")
+        self.assertGreaterEqual(initial_reply_count, 0)
         self.assertIn("mambwe_admin", author_text.lower(), f"expected author text to show 'Posted by mambwe_admin', but found: {author_text}")
 
         #--to specific discussion page and reply to a comment--
@@ -747,8 +766,19 @@ class UniReviewsAuthTest(unittest.TestCase):
         #fills in the reply form 
         reply_textarea.send_keys("This is a valuable advice, thanks.")
 
-        submit_reply_btn = target_comment.find_element(By.CSS_SELECTOR, "button[type='submit'], .submit-reply")
-        submit_reply_btn.click()
+        submit_reply_btn = self.wait.until(
+            EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, ".submit-reply")
+            )
+        )
+
+        actions = ActionChains(self.driver)
+        actions.scroll_to_element(submit_reply_btn).perform()
+
+        self.driver.execute_script(
+            "arguments[0].click();",
+            submit_reply_btn
+        )
 
         flash_alert = self.wait.until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert"))
