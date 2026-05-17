@@ -236,7 +236,7 @@ class UniReviewsAuthTest(unittest.TestCase):
         '''
         # clicks on the first button that is of class feature-title-box
         # figured since all the buttons are all redirecting to the home-page the test shouldn't need to look into each specific button
-        feature = self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box")
+        feature = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".feature-title-box")))
         feature.click()
 
         # this waits for unit cards to show up before it clicks
@@ -274,7 +274,7 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.driver.find_element(By.NAME, "submit_login").click()
 
         # --navigation to form--
-        feature = self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box")
+        feature = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".feature-title-box")))
         feature.click()
 
         # this waits for unit cards to show up before it clicks
@@ -799,7 +799,7 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.driver.find_element(By.NAME, "submit_login").click()
 
         # --navigation to form--
-        feature = self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box")
+        feature = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".feature-title-box")))
         feature.click()
 
         # this waits for unit cards to show up before it clicks
@@ -896,7 +896,7 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.driver.find_element(By.NAME, "submit_login").click()
 
         # --navigation to form--
-        feature = self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box")
+        feature = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".feature-title-box")))
         feature.click()
 
         # this waits for unit cards to show up before it clicks
