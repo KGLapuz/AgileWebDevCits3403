@@ -7,12 +7,34 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 import re
 
+from app import create_app, db
+from seed_tests import seed_tests
+from config import SeleniumTestingConfig
+import threading
+
 class UniReviewsAuthTest(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls.app = create_app(SeleniumTestingConfig)
+
+        # seed TEST database
+        seed_tests(cls.app)
+
+        # run server in background thread
+        def run():
+            cls.app.run(port=5001, debug=False, use_reloader=False)
+
+        cls.server = threading.Thread(target=run)
+        cls.server.daemon = True
+        cls.server.start()
+        
     def setUp(self):
+        
         #initiliazes the chrome browser before each test
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
-        self.driver.get("http://127.0.0.1:5000")
+        self.driver.get("http://127.0.0.1:5001")
         self. wait = WebDriverWait(self.driver, 10) #explicitly wait for dynamic elements
 
     def tearDown(self):

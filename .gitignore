@@ -7,3 +7,4 @@ ENV/
 app.db
 __pycache__/
 app/__pycache__/
+instance/selenium_test.db
