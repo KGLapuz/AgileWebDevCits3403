@@ -86,7 +86,7 @@
             </div>
         </div> <div class="row mt-4 g-3">
             <div class="col-md-4">
-                <a href="{{ url_for('main.unit_discussions', unit_code=unit.code) }}" class="text-decoration-none text-dark">
+                <a href="{{ url_for('main.unit_discussions', unit_code=unit.code) }}" class="text-decoration-none text-dark" data-test="discussions">
                     <div class="card p-3 h-100">
                         <h5>Discussions</h5>
                         <ul class="mt-2">
@@ -101,7 +101,7 @@
             </div>
 
             <div class="col-md-4">
-                <a href="{{ url_for('main.unit_project', unit_code=unit.code) }}" class="text-decoration-none text-dark">
+                <a href="{{ url_for('main.unit_project', unit_code=unit.code) }}" class="text-decoration-none text-dark" data-test="projects">
                     <div class="card p-3 h-100">
                         <h5>Projects</h5>
                         <ul class="mt-2">
@@ -116,7 +116,7 @@
             </div>
 
             <div class="col-md-4">
-                <a href="{{ url_for('main.unit_reviews', unit_code=unit.code) }}" class="text-decoration-none text-dark">
+                <a href="{{ url_for('main.unit_reviews', unit_code=unit.code) }}" class="text-decoration-none text-dark" data-test="reviews">
                     <div class="card p-3 h-100">
                         <h5>Reviews</h5>
                         <ul class="mt-2">
