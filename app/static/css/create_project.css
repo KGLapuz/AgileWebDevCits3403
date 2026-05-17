@@ -1,13 +1,8 @@
-/* ------------------------------------------------
-   Create Project page — consistent with unit_page.css
------------------------------------------------- */
-
 body {
     background-color: rgb(245, 245, 245);
     font-family: Arial, sans-serif;
 }
 
-/* Breadcrumb links */
 .breadcrumb {
     margin-bottom: 20px;
     font-size: 1rem;
@@ -29,7 +24,6 @@ body {
     text-decoration: underline;
 }
 
-/* Card matches site-wide style */
 .card {
     border-radius: 25px;
     border: 2px solid rgba(0, 48, 135);
@@ -37,14 +31,12 @@ body {
     transition: 0.2s;
 }
 
-/* Inputs & textareas */
 .form-control:focus,
 .form-select:focus {
     border-color: rgb(0, 48, 135);
     box-shadow: 0 0 0 0.2rem rgba(0, 48, 135, 0.2);
 }
 
-/* Primary button — UWA blue */
 .btn-primary {
     background-color: rgb(0, 48, 135);
     border-color: rgb(0, 48, 135);
@@ -55,19 +47,16 @@ body {
     border-color: rgb(0, 35, 100);
 }
 
-/* Cancel / outline button hover — UWA gold */
 .btn-outline-secondary:hover {
     background-color: rgb(226, 182, 0);
     border-color: rgb(226, 182, 0);
     color: white;
 }
 
-/* Unit name display */
 .text-primary {
     color: rgb(0, 48, 135) !important;
 }
 
-/* Footer spacing */
 .mb-5 {
     margin-bottom: 3rem !important;
 }

@@ -114,19 +114,17 @@ footer {
     color: rgb(0, 48, 135);
     font-size: 2.3rem;
     font-weight: bold;
-    margin: 0 0 15px 0; /* Cleared out the unbalanced left margin */
+    margin: 0 0 15px 0; 
     text-align: left;
 }
 
-/* --- THIS GOES EDGE-TO-EDGE FLUSH ACROSS SCREEN --- */
 .full-page-divider {
     border: none !important;
     border-top: 2px solid rgba(0, 48, 135, 0.2) !important; 
     width: 100%;
-    margin: 0 0 40px 0; /* Completely removed 'auto' to let it run free */
+    margin: 0 0 40px 0; 
 }
 
-/* --- GRID CARDS ALIGNED --- */
 .features-grid-full {
     display: grid;
     grid-template-columns: repeat(2, 1fr); 
