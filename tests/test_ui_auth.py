@@ -765,11 +765,104 @@ class UniReviewsAuthTest(unittest.TestCase):
 
         self.assertTrue(second_flash_alert.is_displayed(), "second flash alert failed to appear")
 
+    def test_10_logged_in_user_create_discussion(self):
+        '''
+        Verifies that the user's submission was added to the page
+        
+        In this test it is replicating a user's action:
+        - going to the login and input credentials
+        - navigating to reviews
+        - filling up the reviews form
+        - submitting the form and being redirected to the extend html of content list
+        '''
+        # --login process--
+        login_btn = self.driver.find_element(By.CSS_SELECTOR, ".login-btn")
+        login_btn.click()
+
+        #waits for login container to render
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
+
+        #enter credentials
+        self.driver.find_element(By.NAME, "email").send_keys("keithlin.student@unireviews.com")
+        self.driver.find_element(By.NAME, "password").send_keys("hash6")
+        self.driver.find_element(By.NAME, "submit_login").click()
+
+        # --navigation to form--
+        feature = self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box")
+        feature.click()
+
+        # this waits for unit cards to show up before it clicks
+        unit_cards = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content")))
+        unit_cards.click()
+
+        #this waits for the forum button redirects before it clicks
+        fab = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fab-discussion")))
+        fab.click()
+
+        title_input = self.wait.until(EC.visibility_of_element_located((By.ID, "title")))
 
 
+        test_title = "Is the CITS1401 final exam heavily based on project?"
+        title_input.send_keys(test_title)
+
+        typed_value = title_input.get_attribute("value")
+        self.assertEqual(typed_value, test_title, f"expected input valued to be '{test_title}, but found 'typed_value'")
+
+        body_input = self.wait.until(EC.visibility_of_element_located((By.ID, "body")))
+
+        body_input.clear()
+
+        test_body = "Testing the description of the discussion page"
+        body_input.send_keys(test_body)
+
+        body_value = body_input.get_attribute("value")
+        self.assertEqual(body_value, test_body, f"mismatched")
+
+        submit_btn = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "button[type='submit']"))
+        )
+
+        self.wait.until(EC.element_to_be_clickable(submit_btn))
+
+        submit_btn.click()
+
+        #waits until it locates the flash
+        flash_msg = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".alert-success"))
+        )
+
+        #verifies the flash appeard
+        self.assertTrue(flash_msg.is_displayed(), "Success flash message did not appear!")
+
+        # --verification for the latest review card by user appeared with correct meta--
+        #waits until it locates the lates review card
+        meta_block = self.driver.find_element(By.CSS_SELECTOR, ".card-meta")
+        meta_spans = meta_block.find_elements(By.TAG_NAME, "span")
+        
+        author_text = ""
+        timestamp_text = ""
+        reply_count_text = ""
+
+        for span in meta_spans:
+            text = span.text.lower()
+            if "posted by" in text:
+                author_text = span.text
+            elif "ago" in text or "now" in text or "minute" in text or "day" in text:
+                timestamp_text = span.text
+            elif "replies" in text or "reply" in text:
+                reply_count_text = span.text
+
+        self.assertNotEqual(reply_count_text, "", "could not find a span containing the words")
+
+        digit_match = re.search(r'\d+', reply_count_text)
+        extracted_number_str = digit_match.group() if digit_match else ""
 
 
+        self.assertTrue(extracted_number_str.isdigit())
+        self.assertEqual(int(extracted_number_str), 0, f"expected 0 initial replies, but found: {extracted_number_str}")
+        self.assertIn("you", author_text.lower(), f"expected author text to show 'Posted by you', but found: {author_text}")
 
+        
 
 
 
