@@ -643,6 +643,17 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.assertEqual(int(reply_count_value), 11, f"expected 11 initial replies, but found: {reply_count_value}")
 
     def test_9_guest_receive_flashmessage_if_attempted_to_comment(self):
+        '''
+        Verifies guest cannot reply to comments
+        This replicates a user's interaction:
+        - search for a unit 
+        - enter its unit page
+        - enter its discussion page
+        - search for a discussion topic
+        - enter the discussion topic
+        - leave a comment
+        - receive flash warning to log in
+        '''
         #guest no login required. Straight into navigation
         #--navigation to cits3403 discussion--
         #this button will redirect to the browsing unit page
@@ -771,8 +782,8 @@ class UniReviewsAuthTest(unittest.TestCase):
         
         In this test it is replicating a user's action:
         - going to the login and input credentials
-        - navigating to reviews
-        - filling up the reviews form
+        - navigating to discussion
+        - filling up the discussion form
         - submitting the form and being redirected to the extend html of content list
         '''
         # --login process--
@@ -862,9 +873,105 @@ class UniReviewsAuthTest(unittest.TestCase):
         self.assertEqual(int(extracted_number_str), 0, f"expected 0 initial replies, but found: {extracted_number_str}")
         self.assertIn("you", author_text.lower(), f"expected author text to show 'Posted by you', but found: {author_text}")
 
+    def test_11_logged_in_user_create_discussion(self):
+        '''
+        Verifies that the user's submission was added to the page
         
+        In this test it is replicating a user's action:
+        - going to the login and input credentials
+        - navigating to projects
+        - filling up the project form
+        - submitting the form and being redirected to the extend html of content list
+        '''
+        # --login process--
+        login_btn = self.driver.find_element(By.CSS_SELECTOR, ".login-btn")
+        login_btn.click()
 
+        #waits for login container to render
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".login-container")))
 
+        #enter credentials
+        self.driver.find_element(By.NAME, "email").send_keys("keithlin.student@unireviews.com")
+        self.driver.find_element(By.NAME, "password").send_keys("hash6")
+        self.driver.find_element(By.NAME, "submit_login").click()
+
+        # --navigation to form--
+        feature = self.driver.find_element(By.CSS_SELECTOR, ".feature-title-box")
+        feature.click()
+
+        # this waits for unit cards to show up before it clicks
+        unit_cards = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".review-content")))
+        unit_cards.click()
+
+        #this waits for the forum button redirects before it clicks
+        fab = self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fab-project")))
+        fab.click()
+
+        title_input = self.wait.until(EC.visibility_of_element_located((By.ID, "project_title")))
+        title_input.clear()
+
+        project_title = "CITS1401 projest csv examples"
+        title_input.send_keys(project_title)
+
+        typed_value = title_input.get_attribute("value")
+        self.assertEqual(typed_value, project_title, f"expected input valued to be '{project_title}, but found 'typed_value'")
+
+        project_link = self.wait.until(EC.visibility_of_element_located((By.ID, "repo_link")))
+        project_link.clear()
+
+        project_input = "https://github.com/KGLapuz/AgileWebDevCits3403"
+        project_link.send_keys(project_input)
+
+        project_value = project_link.get_attribute("value")
+        self.assertEqual(project_value, project_input, f"mismatched url")
+
+        body_input = self.wait.until(EC.visibility_of_element_located((By.ID, "project_body")))
+
+        body_input.clear()
+
+        test_body = "Testing the description of the project page"
+        body_input.send_keys(test_body)
+
+        body_value = body_input.get_attribute("value")
+        self.assertEqual(body_value, test_body, f"mismatched")
+
+        submit_btn = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "button[type='submit']"))
+        )
+
+        actions = ActionChains(self.driver)
+
+        actions.scroll_to_element(submit_btn).perform()
+
+        self.wait.until(EC.element_to_be_clickable(submit_btn))
+
+        submit_btn.click()
+
+        #waits until it locates the flash
+        flash_msg = self.wait.until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".alert-success"))
+        )
+
+        #verifies the flash appeard
+        self.assertTrue(flash_msg.is_displayed(), "Success flash message did not appear!")
+
+        # --verification for the latest review card by user appeared with correct meta--
+        #waits until it locates the lates review card
+        meta_block = self.driver.find_element(By.CSS_SELECTOR, ".card-meta")
+        meta_spans = meta_block.find_elements(By.TAG_NAME, "span")
+        
+        author_text = ""
+        timestamp_text = ""
+
+        for span in meta_spans:
+            text = span.text.lower()
+            if "ago" in text or "now" in text or "minute" in text or "day" in text:
+                timestamp_text = span.text
+            else:
+                if span.text.strip():
+                    author_text = span.text
+
+        self.assertIn("keithlin_student", author_text.lower(), f"expected author text to show 'keithlin_student', but found: {author_text}")
 
 if __name__ == "__main__":
     unittest.main()
