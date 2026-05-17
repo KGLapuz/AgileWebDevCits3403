@@ -144,7 +144,7 @@ class UniReviewsAuthTest(unittest.TestCase):
 
     def test_4_successful_signup_login_with_new_account(self):
         '''
-        Verifies invalid credentials trigger the flash error message
+        Verifies new accounts can login
 
         In this test it is replicating a user's action:
         - going to login page and opening signup form
